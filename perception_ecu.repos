@@ -1,0 +1,62 @@
+repositories:
+  #
+  # perception stack
+  #
+  perception_ecu/workspace/src/perception_ecu_launcher:
+    type: git
+    url: https://github.com/tier4/perception_ecu_launch.git
+    version: main
+  perception_ecu/workspace/src/sensor_trigger:
+    type: git
+    url: https://github.com/tier4/sensor_trigger.git
+    version: galactic
+  perception_ecu/workspace/src/ros2_v4l2_camera:
+    type: git
+    url: https://github.com/tier4/ros2_v4l2_camera.git
+    version: galactic
+  perception_ecu/workspace/src/image_pipeline:
+    type: git
+    url: https://github.com/tier4/image_pipeline.git
+    version: tier4/support-sensor-data-qos
+  perception_ecu/workspace/src/image_transport_plugins:
+    type: git
+    url: https://github.com/ros-perception/image_transport_plugins.git
+    version: foxy-devel
+  perception_ecu/workspace/src/individual_params:
+    type: git
+    url: https://github.com/tier4/perception_ecu_individual_params
+    version: main
+  perception_ecu/workspace/src/autoware.universe:
+    type: git
+    url: https://github.com/autowarefoundation/autoware.universe.git
+    version: galactic
+  #
+  # packages dependencies
+  #
+  perception_ecu/workspace/src/autoware_common_msgs:
+    type: git
+    url: https://github.com/autowarefoundation/autoware_msgs.git
+    version: main
+  perception_ecu/workspace/src/autoware_common:
+    type: git
+    url: https://github.com/autowarefoundation/autoware_common.git
+    version: main
+  perception_ecu/workspace/src/tier4_autoware_msgs:
+    type: git
+    url: https://github.com/tier4/tier4_autoware_msgs.git
+    version: tier4/universe
+  perception_ecu/workspace/src/autoware_auto_msgs:
+    type: git
+    url: https://github.com/tier4/autoware_auto_msgs.git
+    version: tier4/main
+  #
+  # build dependencies
+  #
+  perception_ecu/workspace/src/cudnn_cmake_module:
+    type: git
+    url: https://github.com/tier4/cudnn_cmake_module.git
+    version: main
+  perception_ecu/workspace/src/tensorrt_cmake_module:
+    type: git
+    url: https://github.com/tier4/tensorrt_cmake_module.git
+    version: main
