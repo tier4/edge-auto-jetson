@@ -1,0 +1,10 @@
+- name: Add settings to autoware.env
+  ansible.builtin.blockinfile:
+    path: "{{ autoware_env_dir }}/autoware.env"
+    state: present
+    create: true
+    mode: 0644
+    marker: "# {mark} set-autoware-env"
+    block: |
+      export ROS_DOMAIN_ID={{ ros_domain_id }}
+  become: true

@@ -1,0 +1,9 @@
+- hosts: localhost
+  vars:
+    autoware_env_dir: /opt/autoware/env
+  roles:
+    - { role: dev_tools, tags: [dev_tools] }
+    - { role: tier4_hdr_camera_driver, tags: [tier4_hdr_camera_driver] }
+    - { role: set_autoware_env, tags: [set_autoware_env] }
+    - { role: cyclonedds_setup, tags: [cyclonedds_setup] }
+    - { role: docker_image, tags: [docker_image] }

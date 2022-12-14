@@ -1,0 +1,27 @@
+- name: Generate docker tag name
+  set_fact:
+    docker_tag_name: "{{ docker_image_name }}:{{ ansible_date_time.date }}"
+
+- name: Build an image for perception ECU
+  shell:
+    chdir: "{{ role_path }}"
+    cmd: |
+      docker build \
+      --platform arm64 \
+      -t {{ docker_tag_name }} \
+      -f docker/Dockerfile \
+      .
+  environment:
+    DOCKER_BUILDKIT: 1
+
+- name: Set latest tag to generated image
+  shell:
+    cmd: |
+      docker tag {{ docker_tag_name }} {{ docker_image_name }}:latest
+
+- name: Add current user to docker group
+  ansible.builtin.user:
+    name: "{{ ansible_user_id }}"
+    groups: docker
+    append: true
+  become: true

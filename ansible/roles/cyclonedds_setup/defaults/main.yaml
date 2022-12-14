@@ -1,0 +1,4 @@
+cyclonedds:
+  network_interface_address:
+    - eth1
+  minimum_socket_receive_buffer_size: 20MB

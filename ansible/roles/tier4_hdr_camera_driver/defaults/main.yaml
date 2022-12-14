@@ -1,0 +1,2 @@
+camera_driver_repo: https://api.github.com/repos/tier4/tier4_automotive_hdr_camera/releases/latest
+camera_driver_download_dir: /tmp
