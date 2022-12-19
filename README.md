@@ -3,6 +3,9 @@
 ## Introduction
 This repository provides a sample environment working with Jetson + GMSL cam + ROS2.
 
+The following figure shows a system overview.
+![](images/overview.svg "system overview")
+
 ## Requirement
 - Camera: v4l2 compatible cameras, including TIER IV Automotive HDR Camera C1/C2
 - ECU: Jetson AGX Xavier from NVIDIA Coorp.
@@ -37,6 +40,9 @@ This script performs:
 
 
 ## Usage
+An example connection between ECUs:
+![](images/connection_example.svg "system connection example")
+
 The following depicts the directory overview:
 ```bash
 perception_ecu_container/
