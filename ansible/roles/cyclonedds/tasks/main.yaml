@@ -18,7 +18,7 @@
     state: present
     create: true
     mode: 0644
-    marker: "# {mark} cyclonedds_setup"
+    marker: "# {mark} cyclonedds"
     block: |
       export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
       export CYCLONEDDS_URI=file:///opt/autoware/cyclonedds/cyclonedds.xml

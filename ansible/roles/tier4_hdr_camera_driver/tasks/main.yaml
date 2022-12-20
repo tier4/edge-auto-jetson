@@ -36,6 +36,18 @@
   check_mode: true
   register: is_driver_installed
 
+- name: Install apt packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - make
+      - build-essential
+      - debhelper
+      - debmake
+      - devscripts
+      - dkms
+    update_cache: true
+
 - name: Setup camera driver and SDK
   block:
     - name: install driver from deb file

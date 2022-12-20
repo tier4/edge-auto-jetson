@@ -1,0 +1,11 @@
+- name: Add settings to autoware.env
+  ansible.builtin.blockinfile:
+    path: "{{ autoware_env_dir }}/autoware.env"
+    state: present
+    create: true
+    mode: 0644
+    marker: "# {mark} cuda"
+    block: |
+      export PATH="/usr/local/cuda/bin:$PATH"
+      export LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
+  become: true

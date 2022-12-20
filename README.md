@@ -4,7 +4,7 @@
 This repository provides a sample environment working with Jetson + GMSL cam + ROS2.
 
 The following figure shows a system overview.
-![](images/overview.svg "system overview")
+![](docs/overview.svg "system overview")
 
 ## Requirement
 - Camera: v4l2 compatible cameras, including TIER IV Automotive HDR Camera C1/C2
@@ -41,7 +41,7 @@ This script performs:
 
 ## Usage
 An example connection between ECUs:
-![](images/connection_example.svg "system connection example")
+![](docs/connection_example.svg "system connection example")
 
 The following depicts the directory overview:
 ```bash

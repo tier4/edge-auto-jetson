@@ -4,7 +4,7 @@
     state: present
     create: true
     mode: 0644
-    marker: "# {mark} set-autoware-env"
+    marker: "# {mark} autoware"
     block: |
       export ROS_DOMAIN_ID={{ ros_domain_id }}
   become: true

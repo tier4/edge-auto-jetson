@@ -16,10 +16,4 @@
   ansible.builtin.apt:
     name:
       - python3-vcstool
-      - make
-      - build-essential
-      - debhelper
-      - debmake
-      - devscripts
-      - dkms
     update_cache: true
