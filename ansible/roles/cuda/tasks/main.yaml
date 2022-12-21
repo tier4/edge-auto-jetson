@@ -1,3 +1,10 @@
+- name: Install apt packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - nvidia-jetpack
+    update_cache: true
+
 - name: Add settings to autoware.env
   ansible.builtin.blockinfile:
     path: "{{ autoware_env_dir }}/autoware.env"
