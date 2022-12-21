@@ -5,11 +5,41 @@
     mode: 0755
   become: true
 
-- name: Copy config
+- name: Copy cyclonedds config
   ansible.builtin.template:
     src: cyclonedds.xml.jinja2
     dest: /opt/autoware/cyclonedds/cyclonedds.xml
     mode: 0755
+  become: true
+
+- name: Copy multicast setup service
+  ansible.builtin.copy:
+    src: multicast@.service
+    dest: /etc/systemd/system/
+    mode: 0755
+  become: true
+
+- name: Enable multicast setup service
+  ansible.builtin.systemd:
+    name: multicast@{{ item }}.service
+    daemon_reload: yes
+    enabled: true
+    masked: false
+  become: true
+  with_items: "{{ cyclonedds.network_interface_address }}"
+
+- name: Add kernel parameter config
+  sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: yes
+    sysctl_file: /etc/sysctl.d/60-cyclonedds.conf
+  with_dict:
+    net.ipv4.ipfrag_time: "{{ cyclonedds.ipfrag_time }}"
+    net.ipv4.ipfrag_high_thresh: "{{ cyclonedds.ipfrag_high_thresh }}"
+    net.core.rmem_max: "{{ cyclonedds.rmem_max }}"
+    net.core.rmem_default: "{{ cyclonedds.rmem_default }}"
   become: true
 
 - name: Add settings to autoware.env
