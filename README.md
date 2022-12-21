@@ -1,7 +1,5 @@
 # perception\_ecu\_container
 
-## Introduction
-
 This repository provides a sample environment working with Jetson + GMSL cam + ROS2.
 
 The following figure shows a system overview.
@@ -11,7 +9,7 @@ The following figure shows a system overview.
 ## Getting Started
 
 ### Prerequisites
-- Camera: v4l2 compatible cameras, including TIER IV Automotive HDR Camera C1/C2
+- Camera: v4l2 compatible cameras, including TIER IV Automotive HDR Camera
 - ECU: Jetson AGX Xavier from NVIDIA Coorp.
 - Board support packages: NVIDIA L4T R32.6.1 (including Ubuntu 18.04) or higher
 
@@ -23,13 +21,21 @@ This repository assumes RQX-58Gs are correctly set up by following to the offici
 
 
 ### Installing dependencies
+Clone `tier4/perception_ecu_container` and move to the directory.
+
 ```bash
 git clone https://github.com/tier4/perception_ecu_container.git
 cd perception_ecu_container
-./setup-dev-env.sh
 ```
 
-### Buiding docker
+You can install the dependencies using the provided Ansible script.
+
+```bash
+./setup-dev-env.sh
+sudo reboot
+```
+
+### Building docker
 ```
 ./docker/build.sh
 ```
