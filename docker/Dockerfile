@@ -32,7 +32,7 @@ RUN vcs import ./ < ../overlay.repos
 # build overlay source
 WORKDIR $OVERLAY_WS
 
-RUN . /opt/ros/$ROS_DISTRO/install/setup.sh && \
+RUN . /opt/ros/"$ROS_DISTRO"/install/setup.sh && \
     colcon build \
       --cmake-args -DCMAKE_BUILD_TYPE=Release \
       --merge-install \
