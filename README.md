@@ -1,7 +1,6 @@
-# perception\_ecu\_container
+# Perception ECU Container
 
-This repository provides a sample environment working with Jetson + GMSL cam + ROS2.
-
+This repository provides a sample environment working with Jetson + GMSL2 cam + ROS2.
 The following images show object recognition results using the contents of this repository.
 
 ![object recognition example](docs/sample.png "perception_ecu_container object recognition example")
@@ -34,9 +33,7 @@ git clone https://github.com/tier4/perception_ecu_container.git
 cd perception_ecu_container
 ```
 
-You can install the dependencies using the provided Ansible script.
-
-(NOTE: If the camera device driver is already installed, it can be skipped by pressing N.)
+You can install the dependencies using the provided ansible script. You will be asked if you want to install the TIER IV camera driver, press N if you want to skip this step because it is pre-installed or for some other reason.
 
 ```sh
 ./setup-dev-env.sh
@@ -51,28 +48,28 @@ sudo reboot
 ```
 
 ### Building docker
-Build a Docker image and build the ROS execution environment.
+Build your docker image and build the ROS execution environment.
 
 ```sh
 ./docker/build_image.sh
 ```
 
 ### Building ROS workspace
-Create a ROS workspace and clone the repository using vcstool.
+Create your ROS workspace and clone repositories using vcstool.
 
 ```
 mkdir src
 vcs import src < perception_ecu.repos
 ```
 
-If you want to update the cloned repository, use the following command.
+If you want to update cloned repositories, use the following command.
 
 ```
 vcs import src < autoware.repos
 vcs pull src
 ```
 
-Build the ROS workspace using a Docker image.
+Build your ROS workspace using your built docker image.
 
 ```sh
 ./docker/build_rosws.sh
@@ -80,7 +77,7 @@ Build the ROS workspace using a Docker image.
 
 ### Running docker
 
-Launch the Docker image to enter the ROS execution environment.
+Launch your docker image to enter your ROS execution environment.
 
 ```sh
 ./docker/run.sh
