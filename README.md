@@ -2,7 +2,11 @@
 
 This repository provides a sample environment working with Jetson + GMSL cam + ROS2.
 
-The following figure shows a system overview.
+The following images show object recognition results using the contents of this repository.
+
+![object recognition example](docs/sample.png "perception_ecu_container object recognition example")
+
+This repository is a docker-based ROS development environment. An overview of the system is shown below.
 
 ![system overview](docs/overview.drawio.svg "perception_ecu_container overview")
 
