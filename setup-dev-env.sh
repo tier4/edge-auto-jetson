@@ -2,7 +2,7 @@
 
 SCRIPT_DIR=$(readlink -f "$(dirname "$0")")
 
-echo "Updating python and installing ansible modules"
+echo "\e[36mUpdating python and installing ansible modules\e[m"
 
 # Install sudo
 if ! (command -v sudo >/dev/null 2>&1); then
