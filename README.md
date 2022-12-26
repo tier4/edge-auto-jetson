@@ -4,65 +4,92 @@ This repository provides a sample environment working with Jetson + GMSL cam + R
 
 The following figure shows a system overview.
 
-![](docs/overview.svg "system overview")
+![system overview](docs/overview.drawio.svg "perception_ecu_container overview")
 
 ## Getting Started
 
 ### Prerequisites
-- Camera: v4l2 compatible cameras, including TIER IV Automotive HDR Camera
+- Camera: v4l2 compatible cameras, including [TIER IV Automotive HDR Camera C1](https://sensor.tier4.jp/automotive-hdr-camera)
 - ECU: Jetson AGX Xavier from NVIDIA Coorp.
 - Board support packages: NVIDIA L4T R32.6.1 (including Ubuntu 18.04) or higher
 
+**NOTE: BSP installation for ADLINK RQX-58G**
+
+This repository assumes RQX-58Gs are correctly set up by following to the official quick start guide from ADLINK Technology, Inc. Please see the [official document](https://www.adlinktech.com/Products/Download.ashx?type=MDownload&isQuickStart=yes&file=1783%5croscube-x-bsp-qsg-l4t-32.5.0-kernel-1.0.8.pdf) in detail.
+TIER IV camera driver ([tier4/tier4_automotive_hdr_camera](https://github.com/tier4/tier4_automotive_hdr_camera)), is already installed in RQX-58G BSP image and it can also be updated during your setup process.
+
 An example connection between ECUs:
-![](docs/connection_example.svg "system connection example")
 
-#### [for RQX-58G from ADLINK Technology, Inc. users] BSP installation
-This repository assumes RQX-58Gs are correctly set up by following to the official quick start guide from ADLINK Technology, Inc. Please see [the official document](https://www.adlinktech.com/Products/Download.ashx?type=MDownload&isQuickStart=yes&file=1783%5croscube-x-bsp-qsg-l4t-32.5.0-kernel-1.0.8.pdf) in detail.
-
+![system connection example](docs/connection.drawio.svg "system connection example")
 
 ### Installing dependencies
 Clone `tier4/perception_ecu_container` and move to the directory.
 
-```bash
+```sh
 git clone https://github.com/tier4/perception_ecu_container.git
 cd perception_ecu_container
 ```
 
 You can install the dependencies using the provided Ansible script.
 
-```bash
+(NOTE: If the camera device driver is already installed, it can be skipped by pressing N.)
+
+```sh
 ./setup-dev-env.sh
+
+[Warning] Do you want to install/update the TIER IV camera driver? [y/N]: 
+```
+
+Finally, reboot once for dependencies and permission settings to take effect.
+
+```sh
 sudo reboot
 ```
 
 ### Building docker
+Build a Docker image and build the ROS execution environment.
+
+```sh
+./docker/build_image.sh
 ```
-./docker/build.sh
+
+### Building ROS workspace
+Create a ROS workspace and clone the repository using vcstool.
+
+```
+mkdir src
+vcs import src < perception_ecu.repos
+```
+
+If you want to update the cloned repository, use the following command.
+
+```
+vcs import src < autoware.repos
+vcs pull src
+```
+
+Build the ROS workspace using a Docker image.
+
+```sh
+./docker/build_rosws.sh
 ```
 
 ### Running docker
-```
+
+Launch the Docker image to enter the ROS execution environment.
+
+```sh
 ./docker/run.sh
 ```
 
-This script mounts `perception_ecu_container` directory onto `/workspace` in docker container.
-
-For example, the followings shows how to execute single camera object detection
-```bash
+For example, the followings shows how to execute single camera object detection after running docker.
+```sh
 ./docker/run.sh
+
+## in docker environment
 source /workspace/install/setup.bash  # Don't miss enabling workspace ROS packages
 ros2 launch perception_ecu_or_launch perception_ecu_or.launch.xml
 ```
-
-### TIER IV Automotive HDR Camera device driver
-- The contents of this repository are tested using [TIER IV Automotive HDR Camera C1](https://sensor.tier4.jp/automotive-hdr-camera). Device driver are provided at https://github.com/tier4/tier4_automotive_hdr_camera 
-- Please follow the installation guide [[English](https://github.com/tier4/tier4_automotive_hdr_camera/releases/download/v1.1.0/TIER.IV.Automotive.HDR.Camera.C1.Quick.Start.Guide.Nvidia.Jetson.AGX.Orin.DevKit._EN_v0_1_1.pdf)] [[Japanese](https://github.com/tier4/tier4_automotive_hdr_camera/releases/download/v1.1.0/TIER.IV.Automotive.HDR.Camera.C1.Quick.Start.Guide.Nvidia.Jetson.AGX.Orin.DevKit._JPN_v0_1_1.pdf)] to install the device driver manually.
-    - **Note: The latest device driver will be installed automatically during executing setup script in the following section. **
-    - [For RQX-58G users] The camera type (i.e., C1/C2) that can connect is fixed for each GMSL2 port. The following table shows the default setting:
-
-      | GMSL2 port No.          | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  |
-      |-------------------------|----|----|----|----|----|----|----|----|
-      | connectable camera type | C1 | C1 | C2 | C2 | C1 | C1 | C2 | C2 |
 
 ## Repository overview
 - [tier4/perception_ecu_container](https://github.com/tier4/perception_ecu_container)
