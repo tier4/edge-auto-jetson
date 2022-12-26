@@ -2,7 +2,7 @@
 
 SCRIPT_DIR=$(readlink -f "$(dirname "$0")")
 
-echo "\e[36mUpdating python and installing ansible modules\e[m"
+echo "Updating python and installing ansible modules"
 
 # Install sudo
 if ! (command -v sudo >/dev/null 2>&1); then
@@ -16,17 +16,18 @@ if ! (command -v git >/dev/null 2>&1); then
     sudo apt-get -y install git
 fi
 
-# Install pipx for ansible
-if ! (python3 -m pipx --version >/dev/null 2>&1); then
+# Install pip for ansible
+if ! (command -v pip3 >/dev/null 2>&1); then
     sudo apt-get -y update
-    sudo apt-get -y install python3-pip python3-venv
-    python3 -m pip install --user pipx
+    sudo apt-get -y install python3-pip
 fi
 
 # Install ansible
-python3 -m pipx ensurepath
-export PATH="${PIPX_BIN_DIR:=$HOME/.local/bin}:$PATH"
-pipx install --include-deps --force "ansible==6.*"
+ansible_version=$(pip3 list | grep -oP "^ansible\s+\K([0-9]+)" || true)
+if [ "$ansible_version" != "6" ]; then
+    sudo apt-get -y purge ansible
+    pip3 install -U "ansible==6.*"
+fi
 
 # For Python packages installed with user privileges
 export PATH="$HOME/.local/bin:$PATH"
