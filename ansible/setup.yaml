@@ -1,8 +1,8 @@
 - hosts: localhost
   roles:
-    - role: tier4_hdr_camera_driver
-    - role: cuda
     - role: autoware
+    - role: cuda
     - role: cyclonedds
     - role: docker
+    - role: tier4_hdr_camera_driver
     - role: vcstool
