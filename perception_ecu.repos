@@ -19,7 +19,7 @@ repositories:
   image_pipeline:
     type: git
     url: https://github.com/tier4/image_pipeline.git
-    version: tier4/support-sensor-data-qos
+    version: tier4/main
   image_transport_plugins:
     type: git
     url: https://github.com/ros-perception/image_transport_plugins.git
@@ -27,6 +27,10 @@ repositories:
   autoware.universe:
     type: git
     url: https://github.com/autowarefoundation/autoware.universe.git
+    version: galactic
+  calibration_tools:
+    type: git
+    url: https://github.com/tier4/CalibrationTools.git
     version: galactic
   # package dependencies
   autoware_common_msgs:
