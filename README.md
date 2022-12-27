@@ -1,6 +1,6 @@
 # Perception ECU Container
 
-This repository provides a sample environment working with Jetson + GMSL2 cam + ROS2.
+This repository provides a sample ROS2 environment working on a Jetson AGX Xavier based ECU and GMSL2-compatible cameras.
 The following images show object recognition results using the contents of this repository.
 
 ![object recognition example](docs/sample.png "perception_ecu_container object recognition example")
@@ -14,7 +14,7 @@ This repository is a docker-based ROS development environment. An overview of th
 ### Prerequisites
 
 - Camera: v4l2 compatible cameras, including [TIER IV Automotive HDR Camera C1](https://sensor.tier4.jp/automotive-hdr-camera)
-- ECU: Jetson AGX Xavier from NVIDIA Corp.
+- ECU: Jetson AGX Xavier based ECU, including [RQX-58G](https://www.adlinktech.com/Products/ROS2_Solution/ROS2_Controller/RQX-580_58G) from ADLINK Technology Inc. and [Developer Kit](https://www.nvidia.com/ja-jp/autonomous-machines/embedded-systems/jetson-agx-xavier) from NVIDIA Corp.
 - Board support packages: NVIDIA L4T R32.6.1 (including Ubuntu 18.04) or higher
 
 **NOTE: BSP installation for ADLINK RQX-58G**
@@ -28,7 +28,7 @@ An example connection between ECUs:
 
 ### Installing dependencies
 
-Clone `tier4/perception_ecu_container` and move to the directory.
+As a first step, clone `tier4/perception_ecu_container` and move to the directory.
 
 ```sh
 git clone https://github.com/tier4/perception_ecu_container.git
@@ -88,6 +88,8 @@ Launch your docker image to enter your ROS execution environment.
 ```
 
 For example, the following shows how to execute single-camera object detection after running docker.
+
+(NOTE: The following command will display the object recognition results in a new window, but building TensorRT engine takes about 15 minutes at first time. from the second launch, it is skipped and the results are displayed immediately.)
 
 ```sh
 ./docker/run.sh
