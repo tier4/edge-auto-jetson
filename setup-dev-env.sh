@@ -16,17 +16,25 @@ if ! (command -v git >/dev/null 2>&1); then
     sudo apt-get -y install git
 fi
 
+# Install python3.8 for ansible
+if ! (command -v python3.8 >/dev/null 2>&1); then
+    sudo apt-get -y update
+    sudo apt-get -y install python3.8
+fi
+
 # Install pip for ansible
 if ! (command -v pip3 >/dev/null 2>&1); then
     sudo apt-get -y update
     sudo apt-get -y install python3-pip
+    python3.8 -m pip install --upgrade pip
 fi
 
 # Install ansible
-ansible_version=$(pip3 list | grep -oP "^ansible\s+\K([0-9]+)" || true)
+ansible_version=$(python3.8 -m pip list | grep -oP "^ansible\s+\K([0-9]+)" || true)
 if [ "$ansible_version" != "6" ]; then
     sudo apt-get -y purge ansible
-    pip3 install -U "ansible==6.*"
+    python3.8 -m pip install setuptools wheel
+    python3.8 -m pip install --upgrade "ansible==6.*"
 fi
 
 # For Python packages installed with user privileges
