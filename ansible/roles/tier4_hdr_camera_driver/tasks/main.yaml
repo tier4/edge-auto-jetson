@@ -29,13 +29,6 @@
     dest: "{{ camera_driver_download_dir }}/{{ sdk_deb_name }}"
     mode: "0644"
 
-- name: Check driver is installed
-  ansible.builtin.package:
-    name: "tier4-camera-gmsl"
-    state: present
-  check_mode: true
-  register: is_driver_installed
-
 - name: Install apt packages
   become: true
   ansible.builtin.apt:
@@ -62,5 +55,4 @@
       ansible.builtin.apt:
         deb: "{{ camera_driver_download_dir }}/{{ sdk_deb_name }}"
         state: present
-  when: is_driver_installed is not succeeded
   become: true
