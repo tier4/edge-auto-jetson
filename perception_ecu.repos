@@ -16,14 +16,6 @@ repositories:
     type: git
     url: https://github.com/tier4/ros2_v4l2_camera.git
     version: galactic
-  image_pipeline:
-    type: git
-    url: https://github.com/tier4/image_pipeline.git
-    version: tier4/main
-  image_transport_plugins:
-    type: git
-    url: https://github.com/ros-perception/image_transport_plugins.git
-    version: foxy-devel
   autoware.universe:
     type: git
     url: https://github.com/autowarefoundation/autoware.universe.git
@@ -49,6 +41,14 @@ repositories:
     type: git
     url: https://github.com/tier4/autoware_auto_msgs.git
     version: tier4/main
+  image_pipeline:
+    type: git
+    url: https://github.com/tier4/image_pipeline.git
+    version: tier4/main
+  image_transport_plugins:
+    type: git
+    url: https://github.com/ros-perception/image_transport_plugins.git
+    version: foxy-devel
   # build dependencies
   cudnn_cmake_module:
     type: git

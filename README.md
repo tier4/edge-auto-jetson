@@ -54,7 +54,7 @@ sudo reboot
 Build your docker image and build the ROS execution environment.
 
 ```sh
-./docker/build_image.sh
+./docker/build.sh
 ```
 
 ### Building ROS workspace
@@ -69,14 +69,14 @@ vcs import src < perception_ecu.repos
 If you want to update cloned repositories, use the following command.
 
 ```
-vcs import src < autoware.repos
+vcs import src < perception_ecu.repos
 vcs pull src
 ```
 
 Build your ROS workspace using your built docker image.
 
 ```sh
-./docker/build_rosws.sh
+./docker/run_colcon_build.sh
 ```
 
 ### Running docker
