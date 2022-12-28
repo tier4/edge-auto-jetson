@@ -1,7 +1,8 @@
 # Perception ECU Container
 
 This repository provides a sample ROS2 environment working on a Jetson AGX Xavier based ECU and GMSL2-compatible cameras.
-As a sample application, the following images show object recognition results using the contents of this repository. We plan to add other OSS applications here.
+
+As a sample application, the following images show object recognition results using the contents of this repository. Various perception applications will be added in the future and you can develop them in this provided environment.
 
 ![object recognition example](docs/sample.png "perception_ecu_container object recognition example")
 
@@ -19,10 +20,11 @@ This repository is a docker-based ROS2 environment. The system overview is shown
 
 **NOTE: BSP installation for ADLINK RQX-58G**
 
-This repository assumes that RQX-58Gs has been properly configured by following the official quick start guide from ADLINK Technology, Inc. Please see the [official document](https://www.adlinktech.com/Products/Download.ashx?type=MDownload&isQuickStart=yes&file=1783%5croscube-x-bsp-qsg-l4t-32.5.0-kernel-1.0.8.pdf) in detail. To download the BSP image, please visit the ADLINK official page [here](https://www.adlinktech.com/Products/DownloadSoftware.aspx?lang=en&pdNo=1783&MainCategory=ROS2-Solution.aspx&kind=BS). (If you are accessing the site for the first time, you will be prompted to create an account.)
+This repository assumes that RQX-58G has been properly configured by following the official quick start guide from ADLINK Technology, Inc. Please see the [official document](https://www.adlinktech.com/Products/Download.ashx?type=MDownload&isQuickStart=yes&file=1783%5croscube-x-bsp-qsg-l4t-32.5.0-kernel-1.0.8.pdf) in detail. To download the BSP image, please visit the ADLINK official page [here](https://www.adlinktech.com/Products/DownloadSoftware.aspx?lang=en&pdNo=1783&MainCategory=ROS2-Solution.aspx&kind=BS). (If you are accessing the site for the first time, you will be prompted to create an account.)
+
 TIER IV camera driver ([tier4/tier4_automotive_hdr_camera](https://github.com/tier4/tier4_automotive_hdr_camera)), is already installed in the RQX-58G BSP image and it can also be updated during your setup process.
 
-An example connection between ECUs:
+An example connection between sensors and ECUs:
 
 ![system connection example](docs/connection.drawio.svg "system connection example")
 
@@ -98,6 +100,9 @@ For example, the following shows how to execute single-camera object detection a
 source /workspace/install/setup.bash  # Don't miss enabling workspace ROS packages
 ros2 launch perception_ecu_or_launch perception_ecu_or.launch.xml
 ```
+
+This sample is based on [tensorrt_yolox](https://github.com/autowarefoundation/autoware.universe/tree/main/perception/tensorrt_yolox) implemented in [autoware.universe](https://github.com/autowarefoundation/autoware.universe.git).
+See this [README](https://github.com/autowarefoundation/autoware.universe/blob/main/perception/tensorrt_yolox/README.md) about the algorithm and the used trained model in more detail.
 
 ## Repository overview
 
