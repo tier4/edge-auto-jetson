@@ -43,7 +43,7 @@ You can install the dependencies using the provided ansible script. You will be 
 [Warning] Do you want to install/update the TIER IV camera driver? [y/N]:
 ```
 
-Finally, reboot once for dependencies and permission settings to take effect.
+Finally, please reboot the system to make the installed dependencies and permission settings effective.
 
 ```sh
 sudo reboot
