@@ -1,5 +1,5 @@
 - name: Get file info from GitHub repository
-  uri:
+  ansible.builtin.uri:
     url: "{{ camera_driver_repo }}"
   register: github_api_return_info
 
@@ -8,23 +8,23 @@
   ansible.builtin.set_fact:
     driver_deb_download_url: "{{ item.browser_download_url }}"
     driver_deb_name: "{{ item.name }}"
-  when: "item.name | regex_search('tier4-camera-gmsl_(.+)_arm64.deb')"
+  when: item.name | regex_search('tier4-camera-gmsl_(.+)_arm64.deb')
 
 - name: Parse download URL for SDK
   loop: "{{ github_api_return_info.json.assets }}"
   ansible.builtin.set_fact:
     sdk_deb_download_url: "{{ item.browser_download_url }}"
     sdk_deb_name: "{{ item.name }}"
-  when: "item.name | regex_search('t4cam_sdk-(.+)-rqx58g.deb')"
+  when: item.name | regex_search('t4cam_sdk-(.+)-rqx58g.deb')
 
 - name: Download driver deb file from public repo
-  ansible.builtin.url:
+  ansible.builtin.uri:
     url: "{{ driver_deb_download_url }}"
     dest: "{{ camera_driver_download_dir }}/{{ driver_deb_name }}"
     mode: 0644
 
 - name: Download SDK deb file from public repo
-  ansible.builtin.url:
+  ansible.builtin.uri:
     url: "{{ sdk_deb_download_url }}"
     dest: "{{ camera_driver_download_dir }}/{{ sdk_deb_name }}"
     mode: 0644
@@ -52,6 +52,8 @@
       ansible.builtin.shell:
         cmd: |
           /opt/nvidia/jetson-io/config-by-hardware.py -n 2="Tier4 ISX021 IMX490 GMSL2 Camera Device Tree Overlay"
+        # noqa no-changed-when
+        # TODO: check dtb file
     - name: Install SDK from deb file
       ansible.builtin.apt:
         deb: "{{ camera_driver_download_dir }}/{{ sdk_deb_name }}"

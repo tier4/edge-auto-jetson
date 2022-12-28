@@ -6,10 +6,10 @@
         return_content: true
       register: script_deb_sh
     - name: Execute setup script
-      ansible.builtin.shell:
-        cmd: bash
-        stdin: "{{ script_deb_sh.content }}"
+      ansible.builtin.cmd: bash "{{ script_deb_sh.content }}"
       become: true
+      # noqa no-changed-when
+      # TODO: check vcstool existing
 
 - name: Install apt packages
   ansible.builtin.apt:
