@@ -10,7 +10,7 @@
         cmd: bash
         stdin: "{{ script_deb_sh.content }}"
       become: true
-        
+
 - name: Install apt packages
   become: true
   ansible.builtin.apt:
