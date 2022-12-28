@@ -18,7 +18,7 @@ This repository is a docker-based ROS2 environment. The system overview is shown
 - ECU: Jetson AGX Xavier based ECU, including [RQX-58G](https://www.adlinktech.com/Products/ROS2_Solution/ROS2_Controller/RQX-580_58G) from ADLINK Technology Inc. and [Developer Kit](https://www.nvidia.com/ja-jp/autonomous-machines/embedded-systems/jetson-agx-xavier) from NVIDIA Corp.
 - Board support packages: NVIDIA L4T R32.6.1 (including Ubuntu 18.04) or higher
 
-**NOTE: BSP installation for ADLINK RQX-58G**
+#### NOTE: BSP installation for ADLINK RQX-58G
 
 This repository assumes that RQX-58G has been properly configured by following the official quick start guide from ADLINK Technology, Inc. Please see the [official document](https://www.adlinktech.com/Products/Download.ashx?type=MDownload&isQuickStart=yes&file=1783%5croscube-x-bsp-qsg-l4t-32.5.0-kernel-1.0.8.pdf) in detail. To download the BSP image, please visit the ADLINK official page [here](https://www.adlinktech.com/Products/DownloadSoftware.aspx?lang=en&pdNo=1783&MainCategory=ROS2-Solution.aspx&kind=BS). (If you are accessing the site for the first time, you will be prompted to create an account.)
 
@@ -63,14 +63,14 @@ Build your docker image and build the ROS execution environment.
 
 Create your ROS workspace and clone repositories using vcstool.
 
-```
+```sh
 mkdir src
 vcs import src < perception_ecu.repos
 ```
 
 If you want to update cloned repositories, use the following command.
 
-```
+```sh
 vcs import src < perception_ecu.repos
 vcs pull src
 ```
