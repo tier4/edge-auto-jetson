@@ -5,7 +5,7 @@ The following images show object recognition results using the contents of this 
 
 ![object recognition example](docs/sample.png "perception_ecu_container object recognition example")
 
-This repository is a docker-based ROS development environment. An overview of the system is shown below.
+This repository is a docker-based ROS2 environment. The system overview is shown below.
 
 ![system overview](docs/overview.drawio.svg "perception_ecu_container overview")
 
