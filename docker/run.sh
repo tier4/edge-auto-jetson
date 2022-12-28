@@ -4,6 +4,7 @@ ROOT_DIR="${SCRIPT_DIR}"/..
 
 COMMAND_IN_CONTAINER="${1:-/bin/bash}"
 
+# shellcheck disable=SC1091
 source /opt/autoware/env/autoware.env
 
 xhost +local:
