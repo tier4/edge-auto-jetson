@@ -23,7 +23,7 @@ RUN apt-get update \
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 100 \
     --slave /usr/bin/g++ g++ /usr/bin/g++-8
 
-# Install PySide2 to use GUI applicaltions
+# Install PySide2 to use GUI applications
 RUN wget https://github.com/hiroyuki-s1/PySide2InstallForJetson/raw/main/dist/PySide2-5.9.0a1-5.9.5-cp36-cp36m-linux_aarch64.whl
 RUN pip3 install --user PySide2-5.9.0a1-5.9.5-cp36-cp36m-linux_aarch64.whl
 
