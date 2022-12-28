@@ -1,7 +1,7 @@
 # Perception ECU Container
 
 This repository provides a sample ROS2 environment working on a Jetson AGX Xavier based ECU and GMSL2-compatible cameras.
-The following images show object recognition results using the contents of this repository.
+As a sample application, the following images show object recognition results using the contents of this repository. We plan to add other OSS applications here.
 
 ![object recognition example](docs/sample.png "perception_ecu_container object recognition example")
 
