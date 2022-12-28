@@ -35,7 +35,7 @@ git clone https://github.com/tier4/perception_ecu_container.git
 cd perception_ecu_container
 ```
 
-You can install the dependencies using the provided ansible script. You will be asked if you want to install the TIER IV camera driver, press `N` button if you want to skip this step because it is pre-installed or for some other reason.
+You can install the dependencies using the provided ansible script. During the installation process, you will be asked if you want to install the TIER IV camera driver. If you already have the driver installed and want to skip this step, please type `N` to continue.
 
 ```sh
 ./setup-dev-env.sh
