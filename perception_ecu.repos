@@ -1,0 +1,60 @@
+repositories:
+  # perception stack
+  launcher:
+    type: git
+    url: https://github.com/tier4/perception_ecu_launch.git
+    version: main
+  individual_params:
+    type: git
+    url: https://github.com/tier4/perception_ecu_individual_params.git
+    version: main
+  sensor_trigger:
+    type: git
+    url: https://github.com/tier4/sensor_trigger.git
+    version: galactic
+  ros2_v4l2_camera:
+    type: git
+    url: https://github.com/tier4/ros2_v4l2_camera.git
+    version: galactic
+  autoware.universe:
+    type: git
+    url: https://github.com/autowarefoundation/autoware.universe.git
+    version: galactic
+  calibration_tools:
+    type: git
+    url: https://github.com/tier4/CalibrationTools.git
+    version: galactic
+  # package dependencies
+  autoware_common_msgs:
+    type: git
+    url: https://github.com/autowarefoundation/autoware_msgs.git
+    version: main
+  autoware_common:
+    type: git
+    url: https://github.com/autowarefoundation/autoware_common.git
+    version: main
+  tier4_autoware_msgs:
+    type: git
+    url: https://github.com/tier4/tier4_autoware_msgs.git
+    version: tier4/universe
+  autoware_auto_msgs:
+    type: git
+    url: https://github.com/tier4/autoware_auto_msgs.git
+    version: tier4/main
+  image_pipeline:
+    type: git
+    url: https://github.com/tier4/image_pipeline.git
+    version: tier4/main
+  image_transport_plugins:
+    type: git
+    url: https://github.com/ros-perception/image_transport_plugins.git
+    version: foxy-devel
+  # build dependencies
+  cudnn_cmake_module:
+    type: git
+    url: https://github.com/tier4/cudnn_cmake_module.git
+    version: main
+  tensorrt_cmake_module:
+    type: git
+    url: https://github.com/tier4/tensorrt_cmake_module.git
+    version: main
