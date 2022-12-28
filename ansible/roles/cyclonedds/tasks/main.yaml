@@ -22,7 +22,7 @@
 - name: Enable multicast setup service
   ansible.builtin.systemd:
     name: multicast@{{ item }}.service
-    daemon_reload: yes
+    daemon_reload: true
     enabled: true
     masked: false
   become: true
@@ -33,7 +33,7 @@
     name: "{{ item.key }}"
     value: "{{ item.value }}"
     state: present
-    reload: yes
+    reload: true
     sysctl_file: /etc/sysctl.d/60-cyclonedds.conf
   with_dict:
     net.ipv4.ipfrag_time: "{{ cyclonedds.ipfrag_time }}"

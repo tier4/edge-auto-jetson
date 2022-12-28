@@ -3,7 +3,7 @@
     - name: Download setup script
       ansible.builtin.uri:
         url: https://packagecloud.io/install/repositories/dirk-thomas/vcstool/script.deb.sh
-        return_content: yes
+        return_content: true
       register: script_deb_sh
     - name: Execute setup script
       ansible.builtin.shell:
@@ -12,8 +12,8 @@
       become: true
 
 - name: Install apt packages
-  become: true
   ansible.builtin.apt:
     name:
       - python3-vcstool
     update_cache: true
+  become: true

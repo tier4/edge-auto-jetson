@@ -5,29 +5,29 @@
 
 - name: Parse download URL for driver
   loop: "{{ github_api_return_info.json.assets }}"
-  set_fact:
+  ansible.builtin.set_fact:
     driver_deb_download_url: "{{ item.browser_download_url }}"
     driver_deb_name: "{{ item.name }}"
   when: "item.name | regex_search('tier4-camera-gmsl_(.+)_arm64.deb')"
 
 - name: Parse download URL for SDK
   loop: "{{ github_api_return_info.json.assets }}"
-  set_fact:
+  ansible.builtin.set_fact:
     sdk_deb_download_url: "{{ item.browser_download_url }}"
     sdk_deb_name: "{{ item.name }}"
   when: "item.name | regex_search('t4cam_sdk-(.+)-rqx58g.deb')"
 
 - name: Download driver deb file from public repo
-  ansible.builtin.get_url:
+  ansible.builtin.url:
     url: "{{ driver_deb_download_url }}"
     dest: "{{ camera_driver_download_dir }}/{{ driver_deb_name }}"
-    mode: "0644"
+    mode: 0644
 
 - name: Download SDK deb file from public repo
-  ansible.builtin.get_url:
+  ansible.builtin.url:
     url: "{{ sdk_deb_download_url }}"
     dest: "{{ camera_driver_download_dir }}/{{ sdk_deb_name }}"
-    mode: "0644"
+    mode: 0644
 
 - name: Install apt packages
   become: true
@@ -42,17 +42,17 @@
     update_cache: true
 
 - name: Setup camera driver and SDK
+  become: true
   block:
-    - name: install driver from deb file
+    - name: Install driver from deb file
       ansible.builtin.apt:
         deb: "{{ camera_driver_download_dir }}/{{ driver_deb_name }}"
         state: present
-    - name: post process
-      shell:
+    - name: Post process
+      ansible.builtin.shell:
         cmd: |
           /opt/nvidia/jetson-io/config-by-hardware.py -n 2="Tier4 ISX021 IMX490 GMSL2 Camera Device Tree Overlay"
-    - name: install SDK from deb file
+    - name: Install SDK from deb file
       ansible.builtin.apt:
         deb: "{{ camera_driver_download_dir }}/{{ sdk_deb_name }}"
         state: present
-  become: true
