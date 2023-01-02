@@ -21,4 +21,4 @@ docker run -it --rm --net host --privileged \
     -v "${ROOT_DIR}":/workspace \
     -w /workspace \
     perception_ecu:latest \
-    "${COMMAND_IN_CONTAINER}"
+    /bin/bash -c "${COMMAND_IN_CONTAINER}"
