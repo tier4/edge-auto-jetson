@@ -90,9 +90,9 @@ Launch your docker image to enter your ROS execution environment.
 ```
 
 For example, the following shows how to execute single-camera object detection after running docker.
-Please refer to [tier4/perception_ecu_launch](https://github.com/tier4/perception_ecu_launch.git) for information on starting multiple cameras and switching camera modes.
+Please refer to [tier4/perception_ecu_launch](https://github.com/tier4/perception_ecu_launch.git) for information on starting multiple cameras and switching camera processing modes.
 
-(NOTE: The following command will display the object recognition results in a new window, but building TensorRT engine takes about 15 minutes at first time. from the second launch, it is skipped and the results are displayed immediately.)
+(NOTE: The following command will display the object recognition results in a new window, but building TensorRT engine takes about 15 minutes at first time. From the second launch, it is skipped and the results are displayed immediately.)
 
 ```sh
 ./docker/run.sh
