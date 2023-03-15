@@ -58,7 +58,7 @@ def build_perception_launcher(repo_root_dir, camera_template, lidar_template, pa
     print("Generating perception launcher...")
 
     # get device names
-    project_path = repo_root_dir + "src/individual_params/individual_params/config/" + params["project_name"]
+    project_path = repo_root_dir + "/src/individual_params/individual_params/config/" + params["project_name"]
     device_names = [dir for dir in os.listdir(project_path) if os.path.isdir(os.path.join(project_path, dir))]
 
     launch_root = etree.Element("launch")
@@ -98,26 +98,26 @@ def main():
     repo_root_dir = args.repo_root_dir
 
     # load parameters
-    launch_params_file = repo_root_dir+"/scripts/templates/"+project_name+"_launch_params.yaml"
+    launch_params_file = repo_root_dir+"/launch_file_generation/templates/"+project_name+"_launch_params.yaml"
     with open(launch_params_file, 'r') as file:
         launch_params = yaml.safe_load(file)
 
     # load top level launcher template
-    top_level_template = etree.parse(repo_root_dir + "edge_auto_jetson_template.launch.xml")
+    top_level_template = etree.parse(repo_root_dir + "/launch_file_generation/templates/edge_auto_jetson_template.launch.xml")
     
     # build top level launcher
     top_level_launcher = build_top_level_launcher(top_level_template, launch_params)
 
     # load template camera/lidar launch files
-    camera_template = etree.parse(repo_root_dir + "camera_template.launch.xml")
-    lidar_template = etree.parse(repo_root_dir + "lidar_template.launch.xml")
+    camera_template = etree.parse(repo_root_dir + "/launch_file_generation/templates/camera_template.launch.xml")
+    lidar_template = etree.parse(repo_root_dir + "/launch_file_generation/templates/lidar_template.launch.xml")
 
     # build perception launcher
     perception_launcher = build_perception_launcher(repo_root_dir, camera_template, lidar_template, launch_params)
 
     # write launchers to files
-    top_level_launcher.write(repo_root_dir + 'src/launcher/edge_auto_jetson_launch/launch/'+project_name+'_edge_auto_jetson.launch.xml', pretty_print=True)
-    perception_launcher.write(repo_root_dir + 'src/launcher/edge_auto_jetson_launch/launch/'+project_name+'_perception_jetson'+str(launch_params['jetson_id'])+'.launch.xml', pretty_print=True)
+    top_level_launcher.write(repo_root_dir + '/src/launcher/edge_auto_jetson_launch/launch/'+project_name+'_edge_auto_jetson.launch.xml', pretty_print=True)
+    perception_launcher.write(repo_root_dir + '/src/launcher/edge_auto_jetson_launch/launch/'+project_name+'_perception_jetson'+str(launch_params['jetson_id'])+'.launch.xml', pretty_print=True)
 
 
 if __name__ == "__main__":

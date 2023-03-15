@@ -159,7 +159,7 @@ def main():
         for file in extrinsic_calibration_files:
             shutil.copy(file, individual_params_config_dir + project_name + "/" + os.path.basename(file))
 
-    with open(repo_root_dir + "/scripts/templates/" + project_name + "_launch_params.yaml", 'w') as outfile:
+    with open(repo_root_dir + "/launch_file_generation/templates/" + project_name + "_launch_params.yaml", 'w') as outfile:
         yaml.dump(launch_params_yaml, outfile, default_flow_style=False)
 
 
