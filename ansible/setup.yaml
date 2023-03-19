@@ -1,3 +1,4 @@
+- name: Setup perception ECU
 - hosts: localhost
   vars_prompt:
     - name: prompt_install_camera_driver
