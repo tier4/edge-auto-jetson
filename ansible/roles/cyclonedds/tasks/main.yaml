@@ -29,7 +29,7 @@
   with_items: "{{ cyclonedds.network_interface_address }}"
 
 - name: Add kernel parameter config
-  sysctl:
+  ansible.posix.sysctl:
     name: "{{ item.key }}"
     value: "{{ item.value }}"
     state: present
