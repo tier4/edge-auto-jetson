@@ -10,6 +10,12 @@ if ! (command -v sudo >/dev/null 2>&1); then
     apt-get -y install sudo
 fi
 
+# Disable inactive apt repository
+DISABLE_TARGET="/etc/apt/sources.list.d/roscube.list"
+if [ -e ${DISABLE_TARGET} ]; then
+    sudo sed -i 's/.*neuron\.adlinktech\.com.*/# &/g' ${DISABLE_TARGET}
+fi
+
 # Install git
 if ! (command -v git >/dev/null 2>&1); then
     sudo apt-get -y update
