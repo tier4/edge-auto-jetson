@@ -28,6 +28,7 @@
     url: "{{ sdk_deb_download_url }}"
     dest: "{{ camera_driver_download_dir }}/{{ sdk_deb_name }}"
     mode: 0644
+  when: sdk_deb_download_url is defined
 
 - name: Install apt packages
   become: true
@@ -51,10 +52,11 @@
     - name: Post process
       ansible.builtin.shell:
         cmd: |
-          /opt/nvidia/jetson-io/config-by-hardware.py -n 2="Tier4 ISX021 IMX490 GMSL2 Camera Device Tree Overlay"
+          /opt/nvidia/jetson-io/config-by-hardware.py -n 2="TIERIV ISX021 IMX490 GMSL2 Camera Device Tree Overlay"
         # noqa no-changed-when
         # TODO: check dtb file
     - name: Install SDK from deb file
       ansible.builtin.apt:
         deb: "{{ camera_driver_download_dir }}/{{ sdk_deb_name }}"
         state: present
+      when: sdk_deb_download_url is defined
