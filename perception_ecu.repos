@@ -1,60 +1,57 @@
 repositories:
-  # perception stack
-  launcher:
-    type: git
-    url: https://github.com/tier4/perception_ecu_launch.git
-    version: main
-  individual_params:
-    type: git
-    url: https://github.com/tier4/perception_ecu_individual_params.git
-    version: main
-  sensor_trigger:
-    type: git
-    url: https://github.com/tier4/sensor_trigger.git
-    version: galactic
-  ros2_v4l2_camera:
-    type: git
-    url: https://github.com/tier4/ros2_v4l2_camera.git
-    version: galactic
   autoware.universe:
     type: git
     url: https://github.com/autowarefoundation/autoware.universe.git
-    version: galactic
-  calibration_tools:
-    type: git
-    url: https://github.com/tier4/CalibrationTools.git
-    version: galactic
-  # package dependencies
-  autoware_common_msgs:
-    type: git
-    url: https://github.com/autowarefoundation/autoware_msgs.git
-    version: main
-  autoware_common:
-    type: git
-    url: https://github.com/autowarefoundation/autoware_common.git
-    version: main
-  tier4_autoware_msgs:
-    type: git
-    url: https://github.com/tier4/tier4_autoware_msgs.git
-    version: tier4/universe
+    version: ec35bb43d1b8e732aa91d7d9dfc0eb5c7f16f645
   autoware_auto_msgs:
     type: git
     url: https://github.com/tier4/autoware_auto_msgs.git
-    version: tier4/main
-  image_pipeline:
+    version: e1795354161ed54d66659366262578863bd2b862
+  autoware_common:
     type: git
-    url: https://github.com/tier4/image_pipeline.git
-    version: tier4/main
-  image_transport_plugins:
+    url: https://github.com/autowarefoundation/autoware_common.git
+    version: e91c5f7506ce417eff1e1f86fc8464e0852486a5
+  autoware_common_msgs:
     type: git
-    url: https://github.com/ros-perception/image_transport_plugins.git
-    version: foxy-devel
-  # build dependencies
+    url: https://github.com/autowarefoundation/autoware_msgs.git
+    version: cdacab8c35bdeee112a0ba4922bf2c346ed285c2
+  calibration_tools:
+    type: git
+    url: https://github.com/tier4/CalibrationTools.git
+    version: a6f08f34c6ee802287145070fc3467137ca32e1e
   cudnn_cmake_module:
     type: git
     url: https://github.com/tier4/cudnn_cmake_module.git
-    version: main
+    version: d5d12fae6c8b7c06631e8b7aaea0da446eb34ec7
+  image_pipeline:
+    type: git
+    url: https://github.com/tier4/image_pipeline.git
+    version: 8413f087568ce9e43b46e410490cb2a60ce14add
+  image_transport_plugins:
+    type: git
+    url: https://github.com/ros-perception/image_transport_plugins.git
+    version: 6d4faa5cb8bbc777c486b352f1c393a89d8d9296
+  individual_params:
+    type: git
+    url: https://github.com/tier4/perception_ecu_individual_params.git
+    version: 911eab4ea3af8a1423df861ef753688f0a13c5fc
+  launcher:
+    type: git
+    url: https://github.com/tier4/perception_ecu_launch.git
+    version: 317c08b181319707995fb879580ee81f2526eca4
+  ros2_v4l2_camera:
+    type: git
+    url: https://github.com/tier4/ros2_v4l2_camera.git
+    version: 9a243f16e91a6463e6214d041ebb65517cabb8f4
+  sensor_trigger:
+    type: git
+    url: https://github.com/tier4/sensor_trigger.git
+    version: 5fbaae979ee18697263d0c310b50d8526776e941
   tensorrt_cmake_module:
     type: git
     url: https://github.com/tier4/tensorrt_cmake_module.git
-    version: main
+    version: 0aff720f7b81384e785ac74489fa1eb7c73723d3
+  tier4_autoware_msgs:
+    type: git
+    url: https://github.com/tier4/tier4_autoware_msgs.git
+    version: f952fbc34a146b6db711652fed995bf0fa062586
