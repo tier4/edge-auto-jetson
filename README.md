@@ -1,4 +1,4 @@
-# Perception ECU Container
+# Edge.auto_jetson
 
 This repository provides a sample ROS2 environment working on a Jetson AGX Xavier based ECU and GMSL2-compatible cameras.
 
@@ -6,7 +6,7 @@ As a sample application, the following images show object recognition results us
 
 ![object recognition example](docs/sample.png "perception_ecu_container object recognition example")
 
-This repository is a docker-based ROS2 environment. The system overview is shown below.
+This repository is based on a natively built ROS2 environment. The system overview is shown below.
 
 ![system overview](docs/overview.drawio.svg "perception_ecu_container overview")
 
@@ -51,14 +51,6 @@ Finally, please reboot the system to make the installed dependencies and permiss
 sudo reboot
 ```
 
-### Building docker
-
-Build your docker image and build the ROS execution environment.
-
-```sh
-./docker/build.sh
-```
-
 ### Building ROS workspace
 
 Create your ROS workspace and clone repositories using vcstool.
@@ -75,29 +67,22 @@ vcs import src < perception_ecu.repos
 vcs pull src
 ```
 
-Build your ROS workspace using your built docker image.
+Build your ROS workspace.
 
 ```sh
-./docker/run_colcon_build.sh
+colcon build --symlink-install \
+  --cmake-args -DCMAKE_BUILD_TYPE=Release -DPython3_EXECUTABLE=$(which python3.6) \
+  --packages-up-to perception_ecu_launch
 ```
 
-### Running docker
+### Running sample
 
-Launch your docker image to enter your ROS execution environment.
-
-```sh
-./docker/run.sh
-```
-
-For example, the following shows how to execute single-camera object detection after running docker.
+For example, the following shows how to execute single-camera object detection.
 
 (NOTE: The following command will display the object recognition results in a new window, but building TensorRT engine takes about 15 minutes at first time. from the second launch, it is skipped and the results are displayed immediately.)
 
 ```sh
-./docker/run.sh
-
-## in docker environment
-source /workspace/install/setup.bash  # Don't miss enabling workspace ROS packages
+source ./install/setup.bash  # Don't miss enabling workspace ROS packages
 ros2 launch perception_ecu_or_launch perception_ecu_or.launch.xml
 ```
 
@@ -107,7 +92,7 @@ See this [README](https://github.com/autowarefoundation/autoware.universe/blob/m
 ## Repository overview
 
 - [tier4/perception_ecu_container](https://github.com/tier4/perception_ecu_container)
-  - Meta-repository containing `.repos` file to construct Perception ECU ROS workspace based on docker.
+  - Meta-repository containing `.repos` file to construct ROS-based workspace on Jetson.
 - [tier4/perception_ecu_launch](https://github.com/tier4/perception_ecu_launch.git)
   - Launch configuration repository containing node configurations and their parameters for Perception ECU.
 - [tier4/perception_ecu_individual_params](https://github.com/tier4/perception_ecu_individual_params)
@@ -118,3 +103,5 @@ See this [README](https://github.com/autowarefoundation/autoware.universe/blob/m
   - ROS2 camera driver using Video4Linux2.
 - [autowarefoundation/autoware.universe](https://github.com/autowarefoundation/autoware.universe.git)
   - Repository for experimental, cutting-edge ROS packages for Autonomous Driving.
+- [tier4/edge-auto](https://github.com/tier4/edge-auto.git)
+  - Meta-repository containing `.repos` to construct ROS-based workspace on x86 (i.e., Host) PC.
