@@ -129,7 +129,6 @@
   vars:
     block_name: PCL
 
-
 - name: Build and install fmt
   block:
     - name: "{{ block_name }}: Download and extract source"
@@ -189,14 +188,12 @@
         dest: "{{ source_build_dir }}/jetson-containers"
         version: L4T-R35.1.0
     - name: "{{ block_name }}: install dependencies"
-      shell:
-        ./opencv_install_deps.sh
+      shell: ./opencv_install_deps.sh
       args:
         chdir: "{{ source_build_dir }}/jetson-containers/scripts"
       become: true
     - name: "{{ block_name }}: execute install script"
-      shell:
-        ./opencv_install.sh https://nvidia.box.com/shared/static/5v89u6g5rb62fpz4lh0rz531ajo2t5ef.gz OpenCV-4.5.0-aarch64.tar.gz
+      shell: ./opencv_install.sh https://nvidia.box.com/shared/static/5v89u6g5rb62fpz4lh0rz531ajo2t5ef.gz OpenCV-4.5.0-aarch64.tar.gz
       args:
         chdir: "{{ source_build_dir }}/jetson-containers/scripts"
       become: true
@@ -283,7 +280,6 @@
   become: true
   vars:
     block_name: update GCC
-
 
 - name: Build ROS
   block:
