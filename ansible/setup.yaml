@@ -1,5 +1,7 @@
 - name: Setup perception ECU
   hosts: localhost
+  vars:
+    - ros_distro: humble
   vars_prompt:
     - name: prompt_install_camera_driver
       prompt: |-
@@ -13,3 +15,4 @@
     - role: vcstool
     - role: tier4_hdr_camera_driver
       when: prompt_install_camera_driver == 'y'
+    - role: ros2
