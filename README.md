@@ -1,4 +1,4 @@
-# Edge.auto_jetson
+# edge_auto_jetson
 
 This repository provides a sample ROS2 environment working on a Jetson AGX Xavier based ECU and GMSL2-compatible cameras.
 
@@ -57,13 +57,13 @@ Create your ROS workspace and clone repositories using vcstool.
 
 ```sh
 mkdir src
-vcs import src < perception_ecu.repos
+vcs import src < autoware.repos
 ```
 
 If you want to update cloned repositories, use the following command.
 
 ```sh
-vcs import src < perception_ecu.repos
+vcs import src < autoware.repos
 vcs pull src
 ```
 
@@ -72,18 +72,18 @@ Build your ROS workspace.
 ```sh
 colcon build --symlink-install \
   --cmake-args -DCMAKE_BUILD_TYPE=Release -DPython3_EXECUTABLE=$(which python3.6) \
-  --packages-up-to perception_ecu_launch
+  --packages-up-to edge_auto_jetson_launch
 ```
 
 ### Running sample
 
 For example, the following shows how to execute single-camera object detection.
 
-(NOTE: The following command will display the object recognition results in a new window, but building TensorRT engine takes about 15 minutes at first time. from the second launch, it is skipped and the results are displayed immediately.)
+(NOTE: The following command will display the object recognition results in a new window, but building TensorRT engine takes about 15 minutes at first time. From the second launch, it is skipped and the results are displayed immediately.)
 
 ```sh
 source ./install/setup.bash  # Don't miss enabling workspace ROS packages
-ros2 launch perception_ecu_or_launch perception_ecu_or.launch.xml
+ros2 launch edge_auto_jetson_launch edge_auto_jetson.launch.xml
 ```
 
 This sample is based on [tensorrt_yolox](https://github.com/autowarefoundation/autoware.universe/tree/main/perception/tensorrt_yolox) implemented in [autoware.universe](https://github.com/autowarefoundation/autoware.universe.git).
