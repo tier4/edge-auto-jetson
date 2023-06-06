@@ -7,8 +7,8 @@
 - name: Install dependencies
   pip:
     name:
-    - dt-apriltags
-    - ruamel.yaml
+      - dt-apriltags
+      - ruamel.yaml
     executable: pip3.6
     state: latest
 
