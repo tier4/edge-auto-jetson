@@ -19,7 +19,7 @@ repositories:
   autoware.universe:
     type: git
     url: https://github.com/autowarefoundation/autoware.universe.git
-    version: galactic
+    version: main
   calibration_tools:
     type: git
     url: https://github.com/tier4/CalibrationTools.git
