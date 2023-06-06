@@ -1,0 +1,25 @@
+- name: Upgrade pip
+  pip:
+    name: pip
+    executable: pip3.6
+    state: latest
+
+- name: Install dependencies
+  pip:
+    name:
+    - dt-apriltags
+    - ruamel.yaml
+    executable: pip3.6
+    state: latest
+
+- name: Download PySide2 wheel
+  ansible.builtin.uri:
+    url: "{{ pyside2_url_base }}/{{ pyside2_wheel }}"
+    dest: "{{ pyside2_download_dir }}/{{ pyside2_wheel }}"
+    mode: 0644
+
+- name: Install PySide2
+  pip:
+    name: "{{ pyside2_download_dir }}/{{ pyside2_wheel }}"
+    executable: pip3.6
+    state: latest

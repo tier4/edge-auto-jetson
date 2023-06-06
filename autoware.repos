@@ -23,7 +23,7 @@ repositories:
   calibration_tools:
     type: git
     url: https://github.com/tier4/CalibrationTools.git
-    version: galactic
+    version: tier4/universe
   # package dependencies
   autoware_common_msgs:
     type: git
