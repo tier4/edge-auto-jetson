@@ -2,11 +2,11 @@ repositories:
   # perception stack
   launcher:
     type: git
-    url: https://github.com/tier4/perception_ecu_launch.git
+    url: https://github.com/tier4/edge_auto_launch.git
     version: main
   individual_params:
     type: git
-    url: https://github.com/tier4/perception_ecu_individual_params.git
+    url: https://github.com/tier4/edge_auto_individual_params.git
     version: main
   sensor_trigger:
     type: git
