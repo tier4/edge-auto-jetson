@@ -2,7 +2,7 @@ repositories:
   # perception stack
   launcher:
     type: git
-    url: https://github.com/tier4/edge_auto_launch.git
+    url: https://github.com/tier4/edge_auto_jetson_launch.git
     version: main
   individual_params:
     type: git
