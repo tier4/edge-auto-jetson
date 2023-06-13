@@ -52,7 +52,7 @@
     - name: Post process
       ansible.builtin.shell:
         cmd: |
-          /opt/nvidia/jetson-io/config-by-hardware.py -n 2="TIERIV ISX021 IMX490 GMSL2 Camera Device Tree Overlay"
+          /opt/nvidia/jetson-io/config-by-hardware.py -n 2="TIERIV ISX021 GMSL2 Camera Device Tree Overlay"
         # noqa no-changed-when
         # TODO: check dtb file
     - name: Install SDK from deb file
