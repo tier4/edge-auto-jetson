@@ -2,6 +2,10 @@
   hosts: localhost
   vars:
     - ros_distro: humble
+    - network_config:
+        ros:
+          interface_address: 192.168.2.2
+          interface_name: eth1
     - ptp4l_client_interface: eth1
   vars_prompt:
     - name: prompt_install_camera_driver
@@ -18,3 +22,4 @@
       when: prompt_install_camera_driver == 'y'
     - role: ros2
     - role: ptp4l_client
+    - role: netplan
