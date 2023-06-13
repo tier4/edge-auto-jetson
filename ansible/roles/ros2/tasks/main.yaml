@@ -407,3 +407,11 @@
   become: true
   vars:
     block_name: Downgrade gcc to 8
+
+- name: Add sourcing command in user's bashrc
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    state: present
+    marker: "# {mark} ros2"
+    block: |
+      source {{ ros_base_dir }}/install/setup.bash
