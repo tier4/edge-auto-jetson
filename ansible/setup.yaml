@@ -2,6 +2,7 @@
   hosts: localhost
   vars:
     - ros_distro: humble
+    - ptp4l_client_interface: eth1
   vars_prompt:
     - name: prompt_install_camera_driver
       prompt: |-
@@ -16,3 +17,4 @@
     - role: tier4_hdr_camera_driver
       when: prompt_install_camera_driver == 'y'
     - role: ros2
+    - role: ptp4l_client
