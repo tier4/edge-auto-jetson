@@ -1,0 +1,3 @@
+{% for key in network_config %}
+SUBSYSTEM=="net",ACTION=="add|change",KERNEL=="{{ network_config[key].interface_name }}",ATTR{tx_queue_len}="{{ txqueue_length }}"
+{% endfor %}

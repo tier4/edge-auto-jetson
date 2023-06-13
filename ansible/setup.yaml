@@ -22,4 +22,5 @@
       when: prompt_install_camera_driver == 'y'
     - role: ros2
     - role: ptp4l_client
+    - role: enlarge_txqueue
     - role: netplan
