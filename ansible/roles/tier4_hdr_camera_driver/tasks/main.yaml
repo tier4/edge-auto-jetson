@@ -60,3 +60,66 @@
         deb: "{{ camera_driver_download_dir }}/{{ sdk_deb_name }}"
         state: present
       when: sdk_deb_download_url is defined
+
+- name: Setup C1 configuration
+  block:
+    - name: "{{ block_name }} : Change trigger mode to Fsync mode"
+      include_tasks: mod_or_add.yaml
+      vars:
+        target_item: trigger_mode
+        target_val: "1"
+    # Set the same value to min/mid/max exposure time
+    # so that exposure time can be estimated under any brightness condition
+    - name: "{{ block_name }} : Fix exposure time"
+      block:
+        - name: "{{ block_name }} : Set min exposure"
+          include_tasks: mod_or_add.yaml
+          vars:
+            target_item: shutter_time_min
+            target_val: "{{ exposure_time }}"
+        - name: "{{ block_name }} : Set mid exposure"
+          include_tasks: mod_or_add.yaml
+          vars:
+            target_item: shutter_time_mid
+            target_val: "{{ exposure_time }}"
+        - name: "{{ block_name }} : Set max exposure"
+          include_tasks: mod_or_add.yaml
+          vars:
+            target_item: shutter_time_max
+            target_val: "{{ exposure_time }}"
+  vars:
+    target_file: /etc/modprobe.d/tier4-isx021.conf
+    config_prefix: options tier4_isx021
+    block_name: ISX021 configuration
+
+- name: Setup C2 configuration
+  block:
+    - name: "{{ block_name }} : Change trigger mode to Fsync mode"
+      include_tasks: mod_or_add.yaml
+      vars:
+        target_item: trigger_mode
+        target_val: "1"
+
+    # Set the same value to min/mid/max exposure time
+    # so that exposure time can be estimated under any brightness condition
+    - name: "{{ block_name }} : Fix exposure time"
+      block:
+        - name: "{{ block_name }} : Set min exposure"
+          include_tasks: mod_or_add.yaml
+          vars:
+            target_item: shutter_time_min
+            target_val: "{{ exposure_time }}"
+        - name: "{{ block_name }} : Set mid exposure"
+          include_tasks: mod_or_add.yaml
+          vars:
+            target_item: shutter_time_mid
+            target_val: "{{ exposure_time }}"
+        - name: "{{ block_name }} : Set max exposure"
+          include_tasks: mod_or_add.yaml
+          vars:
+            target_item: shutter_time_max
+            target_val: "{{ exposure_time }}"
+  vars:
+    target_file: /etc/modprobe.d/tier4-imx490.conf
+    config_prefix: options tier4_imx490
+    block_name: IMX490 configuration
