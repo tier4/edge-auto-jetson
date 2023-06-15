@@ -9,7 +9,7 @@ the future and you can develop them in this provided environment.
 
 ![object recognition example](docs/sample.png "edge-auto-jetson object recognition example")
 
-![object recognition example](docs/sample.png "edge-auto-jetson object recognition exampledge_auto_jetson# Prerequisites
+# Prerequisites
 
 ### System Overview
 
