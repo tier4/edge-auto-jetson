@@ -1,0 +1,26 @@
+- name: Fix python interpreter version to 3
+  set_fact:
+    ansible_python_interpreter: /usr/bin/python3.6
+
+- name: Upgrade pip
+  pip:
+    name: pip
+    state: latest
+
+- name: Install dependencies
+  pip:
+    name:
+      - dt-apriltags
+      - ruamel.yaml
+    state: latest
+
+- name: Download PySide2 wheel
+  ansible.builtin.uri:
+    url: "{{ pyside2_url_base }}/{{ pyside2_wheel }}"
+    dest: "{{ pyside2_download_dir }}/{{ pyside2_wheel }}"
+    mode: 0644
+
+- name: Install PySide2
+  pip:
+    name: "{{ pyside2_download_dir }}/{{ pyside2_wheel }}"
+    state: latest
