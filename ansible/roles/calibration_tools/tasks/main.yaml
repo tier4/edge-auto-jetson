@@ -1,7 +1,10 @@
+- name: Fix python interpreter version to 3
+  set_fact:
+    ansible_python_interpreter: /usr/bin/python3.6
+
 - name: Upgrade pip
   pip:
     name: pip
-    executable: pip3.6
     state: latest
 
 - name: Install dependencies
@@ -9,7 +12,6 @@
     name:
       - dt-apriltags
       - ruamel.yaml
-    executable: pip3.6
     state: latest
 
 - name: Download PySide2 wheel
@@ -21,5 +23,4 @@
 - name: Install PySide2
   pip:
     name: "{{ pyside2_download_dir }}/{{ pyside2_wheel }}"
-    executable: pip3.6
     state: latest
