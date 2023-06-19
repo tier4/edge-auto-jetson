@@ -26,7 +26,8 @@
     enabled: true
     masked: false
   become: true
-  with_items: "{{ cyclonedds.network_interface_address }}"
+  when: item == "lo"
+  with_items: "{{ network_config }}"
 
 - name: Add kernel parameter config
   ansible.posix.sysctl:
