@@ -42,6 +42,8 @@ Please see [Tutorials](https://github.com/tier4/edge-auto/tree/main/docs/tutoria
   - Repository for managing system parameters including camera parameters, driver parameters, etc.
 - [tier4/nebula](https://github.com/tier4/nebula)
   - ROS2 package for unified ethernet-based LiDAR driver.
+- [tier4/tier4_automotive_hdr_camera](https://github.com/tier4/tier4_automotive_hdr_camera)
+  - Kernel driver for using TIER IV cameras with Video4Linux2 interface.
 - [tier4/ros2_v4l2_camera](https://github.com/tier4/ros2_v4l2_camera)
   - ROS2 package for camera driver using Video4Linux2.
 - [tier4/sensor_trigger](https://github.com/tier4/sensor_trigger)
