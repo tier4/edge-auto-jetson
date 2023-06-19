@@ -6,6 +6,8 @@
         ros:
           interface_address: 192.168.2.2
           interface_name: eth1
+        dhcp:
+          interface_name: eth0
     - ptp4l_client_interface: eth1
   vars_prompt:
     - name: prompt_install_camera_driver
