@@ -12,6 +12,10 @@
       prompt: |-
         [Warning] Do you want to install/update the TIER IV camera driver? [y/N]
       private: false
+    - name: prompt_configure_network
+      prompt: |-
+        [Warning] Do you want to configure the network? This configuration may overwrite the IP address of the specific network interface [y/N]
+      private: false
   roles:
     - role: autoware
     - role: cuda
@@ -23,5 +27,8 @@
       when: prompt_install_camera_driver == 'y'
     - role: ros2
     - role: ptp4l_client
+      when: prompt_configure_network
     - role: enlarge_txqueue
+      when: prompt_configure_network
     - role: netplan
+      when: prompt_configure_network
