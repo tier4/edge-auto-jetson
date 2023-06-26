@@ -5,7 +5,7 @@ This repository provides a sample ROS2 environment working on a Jetson-based ECU
 As a sample application, the following images show object recognition results using the contents of this repository. Various perception applications will be added in
 the future and you can develop them in this provided environment.
 
-[Edge.Auto](http://edge.auto) sensor fusion system can be realized by using this with [edge-auto](https://github.com/tier4/edge-auto) repository.
+[Edge.Auto](https://sensor.tier4.jp/) sensor fusion system can be realized by using this with [edge-auto](https://github.com/tier4/edge-auto) repository.
 
 ![object recognition example](docs/sample.png "edge-auto-jetson object recognition example")
 
