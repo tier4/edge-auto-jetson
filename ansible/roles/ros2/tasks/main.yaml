@@ -87,6 +87,11 @@
         path: "{{ source_build_dir }}"
         state: directory
 
+- name: Check Boost build directory existence
+  ansible.builtin.stat:
+    path: "{{ source_build_dir }}/boost_1_74_0"
+  register: boost_build_dir_exist
+
 - name: Build and install Boost
   block:
     - name: "{{ block_name }}: Download and extract source"
@@ -101,6 +106,13 @@
       become: true
   vars:
     block_name: Boost
+  when:
+    not boost_build_dir_exist.stat.exists
+
+- name: Check PCL build directory existence
+  ansible.builtin.stat:
+    path: "{{ source_build_dir }}/pcl"
+  register: pcl_build_dir_exist
 
 - name: Build and install PCL
   block:
@@ -128,6 +140,13 @@
       become: true
   vars:
     block_name: PCL
+  when:
+    not pcl_build_dir_exist.stat.exists
+
+- name: Check fmt build directory existence
+  ansible.builtin.stat:
+    path: "{{ source_build_dir }}/fmt-8.1.1"
+  register: fmt_build_dir_exist
 
 - name: Build and install fmt
   block:
@@ -153,6 +172,14 @@
       become: true
   vars:
     block_name: fmt
+  when:
+    not fmt_build_dir_exist.stat.exists
+
+
+- name: Check Range-v3 build directory existence
+  ansible.builtin.stat:
+    path: "{{ source_build_dir }}/range-v3"
+  register: range_v3_build_dir_exist
 
 - name: Build and install Range-v3
   block:
@@ -179,6 +206,13 @@
       become: true
   vars:
     block_name: Range-v3
+  when:
+    not range_v3_build_dir_exist.stat.exists
+
+- name: Check OpenCV build directory existence
+  ansible.builtin.stat:
+    path: "{{ source_build_dir }}/jetson-containers"
+  register: opencv_build_dir_exist
 
 - name: Build and install OpenCV
   block:
@@ -199,6 +233,13 @@
       become: true
   vars:
     block_name: OpenCV
+  when:
+    not opencv_build_dir_exist.stat.exists
+
+- name: Check YAML build directory existence
+  ansible.builtin.stat:
+    path: "{{ source_build_dir }}/yaml-cpp"
+  register: yaml_cpp_build_dir_exist
 
 - name: Build and install YAML
   block:
@@ -224,6 +265,8 @@
       become: true
   vars:
     block_name: YAML
+  when:
+    not yaml_cpp_build_dir_exist.stat.exists
 
 - name: Upgrade CMake
   block:
@@ -280,6 +323,11 @@
   become: true
   vars:
     block_name: update GCC
+
+- name: Check ROS build directory existence
+  ansible.builtin.stat:
+    path: /opt/ros/{{ ros_distro }}
+  register: ros_build_dir_exist
 
 - name: Build ROS
   block:
@@ -385,6 +433,8 @@
       become: true
   vars:
     block_name: Build ROS
+  when:
+    not ros_build_dir_exist.stat.exists
 
 - name: Downgrade GCC as version 11 is too high for old CUDA version that is used in L4T
   block:
@@ -415,3 +465,5 @@
     marker: "# {mark} ros2"
     block: |
       source {{ ros_base_dir }}/install/setup.bash
+  when:
+    not ros_build_dir_exist.stat.exists
