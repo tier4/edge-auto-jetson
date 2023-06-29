@@ -9,7 +9,7 @@ the future and you can develop them in this provided environment.
 
 ![object detection example](docs/sample.png "edge-auto-jetson object detection example")
 
-# Prerequisites
+## Prerequisites
 
 ### System Overview
 

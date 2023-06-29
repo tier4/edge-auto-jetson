@@ -54,7 +54,7 @@
 - name: add CUDA into PATH
   set_fact:
     environment:
-      PATH: "/usr/local/cuda/bin:{{ ansible_env.PATH }}"
+      PATH: /usr/local/cuda/bin:{{ ansible_env.PATH }}
 
 - name: Python parts
   ansible.builtin.pip:
@@ -98,7 +98,7 @@
       ansible.builtin.unarchive:
         src: https://boostorg.jfrog.io/artifactory/main/release/1.74.0/source/boost_1_74_0.tar.gz
         dest: "{{ source_build_dir }}"
-        remote_src: yes
+        remote_src: true
     - name: "{{ block_name }}: Build boost"
       shell: ./bootstrap.sh --prefix=/usr/local --with-python=python3 && ./b2 install -j7
       args:
@@ -119,7 +119,7 @@
       ansible.builtin.unarchive:
         src: https://github.com/PointCloudLibrary/pcl/releases/download/pcl-1.12.1/source.tar.gz
         dest: "{{ source_build_dir }}"
-        remote_src: yes
+        remote_src: true
     - set_fact:
         pcl_build_dir: "{{ source_build_dir }}/pcl/build"
     - name: "{{ block_name }}: Create build directory"
@@ -131,7 +131,7 @@
       args:
         chdir: "{{ pcl_build_dir }}"
       environment:
-        PATH: "/usr/local/cuda/bin:{{ ansible_env.PATH }}"
+        PATH: /usr/local/cuda/bin:{{ ansible_env.PATH }}
     - name: "{{ block_name }}: build"
       shell: make -j7 install
       args:
@@ -152,7 +152,7 @@
       ansible.builtin.unarchive:
         src: https://github.com/fmtlib/fmt/archive/refs/tags/8.1.1.tar.gz
         dest: "{{ source_build_dir }}"
-        remote_src: yes
+        remote_src: true
     - set_fact:
         fmt_build_dir: "{{ source_build_dir }}/fmt-8.1.1/build"
     - name: "{{ block_name }}: Create build directory"
@@ -268,7 +268,7 @@
     # Follow drirections here: https://apt.kitware.com/
     - name: "{{ block_name }}: update repository info"
       ansible.builtin.apt_repository:
-        repo: "deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ {{ ansible_distribution_release }} main"
+        repo: deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ {{ ansible_distribution_release }} main
         filename: kitware
     - name: "{{ block_name }}: apt update"
       ansible.builtin.apt:
@@ -325,7 +325,7 @@
 - name: Build ROS
   block:
     - set_fact:
-        ros_base_dir: "/opt/ros/{{ ros_distro }}"
+        ros_base_dir: /opt/ros/{{ ros_distro }}
     - set_fact:
         ros_src_dir: "{{ ros_base_dir }}/src"
     - name: "{{ block_name }}: Create base directory"
@@ -339,14 +339,14 @@
         state: directory
       become: true
     - name: "{{ block_name }}: generate repository list using rosinstall_generator"
-      shell: "rosinstall_generator --deps --rosdistro {{ ros_distro }} ros_base launch_xml launch_yaml launch_testing launch_testing_ament_cmake demo_nodes_cpp demo_nodes_py example_interfaces camera_calibration_parsers camera_info_manager cv_bridge vision_opencv vision_msgs image_geometry image_pipeline image_transport compressed_image_transport compressed_depth_image_transport pcl_msgs perception_pcl --exclude rmw_connextdds > /tmp/ros2.{{ ros_distro }}.ros_base.rosinstall"
+      shell: rosinstall_generator --deps --rosdistro {{ ros_distro }} ros_base launch_xml launch_yaml launch_testing launch_testing_ament_cmake demo_nodes_cpp demo_nodes_py example_interfaces camera_calibration_parsers camera_info_manager cv_bridge vision_opencv vision_msgs image_geometry image_pipeline image_transport compressed_image_transport compressed_depth_image_transport pcl_msgs perception_pcl --exclude rmw_connextdds > /tmp/ros2.{{ ros_distro }}.ros_base.rosinstall
     - name: "{{ block_name }}: copy repository list to target ddirectory"
       ansible.builtin.copy:
-        src: "/tmp/ros2.{{ ros_distro }}.ros_base.rosinstall"
+        src: /tmp/ros2.{{ ros_distro }}.ros_base.rosinstall
         dest: "{{ ros_base_dir }}/ros2.{{ ros_distro }}.ros_base.rosinstall"
       become: true
     - name: "{{ block_name }}: clone all repositories via vcs"
-      shell: "vcs import src < ros2.{{ ros_distro }}.ros_base.rosinstall"
+      shell: vcs import src < ros2.{{ ros_distro }}.ros_base.rosinstall
       args:
         chdir: "{{ ros_base_dir }}"
       become: true
