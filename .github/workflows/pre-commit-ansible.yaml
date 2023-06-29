@@ -14,3 +14,7 @@ jobs:
         uses: autowarefoundation/autoware-github-actions/pre-commit@v1
         with:
           pre-commit-config: .pre-commit-config-ansible.yaml
+
+      - name: Install Ansible Galaxy depends for ansible-lint
+        run: |
+          ansible-galaxy collection install -f -r .ansible-galaxy-requirements.yaml
