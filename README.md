@@ -1,6 +1,6 @@
 # edge-auto-jetson
 
-This repository provides a sample ROS2 environment working on a Jetson-based ECU and GMSL2-compatible cameras.
+This repository provides a sample ROS 2 environment working on a Jetson-based ECU and GMSL2-compatible cameras.
 
 As a sample application, the following images show object detection results using the contents of this repository. Various perception applications will be added in
 the future and you can develop them in this provided environment.
@@ -13,7 +13,7 @@ the future and you can develop them in this provided environment.
 
 ### System Overview
 
-This repository is based on a natively built ROS2 environment. The system overview is shown below.
+This repository is based on a natively built ROS 2 environment. The system overview is shown below.
 
 ![system overview](docs/overview.drawio.svg "edge-auto-jetson overview")
 
@@ -22,7 +22,7 @@ This repository is based on a natively built ROS2 environment. The system overvi
 - Camera: v4l2 compatible cameras, including [TIER IV Automotive HDR Camera C1](https://sensor.tier4.jp/automotive-hdr-camera)
 - ECU: Jetson AGX Xavier based ECU, including [RQX-58G](https://www.adlinktech.com/Products/ROS2_Solution/ROS2_Controller/RQX-580_58G) from ADLINK Technology Inc. and [Developer Kit](https://www.nvidia.com/ja-jp/autonomous-machines/embedded-systems/jetson-agx-xavier) from NVIDIA Corp.
 - NVIDIA L4T: R32.6.1 (including Ubuntu 18.04)
-- ROS: ROS2 Humble (native build)
+- ROS: ROS 2 Humble (native build)
 
 ## Getting Started
 
@@ -41,13 +41,13 @@ Please see [Tutorials](https://github.com/tier4/edge-auto/tree/main/docs/tutoria
 - [tier4/edge_auto_individual_params](https://github.com/tier4/edge_auto_individual_params)
   - Repository for managing system parameters including camera parameters, driver parameters, etc.
 - [tier4/nebula](https://github.com/tier4/nebula)
-  - ROS2 package for unified ethernet-based LiDAR driver.
+  - ROS 2 package for unified ethernet-based LiDAR driver.
 - [tier4/tier4_automotive_hdr_camera](https://github.com/tier4/tier4_automotive_hdr_camera)
   - Kernel driver for using TIER IV cameras with Video4Linux2 interface.
 - [tier4/ros2_v4l2_camera](https://github.com/tier4/ros2_v4l2_camera)
-  - ROS2 package for camera driver using Video4Linux2.
+  - ROS 2 package for camera driver using Video4Linux2.
 - [tier4/sensor_trigger](https://github.com/tier4/sensor_trigger)
-  - ROS2 package for generating sensor trigger signals.
+  - ROS 2 package for generating sensor trigger signals.
 - [tier4/calibration_tools](https://github.com/tier4/CalibrationTools)
   - Repository for calibration tools to estimate parameters on autonomous driving systems.
 - [autowarefoundation/autoware.universe](https://github.com/autowarefoundation/autoware.universe)
