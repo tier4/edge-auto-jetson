@@ -53,10 +53,7 @@
     },
     {
       "filename": "**/*.py",
-      "ignoreRegExpList": [
-        "author(_email)?=.*$",
-        "maintainer(_email)?=.*$"
-      ]
+      "ignoreRegExpList": ["author(_email)?=.*$", "maintainer(_email)?=.*$"]
     },
     {
       "filename": "**/*.rst",
@@ -69,68 +66,39 @@
     },
     {
       "filename": "**/*.toml",
-      "ignoreRegExpList": [
-        "authors = .*?$",
-        "maintainers = .*?$"
-      ]
+      "ignoreRegExpList": ["authors = .*?$", "maintainers = .*?$"]
     },
     {
       "filename": "**/*.txt",
-      "ignoreRegExpList": [
-        "download\\(.+\\)"
-      ]
+      "ignoreRegExpList": ["download\\(.+\\)"]
     },
     {
       "filename": "**/*.xosc",
-      "ignoreRegExpList": [
-        "author=\".*?\""
-      ]
+      "ignoreRegExpList": ["author=\".*?\""]
     },
     {
       "filename": "**/*.yaml",
-      "ignoreRegExpList": [
-        "author: .+$",
-        "git_email: .+$",
-        "git_user: .+$",
-        "uses: .+$"
-      ]
+      "ignoreRegExpList": ["author: .+$", "git_email: .+$", "git_user: .+$", "uses: .+$"]
     },
     {
       "filename": "**/package.json",
-      "ignoreRegExpList": [
-        "\"author\": .*"
-      ]
+      "ignoreRegExpList": ["\"author\": .*"]
     },
     {
       "filename": "**/package.xml",
-      "ignoreRegExpList": [
-        "<author.*?</author>",
-        "<maintainer.*?</maintainer>"
-      ]
+      "ignoreRegExpList": ["<author.*?</author>", "<maintainer.*?</maintainer>"]
     },
     {
       "filename": "**/sync-files.yaml",
-      "ignoreRegExpList": [
-        "dest: .*",
-        "repository: .*",
-        "source: .*"
-      ]
+      "ignoreRegExpList": ["dest: .*", "repository: .*", "source: .*"]
     },
     {
       "filename": "**/{*.cpp,*.hpp,*.py,*.sh,*.xml,*.yaml,CMakeLists.txt}",
-      "ignoreRegExpList": [
-        "Copyright (\\(c\\))?.+$",
-        "FIXME( )?\\(.+?\\)",
-        "TODO( )?\\(.+?\\)"
-      ]
+      "ignoreRegExpList": ["Copyright (\\(c\\))?.+$", "FIXME( )?\\(.+?\\)", "TODO( )?\\(.+?\\)"]
     },
     {
       "filename": "**/{*.cpp,*.hpp}",
-      "ignoreRegExpList": [
-        "@author .*$",
-        "\\author .*$",
-        "Author(s)?( )?: .*$"
-      ]
+      "ignoreRegExpList": ["@author .*$", "\\author .*$", "Author(s)?( )?: .*$"]
     },
     {
       "filename": "**/{*.drawio,*.svg}",
@@ -147,15 +115,10 @@
     },
     {
       "filename": "**/{*.js,*.ts}",
-      "ignoreRegExpList": [
-        "owner: .*$",
-        "repo:: .*$"
-      ]
+      "ignoreRegExpList": ["owner: .*$", "repo:: .*$"]
     }
   ],
-  "flagWords": [
-    "planing"
-  ],
+  "flagWords": ["planing"],
   "words": [
     "pyside",
     "apriltags",
