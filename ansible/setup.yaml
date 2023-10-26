@@ -34,3 +34,6 @@
       when: prompt_configure_network == 'y'
     - role: netplan
       when: prompt_configure_network == 'y'
+
+  environment:
+    DEBIAN_FRONTEND: noninteractive
