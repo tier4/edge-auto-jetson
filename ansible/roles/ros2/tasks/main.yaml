@@ -31,15 +31,15 @@
       set_fact:
         ros2_build_script: "{{ jetson_script_dir }}/ros2_build.sh"
     - name: Download OpenCV deps script
-      ansible.builtin.get-uri:
+      ansible.builtin.get_url:
         url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R35.3.1/scripts/opencv_install_deps.sh
         dest: "{{ opencv_install_deps_script }}"
     - name: Download OpenCV install script
-      ansible.builtin.get-uri:
+      ansible.builtin.get_url:
         url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R35.3.1/scripts/opencv_install.sh
         dest: "{{ opencv_install_script }}"
     - name: Download ROS2 Humble install script
-      ansible.builtin.get-uri:
+      ansible.builtin.get_url:
         url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R35.3.1/scripts/ros2_build.sh
         dest: "{{ ros2_build_script }}"
 
