@@ -109,7 +109,7 @@
 
 - name: Install OpenCV
   ansible.builtin.command:
-    cmd: "{{ opencv_install_script }} {{ opencv_url }} {{ opencv_deb }}"
+    cmd: "{{ opencv_install_script }} https://nvidia.box.com/shared/static/2hssa5g3v28ozvo3tc3qwxmn78yerca9.gz OpenCV-4.5.0-aarch64.tar.gz"
 
 - name: Build ROS2 Humble
   ansible.builtin.command:
