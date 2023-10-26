@@ -34,14 +34,26 @@
       ansible.builtin.get_url:
         url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R35.3.1/scripts/opencv_install_deps.sh
         dest: "{{ opencv_install_deps_script }}"
+    - name: Make OpenCV deps script executable
+      ansible.builtin.file:
+        dest: "{{ opencv_install_deps_script }}"
+        mode: u+x
     - name: Download OpenCV install script
       ansible.builtin.get_url:
         url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R35.3.1/scripts/opencv_install.sh
         dest: "{{ opencv_install_script }}"
+    - name: Make OpenCV install script executable
+      ansible.builtin.file:
+        dest: "{{ opencv_install_script }}"
+        mode: u+x
     - name: Download ROS2 Humble install script
       ansible.builtin.get_url:
         url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R35.3.1/scripts/ros2_build.sh
         dest: "{{ ros2_build_script }}"
+    - name: Make ROS2 Humble install script executable
+      ansible.builtin.file:
+        dest: "{{ ros2_build_script }}"
+        mode: u+x
 
 - name: Install dependencies
   block:
