@@ -57,12 +57,12 @@
 
 - name: Install dependencies
   block:
-    - name: Install jetpack
-      ansible.builtin.apt:
-        name:
-          - nvidia-jetpack
-        install_recommends: false
-        update_cache: true
+#    - name: Install jetpack
+#      ansible.builtin.apt:
+#        name:
+#          - nvidia-jetpack
+#        install_recommends: false
+#        update_cache: true
     - name: Install OpenCV deps
       ansible.builtin.command:
         cmd: "{{ opencv_install_deps_script }}"
