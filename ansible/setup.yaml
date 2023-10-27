@@ -5,10 +5,10 @@
     - network_config:
         ros:
           interface_address: 192.168.2.2
-          interface_name: mgbe0
+          interface_name: eqos0
         dhcp:
           interface_name: mgbe1
-    - ptp4l_client_interface: mgbe0
+    - ptp4l_client_interface: eqos0
   vars_prompt:
 #    - name: prompt_install_camera_driver
 #      prompt: |-
