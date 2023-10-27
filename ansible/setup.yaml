@@ -30,6 +30,8 @@
     - role: ros2
     - role: ptp4l_client
       when: prompt_configure_network == 'y'
+    - role: ptp4l_host
+      when: prompt_configure_network == 'y'
     - role: enlarge_txqueue
       when: prompt_configure_network == 'y'
     - role: netplan
