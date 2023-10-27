@@ -24,7 +24,7 @@
     - role: cyclonedds
 #    - role: docker
     - role: vcstool
-    - role: calibration_tools
+#    - role: calibration_tools
 #    - role: tier4_hdr_camera_driver
 #      when: prompt_install_camera_driver == 'y'
     - role: ros2
