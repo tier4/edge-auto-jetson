@@ -1,12 +1,76 @@
 repositories:
-  # perception stack
+  autoware.universe:
+    type: git
+    url: https://github.com/autowarefoundation/autoware.universe.git
+    version: main
+  autoware_common:
+    type: git
+    url: https://github.com/autowarefoundation/autoware_common.git
+    version: main
+  autoware_msgs:
+    type: git
+    url: https://github.com/autowarefoundation/autoware_msgs.git
+    version: main
+  autoware_adapi_msgs:
+    type: git
+    url: https://github.com/autowarefoundation/autoware_adapi_msgs.git
+    version: main
+  autoware_auto_msgs:
+    type: git
+    url: https://github.com/tier4/autoware_auto_msgs.git
+    version: tier4/main
+  tier4_autoware_msgs:
+    type: git
+    url: https://github.com/tier4/tier4_autoware_msgs.git
+    version: tier4/universe
   launcher:
     type: git
-    url: https://github.com/tier4/edge_auto_jetson_launch.git
+    url: https://github.com/tier4/edge_auto_launch.git
     version: main
   individual_params:
     type: git
     url: https://github.com/tier4/edge_auto_individual_params.git
+    version: main
+  calibration_tools:
+    type: git
+    url: https://github.com/tier4/CalibrationTools.git
+    version: tier4/universe
+  nebula:
+    type: git
+    url: https://github.com/tier4/nebula.git
+    version: main
+  transport_drivers:
+    type: git
+    url: https://github.com/MapIV/transport_drivers.git
+    version: boost
+  lidartag:
+    type: git
+    url: https://github.com/tier4/LiDARTag.git
+    version: humble
+  lidartag_msgs:
+    type: git
+    url: https://github.com/tier4/LiDARTag_msgs.git
+    version: tier4/universe
+  apriltag_msgs:
+    type: git
+    url: https://github.com/christianrauch/apriltag_msgs.git
+    version: 2.0.0
+  apriltag_ros:
+    type: git
+    url: https://github.com/christianrauch/apriltag_ros.git
+    version: e814e9e5d5f1bfb60a4aa685d30977c632bbc540
+  ros2_numpy:
+    type: git
+    url: https://github.com/Box-Robotics/ros2_numpy.git
+    version: humble
+  image_pipeline:
+    type: git
+    url: https://github.com/tier4/image_pipeline.git
+    version: 47964112293eb19f9f57254b2e6b68706954cc63
+  # edge-auto-jetson
+  camera_perception_launcher:
+    type: git
+    url: https://github.com/tier4/edge_auto_jetson_launch.git
     version: main
   sensor_trigger:
     type: git
@@ -16,40 +80,10 @@ repositories:
     type: git
     url: https://github.com/tier4/ros2_v4l2_camera.git
     version: galactic
-  autoware.universe:
-    type: git
-    url: https://github.com/autowarefoundation/autoware.universe.git
-    version: main
-  calibration_tools:
-    type: git
-    url: https://github.com/tier4/CalibrationTools.git
-    version: tier4/universe
-  # package dependencies
-  autoware_common_msgs:
-    type: git
-    url: https://github.com/autowarefoundation/autoware_msgs.git
-    version: main
-  autoware_common:
-    type: git
-    url: https://github.com/autowarefoundation/autoware_common.git
-    version: main
-  tier4_autoware_msgs:
-    type: git
-    url: https://github.com/tier4/tier4_autoware_msgs.git
-    version: tier4/universe
-  autoware_auto_msgs:
-    type: git
-    url: https://github.com/tier4/autoware_auto_msgs.git
-    version: tier4/main
-  image_pipeline:
-    type: git
-    url: https://github.com/tier4/image_pipeline.git
-    version: tier4/main
   image_transport_plugins:
     type: git
     url: https://github.com/ros-perception/image_transport_plugins.git
     version: humble
-  # build dependencies
   cudnn_cmake_module:
     type: git
     url: https://github.com/tier4/cudnn_cmake_module.git
@@ -70,3 +104,89 @@ repositories:
     type: git
     url: https://github.com/ros2/demos.git
     version: humble
+  # from nebula
+  udp_msgs:
+    type: git
+    url: https://github.com/flynneva/udp_msgs.git
+    version: main
+  angles:
+    type: git
+    url: https://github.com/ros/angles.git
+    version: humble-devel
+  diagnostics:
+    type: git
+    url: https://github.com/ros/diagnostics.git
+    version: ros2
+  # other build dependencies
+  tf_transformations:
+    type: git
+    url: https://github.com/DLu/tf_transformations.git
+    version: main
+  point_cloud_msg_wrapper:
+    type: git
+    url: https://gitlab.com/ApexAI/point_cloud_msg_wrapper
+    version: rolling
+  lanelet2_validation:
+    type: git
+    url: https://github.com/fzi-forschungszentrum-informatik/lanelet2.git
+    version: master
+  usb_cam:
+    type: git
+    url: https://github.com/ros-drivers/usb_cam.git
+    version: ros2
+  apriltag:
+    type: git
+    url: https://github.com/AprilRobotics/apriltag.git
+    version: master
+  mrt_cmake_modules:
+    type: git
+    url: https://github.com/KIT-MRT/mrt_cmake_modules.git
+    version: master
+  gtest_vendor:
+    type: git
+    url: https://github.com/ament/googletest.git
+    version: humble
+  grid_map:
+    type: git
+    url: https://github.com/ANYbotics/grid_map.git
+    version: humble
+  filters:
+    type: git
+    url: https://github.com/ros/filters.git
+    version: ros2
+  nav2_msgs:
+    type: git
+    url: https://github.com/ros-planning/navigation2.git
+    version: humble
+#  rviz2:
+#    type: git
+#    url: https://github.com/ros2/rviz.git
+#    version: humble
+#  resource_retriever:
+#    type: git
+#    url: https://github.com/ros/resource_retriever.git
+#    version: humble
+  tf2-eigen:
+    type: git
+    url: https://github.com/ros2/geometry2.git
+    version: humble
+#  eigenpy:
+#    type: git
+#    url: https://github.com/stack-of-tasks/eigenpy.git
+#    version: devel
+  quaternion_operation:
+    type: git
+    url: https://github.com/OUXT-Polaris/quaternion_operation.git
+    version: ros2
+  ouxt_lint_common:
+    type: git
+    url: https://github.com/OUXT-Polaris/ouxt_common.git
+    version: master
+  ament_cmake_clang_format:
+    type: git
+    url: https://github.com/ament/ament_lint.git
+    version: humble
+  tensorrt_cmake_module:
+    type: git
+    url: https://github.com/tier4/tensorrt_cmake_module.git
+    version: main
