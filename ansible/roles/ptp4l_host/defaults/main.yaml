@@ -1,2 +1,2 @@
 ptp4l_host_interface:
-  - mgbe0
+  - eth0

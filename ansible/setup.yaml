@@ -10,9 +10,9 @@
           interface_name: mgbe1
         lidar:
           interface_address: 192.168.1.100
-          interface_name: mgbe0
+          interface_name: eth0
     - ptp4l_client_interface: eqos0
-    - ptp4l_host_interface: mgbe0
+    - ptp4l_host_interface: eth0
   vars_prompt:
 #    - name: prompt_install_camera_driver
 #      prompt: |-
