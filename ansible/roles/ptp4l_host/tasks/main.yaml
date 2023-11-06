@@ -1,15 +1,15 @@
-# - name: Install ptp4l
-#   ansible.builtin.apt:
-#     name:
-#       - linuxptp
-#     update_cache: true
-#   become: true
+- name: Install ptp4l
+  ansible.builtin.apt:
+    name:
+      - linuxptp
+    update_cache: true
+  become: true
 
-# - name: Copy service template file
-#   ansible.builtin.copy:
-#     src: ptp4l@.service
-#     dest: /etc/systemd/system/
-#   become: true
+- name: Copy service template file
+  ansible.builtin.copy:
+    src: ptp4l@.service
+    dest: /etc/systemd/system/
+  become: true
 
 - name: Install ptp4l client service file
   ansible.builtin.systemd:

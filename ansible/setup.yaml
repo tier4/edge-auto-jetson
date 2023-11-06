@@ -32,8 +32,8 @@
 #    - role: tier4_hdr_camera_driver
 #      when: prompt_install_camera_driver == 'y'
     - role: ros2
-    - role: ptp4l_client
-      when: prompt_configure_network == 'y'
+#    - role: ptp4l_client
+#      when: prompt_configure_network == 'y'
     - role: ptp4l_host
       when: prompt_configure_network == 'y'
     - role: enlarge_txqueue
