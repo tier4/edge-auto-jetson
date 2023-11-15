@@ -123,18 +123,18 @@
         remote_src: yes
     - name: Create build directory
       ansible.builtin.file:
-        path: "{{ range_v3_directory }}/range-v3/build"
+        path: "{{ range_v3_directory }}/range-v3-0.11.0/build"
         state: directory
     - name: Run cmake
       ansible.builtin.command:
         cmd: cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc ..
-        chdir: "{{ range_v3_directory }}/range-v3/build"
+        chdir: "{{ range_v3_directory }}/range-v3-0.11.0/build"
       environment:
         PATH: "/usr/local/cuda/bin:{{ ansible_env.PATH }}"
     - name: Install range-v3
       ansible.builtin.command:
         cmd: make -j7 install
-        chdir: "{{ range_v3_directory }}/range-v3/build"
+        chdir: "{{ range_v3_directory }}/range-v3-0.11.0/build"
       become: true
 
 - name: Build ROS2 Humble
