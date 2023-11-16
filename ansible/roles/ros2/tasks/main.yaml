@@ -178,6 +178,10 @@
           - libasio-dev
           - libtinyxml2-dev
           - libcunit1-dev
+          - libpugixml-dev
+          - libgeographic-dev
+          - libgtest-dev
+          - libcgal-dev
           - apt-utils
         install_recommends: false
         update_cache: true
