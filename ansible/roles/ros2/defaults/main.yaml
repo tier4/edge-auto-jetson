@@ -1,3 +1,2 @@
 ros_root_dir: /opt/ros/humble
 ros_pkg: ros_base
-skip_keys: "libopencv-dev python3-catkin-pkg-modules"
