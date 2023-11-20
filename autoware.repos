@@ -25,7 +25,7 @@ repositories:
     version: tier4/universe
   launcher:
     type: git
-    url: https://github.com/tier4/edge_auto_launch.git
+    url: https://github.com/tier4/edge_auto_jetson_launch.git
     version: main
   individual_params:
     type: git
@@ -47,11 +47,7 @@ repositories:
     type: git
     url: https://github.com/tier4/image_pipeline.git
     version: 47964112293eb19f9f57254b2e6b68706954cc63
-  # edge-auto-jetson
-  camera_perception_launcher:
-    type: git
-    url: https://github.com/tier4/edge_auto_jetson_launch.git
-    version: main
+  # edge-auto-jetson deps
   sensor_trigger:
     type: git
     url: https://github.com/tier4/sensor_trigger.git
