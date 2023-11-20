@@ -1,9 +1,11 @@
 - name: Create data directory
+  become: true
   ansible.builtin.file:
     path: "{{ data_dir }}"
     state: directory
 
 - name: Create tensorrt_yolox directory inside {{ data_dir }}
+  become: true
   ansible.builtin.file:
     path: "{{ data_dir }}/tensorrt_yolox"
     mode: "755"
