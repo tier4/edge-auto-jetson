@@ -1,5 +1,28 @@
 repositories:
-  # perception stack
+  autoware.universe:
+    type: git
+    url: https://github.com/autowarefoundation/autoware.universe.git
+    version: main
+  autoware_common:
+    type: git
+    url: https://github.com/autowarefoundation/autoware_common.git
+    version: main
+  autoware_msgs:
+    type: git
+    url: https://github.com/autowarefoundation/autoware_msgs.git
+    version: main
+  autoware_adapi_msgs:
+    type: git
+    url: https://github.com/autowarefoundation/autoware_adapi_msgs.git
+    version: main
+  autoware_auto_msgs:
+    type: git
+    url: https://github.com/tier4/autoware_auto_msgs.git
+    version: tier4/main
+  tier4_autoware_msgs:
+    type: git
+    url: https://github.com/tier4/tier4_autoware_msgs.git
+    version: tier4/universe
   launcher:
     type: git
     url: https://github.com/tier4/edge_auto_jetson_launch.git
@@ -8,6 +31,23 @@ repositories:
     type: git
     url: https://github.com/tier4/edge_auto_individual_params.git
     version: main
+  nebula:
+    type: git
+    url: https://github.com/tier4/nebula.git
+    version: main
+  transport_drivers:
+    type: git
+    url: https://github.com/MapIV/transport_drivers.git
+    version: boost
+  ros2_numpy:
+    type: git
+    url: https://github.com/Box-Robotics/ros2_numpy.git
+    version: humble
+  image_pipeline:
+    type: git
+    url: https://github.com/tier4/image_pipeline.git
+    version: 47964112293eb19f9f57254b2e6b68706954cc63
+  # edge-auto-jetson deps
   sensor_trigger:
     type: git
     url: https://github.com/tier4/sensor_trigger.git
@@ -16,40 +56,10 @@ repositories:
     type: git
     url: https://github.com/tier4/ros2_v4l2_camera.git
     version: galactic
-  autoware.universe:
-    type: git
-    url: https://github.com/autowarefoundation/autoware.universe.git
-    version: main
-  calibration_tools:
-    type: git
-    url: https://github.com/tier4/CalibrationTools.git
-    version: tier4/universe
-  # package dependencies
-  autoware_common_msgs:
-    type: git
-    url: https://github.com/autowarefoundation/autoware_msgs.git
-    version: main
-  autoware_common:
-    type: git
-    url: https://github.com/autowarefoundation/autoware_common.git
-    version: main
-  tier4_autoware_msgs:
-    type: git
-    url: https://github.com/tier4/tier4_autoware_msgs.git
-    version: tier4/universe
-  autoware_auto_msgs:
-    type: git
-    url: https://github.com/tier4/autoware_auto_msgs.git
-    version: tier4/main
-  image_pipeline:
-    type: git
-    url: https://github.com/tier4/image_pipeline.git
-    version: tier4/main
   image_transport_plugins:
     type: git
     url: https://github.com/ros-perception/image_transport_plugins.git
-    version: foxy-devel
-  # build dependencies
+    version: humble
   cudnn_cmake_module:
     type: git
     url: https://github.com/tier4/cudnn_cmake_module.git
@@ -58,3 +68,12 @@ repositories:
     type: git
     url: https://github.com/tier4/tensorrt_cmake_module.git
     version: main
+  # other build dependencies
+  point_cloud_msg_wrapper:
+    type: git
+    url: https://gitlab.com/ApexAI/point_cloud_msg_wrapper
+    version: rolling
+  lanelet2_validation:
+    type: git
+    url: https://github.com/fzi-forschungszentrum-informatik/lanelet2.git
+    version: master
