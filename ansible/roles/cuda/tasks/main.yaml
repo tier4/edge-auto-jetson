@@ -1,9 +1,14 @@
+- name: Gather package facts
+  ansible.builtin.package_facts:
+    manager: apt
+
 - name: Install apt packages
   become: true
   ansible.builtin.apt:
     name:
       - nvidia-jetpack
     update_cache: true
+  when: "'nvidia-jetpack' not in ansible_facts.package"
 
 - name: Add settings to autoware.env
   ansible.builtin.blockinfile:
