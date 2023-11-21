@@ -1,6 +1,10 @@
-- name: Gather package facts
-  ansible.builtin.package_facts:
-    manager: apt
+- name: Remove OpenCV installation
+  become: true
+  ansible.builtin.apt:
+    name:
+      - "*opencv"
+    state: absent
+    purge: true
 
 - name: Install apt packages
   become: true
@@ -8,7 +12,6 @@
     name:
       - nvidia-jetpack
     update_cache: true
-  when: "'nvidia-jetpack' not in ansible_facts.package"
 
 - name: Add settings to autoware.env
   ansible.builtin.blockinfile:
