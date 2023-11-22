@@ -77,7 +77,6 @@ def build_perception_launcher(camera_template, lidar_template, params):
             lidar_launch = copy.deepcopy(lidar_template)
             
             params["lidar_name"] = device_name
-            params["tf_file_path"] = "TODO!"
 
             lidar_launch = replace_root_args(lidar_launch, params)
 
