@@ -112,8 +112,8 @@ def main():
     perception_launcher = build_perception_launcher(camera_template, lidar_template, launch_params)
 
     # write launchers to files
-    top_level_launcher.write(project_name+'_edge_auto_jetson.launch.xml', pretty_print=True)
-    perception_launcher.write(project_name+'_perception_jetson'+str(launch_params['jetson_id'])+'.launch.xml', pretty_print=True)
+    top_level_launcher.write('src/launcher/edge_auto_jetson_launch/launch/'+project_name+'_edge_auto_jetson.launch.xml', pretty_print=True)
+    perception_launcher.write('src/launcher/edge_auto_jetson_launch/launch/'+project_name+'_perception_jetson'+str(launch_params['jetson_id'])+'.launch.xml', pretty_print=True)
 
 
 if __name__ == "__main__":
