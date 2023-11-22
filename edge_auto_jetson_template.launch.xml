@@ -1,9 +1,9 @@
 <launch>
-  <arg name="vehicle_id" value="$(env VEHICLE_ID default)" />
-  <arg name="jetson_id" value="$(env JETSON_ID 0)" />
-  <arg name="live_sensor" value="True"
+  <arg name="vehicle_id" default="$(env VEHICLE_ID default)" />
+  <arg name="jetson_id" default="$(env JETSON_ID 0)" />
+  <arg name="live_sensor" default="True"
        description="If true, camera drivers will be booted. Otherwise, image decompressor will be."/>
-  <arg name="perception" value="True"
+  <arg name="perception" default="True"
        description="If true, series of perception stack will be booted."/>
 
   <include file="$(find-pkg-share edge_auto_jetson_launch)/launch/perception_jetson$(var jetson_id).launch.xml">
