@@ -1,6 +1,6 @@
-<camera>
-  <arg name="camera_id" value="$(var camera_id)"/>
-  <arg name="camera_name" value="camera$(var camera_id)" />
+<group>
+  <arg name="camera_id" default="$(var camera_id)"/>
+  <arg name="camera_name" default="camera$(var camera_id)" />
 
   <!-- Create container in which all nodes are loaded -->
   <let name="container_name" value="$(var camera_name)_container" />
@@ -48,4 +48,4 @@
       <arg name="output/objects" value="/perception/object_recognition/detection/rois$(var camera_id)" />
     </include>
   </group>
-</camera> 
+</group> 

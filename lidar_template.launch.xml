@@ -1,25 +1,25 @@
-<lidar>
+<group>
   <!-- arguments -->
   <arg name="project_name" default="$(env VEHICLE_ID default)"/>
   <arg name="lidar_correction_file" default="$(find-pkg-share individual_params)/config/$(var project_name)/lidar/at128_default.dat"/>
   <arg name="lidar_camera0_tf_file" default="$(find-pkg-share individual_params)/config/$(var project_name)/at128_to_camera0.json"/>
   <arg name="lidar_camera1_tf_file" default="$(find-pkg-share individual_params)/config/$(var project_name)/at128_to_camera1.json"/>
   <arg name="live_sensor" default="True"/>
-  <arg name="lidar_name" value="at128"/>
-  <arg name="lidar_model" value="hesai_at128"/>
+  <arg name="lidar_name" default="at128"/>
+  <arg name="lidar_model" default="hesai_at128"/>
 
   <!-- calibration -->
-  <include file="$(find-pkg-share edge_auto_launch)/launch/component/lidar_camera_tf_publisher.launch.py">
+  <include file="$(find-pkg-share edge_auto_jetson_launch)/launch/component/lidar_camera_tf_publisher.launch.py">
     <arg name="tf_file_path" value="$(var lidar_camera0_tf_file)"/>
   </include>
-  <include file="$(find-pkg-share edge_auto_launch)/launch/component/lidar_camera_tf_publisher.launch.py">
+  <include file="$(find-pkg-share edge_auto_jetson_launch)/launch/component/lidar_camera_tf_publisher.launch.py">
     <arg name="tf_file_path" value="$(var lidar_camera1_tf_file)"/>
   </include>
 
   <!-- driver -->
   <group>
     <push-ros-namespace namespace="/sensing/lidar/$(var lidar_name)"/>
-    <include file="$(find-pkg-share edge_auto_launch)/launch/component/$(var lidar_model).launch.xml">
+    <include file="$(find-pkg-share edge_auto_jetson_launch)/launch/component/$(var lidar_model).launch.xml">
       <arg name="frame_id" value="lidar"/>
       <arg name="live_sensor" value="$(var live_sensor)"/>
       <arg name="correction_file" value="$(var lidar_correction_file)"/>
@@ -31,19 +31,19 @@
     <push-ros-namespace namespace="/perception/object_recognition/detection"/>
     <group>
       <push-ros-namespace namespace="centerpoint"/>
-      <include file="$(find-pkg-share edge_auto_launch)/launch/component/crop_box_filter.launch.xml">
+      <include file="$(find-pkg-share edge_auto_jetson_launch)/launch/component/crop_box_filter.launch.xml">
         <arg name="input/pointcloud" value="/sensing/lidar/$(var lidar_name)/pointcloud_raw"/>
         <arg name="output/pointcloud" value="cropped/pointcloud"/>
         <arg name="max_z" value="1.2"/>
       </include>
-      <include file="$(find-pkg-share edge_auto_launch)/launch/component/voxel_downsample_filter.launch.xml">
+      <include file="$(find-pkg-share edge_auto_jetson_launch)/launch/component/voxel_downsample_filter.launch.xml">
         <arg name="input/pointcloud" value="cropped/pointcloud"/>
         <arg name="output/pointcloud" value="downsampled/pointcloud"/>
         <arg name="voxel_size_x" value="0.3"/>
         <arg name="voxel_size_y" value="0.3"/>
         <arg name="voxel_size_z" value="0.1"/>
       </include>
-      <include file="$(find-pkg-share edge_auto_launch)/launch/component/lidar_centerpoint.launch.xml">
+      <include file="$(find-pkg-share edge_auto_jetson_launch)/launch/component/lidar_centerpoint.launch.xml">
         <arg name="input/pointcloud" value="downsampled/pointcloud"/>
         <arg name="output/objects" value="objects"/>
         <arg name="model_name" value="centerpoint"/>
@@ -53,7 +53,7 @@
     </group>
     <group>
       <push-ros-namespace namespace="image_projection_based_fusion"/>
-      <include file="$(find-pkg-share edge_auto_launch)/launch/component/roi_detected_objects_fusion.launch.xml">
+      <include file="$(find-pkg-share edge_auto_jetson_launch)/launch/component/roi_detected_objects_fusion.launch.xml">
         <arg name="input/objects" value="/perception/object_recognition/detection/centerpoint/objects"/>
         <arg name="output/objects" value="/perception/object_recognition/detection/objects"/>
         <arg name="model_name" value="centerpoint"/>
@@ -70,14 +70,14 @@
   <group if="$(var voxel_grid_based_euclidean_cluster)">
     <push-ros-namespace namespace="/perception"/>
     <group>
-      <include file="$(find-pkg-share edge_auto_launch)/launch/component/crop_box_filter.launch.xml">
+      <include file="$(find-pkg-share edge_auto_jetson_launch)/launch/component/crop_box_filter.launch.xml">
         <arg name="input/pointcloud" value="/sensing/lidar/xt32/pointcloud_raw"/>
         <arg name="output/pointcloud" value="cropped/pointcloud"/>
         <arg name="frame_id" value="base_link"/>
         <arg name="max_z" value="1.2"/>
       </include>
       <push-ros-namespace namespace="obstacle_segmentation"/>
-      <include file="$(find-pkg-share edge_auto_launch)/launch/component/scan_ground_filter.launch.xml">
+      <include file="$(find-pkg-share edge_auto_jetson_launch)/launch/component/scan_ground_filter.launch.xml">
         <arg name="input/pointcloud" value="/perception/cropped/pointcloud"/>
         <arg name="output/pointcloud" value="/perception/obstacle_segmentation/pointcloud"/>
       </include>
@@ -86,7 +86,7 @@
       <push-ros-namespace namespace="object_recognition/detection"/>
       <group>
         <push-ros-namespace namespace="euclidean_cluster"/>
-        <include file="$(find-pkg-share edge_auto_launch)/launch/component/voxel_grid_based_euclidean_cluster.launch.xml">
+        <include file="$(find-pkg-share edge_auto_jetson_launch)/launch/component/voxel_grid_based_euclidean_cluster.launch.xml">
           <arg name="input/pointcloud" value="/perception/obstacle_segmentation/pointcloud"/>
           <arg name="output/objects" value="clusters"/>
         </include>
@@ -104,7 +104,7 @@
     </group>
     <group>
       <push-ros-namespace namespace="image_projection_based_fusion"/>
-      <include file="$(find-pkg-share edge_auto_launch)/launch/component/roi_cluster_fusion.launch.xml">
+      <include file="$(find-pkg-share edge_auto_jetson_launch)/launch/component/roi_cluster_fusion.launch.xml">
         <arg name="input/clusters" value="/perception/object_recognition/detection/euclidean_cluster/clusters"/>
         <arg name="output/clusters" value="clusters"/>
         <arg name="input/rois_number" value="2"/>
@@ -125,4 +125,4 @@
       </include>
     </group>
   </group>
-</lidar>
+</group>
