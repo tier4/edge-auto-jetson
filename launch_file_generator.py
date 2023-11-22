@@ -11,7 +11,7 @@ def make_parser():
 
     return parser
 
-def replace_root_args(launch_file, params): # TODO: only replace outside layer of args
+def replace_root_args(launch_file, params, value_key="value"): # TODO: only replace outside layer of args
     launch_file_root = launch_file.getroot()
     
     # print(list(launch_file_root))
@@ -20,7 +20,7 @@ def replace_root_args(launch_file, params): # TODO: only replace outside layer o
             continue
         # print(child.get("name"))
         if child.get("name") in params:
-            child.set("value", str(params[child.get("name")]))
+            child.set(value_key, str(params[child.get("name")]))
 
     return launch_file
 
@@ -45,7 +45,7 @@ def remove_extra_code(launch_file, device_params): # remove lines following "if 
 def build_top_level_launcher(template, params):
     print("Generating top level launcher...")
 
-    top_level_launch = replace_root_args(template, params)
+    top_level_launch = replace_root_args(template, params, value_key="default")
     
     return top_level_launch
     
@@ -83,7 +83,7 @@ def build_perception_launcher(camera_template, lidar_template, params):
             # TODO: remove all nodes following "if false"
             lidar_launch = remove_extra_code(lidar_launch, params)
 
-            launch_root.append(lidar_launch.getroot()) 
+            launch_root.append(lidar_launch.getroot())
 
     return etree.ElementTree(launch_root)
 
