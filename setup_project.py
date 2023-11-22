@@ -33,6 +33,7 @@ def make_parser():
     parser.add_argument("--camera_intrinsics_file", default="", nargs="+", required=False, help="")
     parser.add_argument("--lidar_name", default="", nargs="+", required=True, help="")
     parser.add_argument("--lidar_calibration_file", default="", nargs="+", required=False, help="")
+    parser.add_argument("--extrinsic_calibration_file", default="", nargs="+", required=False, help="")
 
     return parser
 
@@ -106,6 +107,7 @@ def main():
     intrinsics_file = args.camera_intrinsics_file
     lidar_names = args.lidar_name
     lidar_calibration_files = args.lidar_calibration_file # TODO
+    extrinsic_calibration_files = args.extrinsic_calibration_file
     
     general_parameters = dict(
         jetson_id = None,
@@ -139,8 +141,11 @@ def main():
         os.makedirs(lidar_individual_params_dir, exist_ok=True)
 
         if lidar_calibration_files:
-            shutil.copy(lidar_calibration_files[i], lidar_individual_params_dir+"/calibration.csv") # TODO: worried about file extension not generalizing
+            shutil.copy(lidar_calibration_files[i], lidar_individual_params_dir+"/"+os.path.basename(lidar_calibration_files[i])) # TODO: worried about file extension not generalizing
 
+    if extrinsic_calibration_files:
+        for file in extrinsic_calibration_files:
+            shutil.copy(file, "src/individual_params/individual_params/config/" + project_name + "/" + os.path.basename(file))
 
     with open(project_name + "_launch_params.yaml", 'w') as outfile:
         yaml.dump(launch_params_yaml, outfile)
