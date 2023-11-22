@@ -29,15 +29,18 @@ def remove_extra_code(launch_file, device_params): # remove lines following "if 
         for field in node.keys():
             if field != "if":
                 continue
+            # print("here:", node.get(field))
 
             var_match = re.search("\$\(var .*?\)", node.get(field))
             if not var_match:
                 continue
 
-            if ("lidar_centerpoint" in var_match.group() or "voxel_grid_based_euclidean_cluster" in var_match.group()) and device_params[node.get(field)[var_match.span()[0]+6:var_match.span()[1]-1]] == False: # dead code
-                print("removing node...")
-                node.getparent().remove(node.getprevious()) # remove comment
-                node.getparent().remove(node) # remove content
+            if ("lidar_centerpoint" in var_match.group() or "voxel_grid_based_euclidean_cluster" in var_match.group()):
+                if not device_params[node.get(field)[var_match.span()[0]+6:var_match.span()[1]-1]]: # dead code
+                    node.getparent().remove(node.getprevious()) # remove comment
+                    node.getparent().remove(node) # remove content
+                else:
+                    node.set(field, str(True))
     
     return launch_file
 
