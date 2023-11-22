@@ -1,7 +1,7 @@
 <group>
   <!-- arguments -->
   <arg name="project_name" default="$(env VEHICLE_ID default)"/>
-  <arg name="lidar_correction_file" default="$(find-pkg-share individual_params)/config/$(var project_name)/lidar/at128_default.dat"/>
+  <arg name="lidar_correction_file" default="$(find-pkg-share individual_params)/config/$(var project_name)/$(var lidar_name)/at128_default.dat"/>
   <arg name="lidar_camera0_tf_file" default="$(find-pkg-share individual_params)/config/$(var project_name)/at128_to_camera0.json"/>
   <arg name="lidar_camera1_tf_file" default="$(find-pkg-share individual_params)/config/$(var project_name)/at128_to_camera1.json"/>
   <arg name="live_sensor" default="True"/>
@@ -18,7 +18,7 @@
 
   <!-- driver -->
   <group>
-    <push-ros-namespace namespace="/sensing/lidar/$(var lidar_name)"/>
+    <push-ros-namespace namespace="/sensing/$(var lidar_name)/$(var lidar_name)"/>
     <include file="$(find-pkg-share edge_auto_jetson_launch)/launch/component/$(var lidar_model).launch.xml">
       <arg name="frame_id" value="lidar"/>
       <arg name="live_sensor" value="$(var live_sensor)"/>
@@ -32,7 +32,7 @@
     <group>
       <push-ros-namespace namespace="centerpoint"/>
       <include file="$(find-pkg-share edge_auto_jetson_launch)/launch/component/crop_box_filter.launch.xml">
-        <arg name="input/pointcloud" value="/sensing/lidar/$(var lidar_name)/pointcloud_raw"/>
+        <arg name="input/pointcloud" value="/sensing/$(var lidar_name)/$(var lidar_name)/pointcloud_raw"/>
         <arg name="output/pointcloud" value="cropped/pointcloud"/>
         <arg name="max_z" value="1.2"/>
       </include>
@@ -71,7 +71,7 @@
     <push-ros-namespace namespace="/perception"/>
     <group>
       <include file="$(find-pkg-share edge_auto_jetson_launch)/launch/component/crop_box_filter.launch.xml">
-        <arg name="input/pointcloud" value="/sensing/lidar/xt32/pointcloud_raw"/>
+        <arg name="input/pointcloud" value="/sensing/$(var lidar_name)/xt32/pointcloud_raw"/>
         <arg name="output/pointcloud" value="cropped/pointcloud"/>
         <arg name="frame_id" value="base_link"/>
         <arg name="max_z" value="1.2"/>
