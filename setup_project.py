@@ -128,7 +128,7 @@ def main():
         camera_individual_params_dir = "src/individual_params/individual_params/config/" + project_name + "/" + camera_name
         os.makedirs(camera_individual_params_dir, exist_ok=True)
         with open(camera_individual_params_dir+"/camera_info.yaml", 'w') as outfile:
-            yaml.dump(camera_info_yaml, outfile, default_flow_style=False)
+            yaml.dump(camera_info_yaml, outfile, default_flow_style=None)
         with open(camera_individual_params_dir+"/trigger.param.yaml", 'w') as outfile:
             yaml.dump(trigger_params_yaml, outfile, default_flow_style=False)
         with open(camera_individual_params_dir+"/v4l2_camera.param.yaml", 'w') as outfile:
