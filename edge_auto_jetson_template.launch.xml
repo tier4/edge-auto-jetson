@@ -6,10 +6,12 @@
   <arg name="perception" default="True"
        description="If true, series of perception stack will be booted."/>
   <arg name="project_name" default="None" />
+  <arg name="sensor_height" default="1.0"/>
 
   <include file="$(find-pkg-share edge_auto_jetson_launch)/launch/$(var project_name)_perception_jetson$(var jetson_id).launch.xml">
     <arg name="vehicle_id" value="$(var vehicle_id)" />
     <arg name="live_sensor" value="$(var live_sensor)" />
     <arg name="perception" value="$(var perception)" />
+    <arg name="sensor_height" value="$(var sensor_height)"/>
   </include>
 </launch>

@@ -7,6 +7,10 @@
   <arg name="lidar_camera0_tf_file" default="$(find-pkg-share individual_params)/config/$(var project_name)/at128_to_camera0.json"/>
   <arg name="lidar_camera1_tf_file" default="$(find-pkg-share individual_params)/config/$(var project_name)/at128_to_camera1.json"/>
   <arg name="live_sensor" default="True"/>
+  <arg name="sensor_height" default="1.0"/>
+
+  <!-- base_link generation -->
+  <node pkg="tf2_ros" exec="static_transform_publisher" name="base_link_broadcaster" output="screen" args="--x 0.0 --y 0.0 --z $(var sensor_height) --qx 0.0 --qy 0.0 --qz 0.0 --qw 1.0 --frame-id base_link --child-frame-id lidar" />
 
   <!-- calibration -->
   <include file="$(find-pkg-share edge_auto_jetson_launch)/launch/component/lidar_camera_tf_publisher.launch.py">
@@ -34,7 +38,8 @@
       <include file="$(find-pkg-share edge_auto_jetson_launch)/launch/component/crop_box_filter.launch.xml">
         <arg name="input/pointcloud" value="/sensing/lidar/$(var lidar_name)/pointcloud_raw"/>
         <arg name="output/pointcloud" value="cropped/pointcloud"/>
-        <arg name="max_z" value="1.2"/>
+        <arg name="frame_id" value="base_link"/>
+        <arg name="max_z" value="2.0"/>
       </include>
       <include file="$(find-pkg-share edge_auto_jetson_launch)/launch/component/voxel_downsample_filter.launch.xml">
         <arg name="input/pointcloud" value="cropped/pointcloud"/>

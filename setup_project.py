@@ -117,6 +117,7 @@ def main():
         lidar_centerpoint = None, 
         voxel_grid_based_euclidean_cluster = None, 
         lidar_model = None, 
+        sensor_height = None,
     )
 
     launch_params_yaml = general_parameters
@@ -141,7 +142,7 @@ def main():
         os.makedirs(lidar_individual_params_dir, exist_ok=True)
 
         if lidar_calibration_files:
-            shutil.copy(lidar_calibration_files[i], lidar_individual_params_dir+"/"+os.path.basename(lidar_calibration_files[i])) # TODO: worried about file extension not generalizing
+            shutil.copy(lidar_calibration_files[i], lidar_individual_params_dir+"/"+os.path.basename(lidar_calibration_files[i]))
 
     if extrinsic_calibration_files:
         for file in extrinsic_calibration_files:
