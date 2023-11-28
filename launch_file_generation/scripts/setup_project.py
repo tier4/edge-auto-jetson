@@ -102,12 +102,12 @@ def main():
     args = make_parser().parse_args()
 
     project_name = args.project_name
-    camera_names = args.camera_name
-    camera_setup_file = args.camera_setup_file
-    intrinsics_file = args.camera_intrinsics_file
-    lidar_names = args.lidar_name
-    lidar_calibration_files = args.lidar_calibration_file # TODO
-    extrinsic_calibration_files = args.extrinsic_calibration_file
+    camera_names = args.camera_names
+    camera_setup_files = args.camera_setup_files
+    camera_intrinsics_files = args.camera_intrinsics_files
+    lidar_name = args.lidar_name
+    lidar_calibration_file = args.lidar_calibration_file 
+    extrinsic_calibration_files = args.extrinsic_calibration_files
     
     general_parameters = dict(
         jetson_id = None,
@@ -123,10 +123,10 @@ def main():
     launch_params_yaml = general_parameters
 
     for i, camera_name in enumerate(camera_names):
-        if intrinsics_file:
-            camera_info_yaml, trigger_params_yaml, v4l2_params_yaml = generate_yaml_files(camera_setup_file[i], camera_name, intrinsics_file[i])
+        if camera_intrinsics_files:
+            camera_info_yaml, trigger_params_yaml, v4l2_params_yaml = generate_yaml_files(camera_setup_files[i], camera_name, camera_intrinsics_files[i])
         else:
-            camera_info_yaml, trigger_params_yaml, v4l2_params_yaml = generate_yaml_files(camera_setup_file[i], camera_name, None)
+            camera_info_yaml, trigger_params_yaml, v4l2_params_yaml = generate_yaml_files(camera_setup_files[i], camera_name, None)
 
         camera_individual_params_dir = "src/individual_params/individual_params/config/" + project_name + "/" + camera_name
         os.makedirs(camera_individual_params_dir, exist_ok=True)
@@ -137,12 +137,11 @@ def main():
         with open(camera_individual_params_dir+"/v4l2_camera.param.yaml", 'w') as outfile:
             yaml.dump(v4l2_params_yaml, outfile, default_flow_style=None)
         
-    for i, lidar_name in enumerate(lidar_names):
-        lidar_individual_params_dir = "src/individual_params/individual_params/config/" + project_name + "/" + lidar_name
-        os.makedirs(lidar_individual_params_dir, exist_ok=True)
+    lidar_individual_params_dir = "src/individual_params/individual_params/config/" + project_name + "/" + lidar_name
+    os.makedirs(lidar_individual_params_dir, exist_ok=True)
 
-        if lidar_calibration_files:
-            shutil.copy(lidar_calibration_files[i], lidar_individual_params_dir+"/"+os.path.basename(lidar_calibration_files[i]))
+    if lidar_calibration_file:
+        shutil.copy(lidar_calibration_file, lidar_individual_params_dir+"/"+os.path.basename(lidar_calibration_file))
 
     if extrinsic_calibration_files:
         for file in extrinsic_calibration_files:
