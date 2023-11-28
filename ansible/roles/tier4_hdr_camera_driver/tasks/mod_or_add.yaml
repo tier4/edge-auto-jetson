@@ -3,7 +3,7 @@
 # or add it to the end of line starting with {{ config_prefix }} if it not exist
 #
 - name: Check item existence
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ target_file }}"
     regexp: ^(.*){{ target_item }}={{ target_val }}(.*)$
     state: absent
@@ -13,7 +13,7 @@
   become: true
 
 - name: Modify
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ target_file }}"
     regexp: ^(.*) {{ target_item }}=[a-z0-9]* (.*)$
     line: \1 {{ target_item }}={{ target_val }} \2 # Yaml requires escaping backslashes in double quotes but not in single quotes
@@ -22,7 +22,7 @@
   become: true
 
 - name: Add
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ target_file }}"
     regexp: ^({{ config_prefix }})(.*)$
     line: \1\2 {{ target_item }}={{ target_val }}

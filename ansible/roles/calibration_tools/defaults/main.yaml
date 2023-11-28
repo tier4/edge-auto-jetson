@@ -1,3 +1,3 @@
-pyside2_url_base: https://github.com/hiroyuki-s1/PySide2InstallForJetson/raw/main/dist
-pyside2_wheel: PySide2-5.9.0a1-5.9.5-cp36-cp36m-linux_aarch64.whl
-pyside2_download_dir: /tmp
+calibration_tools_pyside2_url_base: https://github.com/hiroyuki-s1/PySide2InstallForJetson/raw/main/dist
+calibration_tools_pyside2_wheel: PySide2-5.9.0a1-5.9.5-cp36-cp36m-linux_aarch64.whl
+calibration_tools_pyside2_download_dir: /tmp
