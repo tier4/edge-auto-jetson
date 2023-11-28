@@ -1,0 +1,8 @@
+image_width: 1920
+image_height: 1280
+frame_rate: 10.0
+phase: 330.0
+gpio: 52
+cpu_core_id: 7
+video_device: "/dev/video1"
+output_encoding: "rgb8"
