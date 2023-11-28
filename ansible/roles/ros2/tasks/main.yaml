@@ -1,8 +1,9 @@
 - name: Fix python interpreter version to 3
-  set_fact:
+  ansible.builtin.set_fact:
     ansible_python_interpreter: /usr/bin/python3.6
 
 - name: Setup dependencies
+  become: true
   block:
     - name: Apt install
       ansible.builtin.apt:
@@ -18,7 +19,8 @@
         install_recommends: false
         update_cache: true
     - name: Add ROS 2 source list
-      shell: echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+      ansible.builtin.shell: set -o pipefail && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+      changed_when: false
     - name: Download gpg key
       ansible.builtin.uri:
         url: https://raw.githubusercontent.com/ros/rosdistro/master/ros.key
@@ -49,10 +51,9 @@
           - libflann-dev
         install_recommends: false
         update_cache: true
-  become: true
 
-- name: add CUDA into PATH
-  set_fact:
+- name: Add CUDA into PATH
+  ansible.builtin.set_fact:
     environment:
       PATH: /usr/local/cuda/bin:{{ ansible_env.PATH }}
 
@@ -80,7 +81,7 @@
 - name: Prepare for dependencies' source build
   block:
     - name: Define directory name
-      set_fact:
+      ansible.builtin.set_fact:
         source_build_dir: "{{ ansible_env.HOME }}/source_builds"
     - name: Create directory
       ansible.builtin.file:
