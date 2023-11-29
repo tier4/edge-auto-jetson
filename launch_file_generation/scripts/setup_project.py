@@ -108,6 +108,8 @@ def main():
     lidar_name = args.lidar_name
     lidar_calibration_file = args.lidar_calibration_file 
     extrinsic_calibration_files = args.extrinsic_calibration_files
+
+    individual_params_config_dir = "../../src/individual_params/individual_params/config/"
     
     if lidar_name:
         general_parameters = dict(
@@ -136,7 +138,7 @@ def main():
         else:
             camera_info_yaml, trigger_params_yaml, v4l2_params_yaml = generate_yaml_files(camera_setup_files[i], camera_name, None)
 
-        camera_individual_params_dir = "src/individual_params/individual_params/config/" + project_name + "/" + camera_name
+        camera_individual_params_dir = individual_params_config_dir + project_name + "/" + camera_name
         os.makedirs(camera_individual_params_dir, exist_ok=True)
         with open(camera_individual_params_dir+"/camera_info.yaml", 'w') as outfile:
             yaml.dump(camera_info_yaml, outfile, default_flow_style=None)
@@ -145,7 +147,7 @@ def main():
         with open(camera_individual_params_dir+"/v4l2_camera.param.yaml", 'w') as outfile:
             yaml.dump(v4l2_params_yaml, outfile, default_flow_style=None)
         
-    lidar_individual_params_dir = "src/individual_params/individual_params/config/" + project_name + "/" + lidar_name
+    lidar_individual_params_dir = individual_params_config_dir + project_name + "/" + lidar_name
     os.makedirs(lidar_individual_params_dir, exist_ok=True)
 
     if lidar_calibration_file:
@@ -153,7 +155,7 @@ def main():
 
     if extrinsic_calibration_files:
         for file in extrinsic_calibration_files:
-            shutil.copy(file, "src/individual_params/individual_params/config/" + project_name + "/" + os.path.basename(file))
+            shutil.copy(file, individual_params_config_dir + project_name + "/" + os.path.basename(file))
 
     with open(project_name + "_launch_params.yaml", 'w') as outfile:
         yaml.dump(launch_params_yaml, outfile)
