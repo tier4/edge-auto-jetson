@@ -1,5 +1,5 @@
-image_width: 1920
-image_height: 1280
+image_width: 2880
+image_height: 1860
 frame_rate: 10.0
 phase: 30.0
 gpio: 51
