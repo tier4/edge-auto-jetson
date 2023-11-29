@@ -109,16 +109,24 @@ def main():
     lidar_calibration_file = args.lidar_calibration_file 
     extrinsic_calibration_files = args.extrinsic_calibration_files
     
-    general_parameters = dict(
-        jetson_id = None,
-        live_sensor = None,
-        perception = None,
-        project_name = project_name,
-        lidar_centerpoint = None, 
-        voxel_grid_based_euclidean_cluster = None, 
-        lidar_model = None, 
-        sensor_height = None,
-    )
+    if lidar_name:
+        general_parameters = dict(
+            jetson_id = None,
+            live_sensor = None,
+            perception = None,
+            project_name = project_name,
+            lidar_centerpoint = None, 
+            voxel_grid_based_euclidean_cluster = None, 
+            lidar_model = None, 
+            sensor_height = None,
+        )
+    else:
+        general_parameters = dict(
+            jetson_id = None,
+            live_sensor = None,
+            perception = None,
+            project_name = project_name,
+        )
 
     launch_params_yaml = general_parameters
 
