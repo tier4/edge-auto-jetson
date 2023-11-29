@@ -31,8 +31,8 @@ def make_parser():
     parser.add_argument("--camera_names", default="", nargs="+", required=True, help="")
     parser.add_argument("--camera_setup_files", default="", nargs="+", required=True, help="")
     parser.add_argument("--camera_intrinsics_files", default="", nargs="+", required=False, help="")
-    parser.add_argument("--lidar_name", default="", nargs="+", required=True, help="")
-    parser.add_argument("--lidar_calibration_file", default="", nargs="+", required=False, help="")
+    parser.add_argument("--lidar_name", default="", required=False, help="")
+    parser.add_argument("--lidar_calibration_file", default="", required=False, help="")
     parser.add_argument("--extrinsic_calibration_files", default="", nargs="+", required=False, help="")
 
     return parser

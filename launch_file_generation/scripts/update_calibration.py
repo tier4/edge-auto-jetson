@@ -8,8 +8,8 @@ def make_parser():
     parser.add_argument("-p", "--project_name", default="my_project", type=str, required=True, help="")
     parser.add_argument("--camera_names", default="", nargs="+", required=False, help="")
     parser.add_argument("--camera_intrinsics_files", default="", nargs="+", required=False, help="")
-    parser.add_argument("--lidar_name", default="", nargs="+", required=False, help="")
-    parser.add_argument("--lidar_calibration_file", default="", nargs="+", required=False, help="")
+    parser.add_argument("--lidar_name", default="", required=False, help="")
+    parser.add_argument("--lidar_calibration_file", default="", required=False, help="")
     parser.add_argument("--extrinsic_calibration_files", default="", nargs="+", required=False, help="")
 
     return parser
