@@ -158,7 +158,7 @@ def main():
             shutil.copy(file, individual_params_config_dir + project_name + "/" + os.path.basename(file))
 
     with open(project_name + "_launch_params.yaml", 'w') as outfile:
-        yaml.dump(launch_params_yaml, outfile, default_flow_style=None)
+        yaml.dump(launch_params_yaml, outfile, default_flow_style=False)
 
 
 if __name__ == "__main__":
