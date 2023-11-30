@@ -11,6 +11,7 @@ def make_parser():
     parser.add_argument("--lidar_name", default="", required=False, help="")
     parser.add_argument("--lidar_calibration_file", default="", required=False, help="")
     parser.add_argument("--extrinsic_calibration_files", default="", nargs="+", required=False, help="")
+    parser.add_argument("--repo_root_dir", default=".", required=False, help="Path to repository root directory")
 
     return parser
 
@@ -24,8 +25,9 @@ def main():
     lidar_name = args.lidar_name
     lidar_calibration_file = args.lidar_calibration_file 
     extrinsic_calibration_files = args.extrinsic_calibration_file
+    repo_root_dir = args.repo_root_dir
 
-    individual_params_config_dir = "../../src/individual_params/individual_params/config/"
+    individual_params_config_dir = repo_root_dir +  "/src/individual_params/individual_params/config/"
 
     for i, camera_name in enumerate(camera_names):  
         camera_individual_params_dir = individual_params_config_dir + project_name + "/" + camera_name
