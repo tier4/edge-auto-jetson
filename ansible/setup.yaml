@@ -5,32 +5,37 @@
     - network_config:
         ros:
           interface_address: 192.168.2.2
-          interface_name: eth1
+          interface_name: eqos0
         dhcp:
+          interface_name: mgbe1
+        lidar:
+          interface_address: 192.168.1.100
           interface_name: eth0
-    - ptp4l_client_interface: eth1
+    - ptp4l_client_interface: eqos0
+    - ptp4l_host_interface: eth0
   vars_prompt:
-    - name: prompt_install_camera_driver
-      prompt: |-
-        [Warning] Do you want to install/update the TIER IV camera driver? [y/N]
-      private: false
     - name: prompt_configure_network
       prompt: |-
         [Warning] Do you want to configure the network? This configuration may overwrite the IP address of the specific network interface [y/N]
+      private: false
+    - name: prompt_download_models
+      prompt: |-
+        [Warning] Do you want to download onnx models? [y/N]
       private: false
   roles:
     - role: autoware
     - role: cuda
     - role: cyclonedds
-    - role: docker
     - role: vcstool
-    - role: calibration_tools
-    - role: tier4_hdr_camera_driver
-      when: prompt_install_camera_driver == 'y'
     - role: ros2
-    - role: ptp4l_client
+    - role: ptp4l_host
       when: prompt_configure_network == 'y'
     - role: enlarge_txqueue
       when: prompt_configure_network == 'y'
     - role: netplan
       when: prompt_configure_network == 'y'
+    - role: download_models
+      when: prompt_download_models == 'y'
+
+  environment:
+    DEBIAN_FRONTEND: noninteractive
