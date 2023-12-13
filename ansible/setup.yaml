@@ -18,6 +18,10 @@
       prompt: |-
         [Warning] Do you want to configure the network? This configuration may overwrite the IP address of the specific network interface [y/N]
       private: false
+    - name: prompt_download_models
+      prompt: |-
+        [Warning] Do you want to download onnx models? [y/N]
+      private: false
   roles:
     - role: autoware
     - role: cuda
@@ -30,6 +34,8 @@
       when: prompt_configure_network == 'y'
     - role: netplan
       when: prompt_configure_network == 'y'
+    - role: download_models
+      when: prompt_download_models == 'y'
 
   environment:
     DEBIAN_FRONTEND: noninteractive

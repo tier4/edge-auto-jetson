@@ -1,0 +1,83 @@
+- name: Create data directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ data_dir }}"
+    state: directory
+
+- name: Create tensorrt_yolox directory inside {{ data_dir }}
+  become: true
+  ansible.builtin.file:
+    path: "{{ data_dir }}/tensorrt_yolox"
+    mode: "755"
+    state: directory
+
+- name: Download tensorrt_yolox/yolox-tiny.onnx
+  become: true
+  ansible.builtin.get_url:
+    url: https://awf.ml.dev.web.auto/perception/models/yolox-tiny.onnx
+    dest: "{{ data_dir }}/tensorrt_yolox/yolox-tiny.onnx"
+    mode: "644"
+    checksum: sha256:471a665f4243e654dff62578394e508db22ee29fe65d9e389dfc3b0f2dee1255
+
+- name: Download tensorrt_yolox/yolox-sPlus-opt.onnx
+  become: true
+  ansible.builtin.get_url:
+    url: https://awf.ml.dev.web.auto/perception/models/yolox-sPlus-opt.onnx
+    dest: "{{ data_dir }}/tensorrt_yolox/yolox-sPlus-opt.onnx"
+    mode: "644"
+    checksum: md5:bf3b0155351f90fcdca2626acbfd3bcf
+
+- name: Download tensorrt_yolox/yolox-sPlus-opt.EntropyV2-calibration.table
+  become: true
+  ansible.builtin.get_url:
+    url: https://awf.ml.dev.web.auto/perception/models/yolox-sPlus-opt.EntropyV2-calibration.table
+    dest: "{{ data_dir }}/tensorrt_yolox/yolox-sPlus-opt.EntropyV2-calibration.table"
+    mode: "644"
+    checksum: md5:c6e6f1999d5724a017516a956096701f
+
+- name: Download tensorrt_yolox/label.txt
+  become: true
+  ansible.builtin.get_url:
+    url: https://awf.ml.dev.web.auto/perception/models/label.txt
+    dest: "{{ data_dir }}/tensorrt_yolox/label.txt"
+    mode: "644"
+    checksum: sha256:3540a365bfd6d8afb1b5d8df4ec47f82cb984760d3270c9b41dbbb3422d09a0c
+
+- name: Create lidar_centerpoint directory inside {{ data_dir }}
+  become: true
+  ansible.builtin.file:
+    path: "{{ data_dir }}/lidar_centerpoint"
+    mode: "755"
+    state: directory
+
+- name: Download lidar_centerpoint/pts_voxel_encoder_centerpoint.onnx
+  become: true
+  ansible.builtin.get_url:
+    url: https://awf.ml.dev.web.auto/perception/models/centerpoint/v2/pts_voxel_encoder_centerpoint.onnx
+    dest: "{{ data_dir }}/lidar_centerpoint/pts_voxel_encoder_centerpoint.onnx"
+    mode: "644"
+    checksum: sha256:dc1a876580d86ee7a341d543f8ade2ede7f43bd032dc5b44155b1f0175405764
+
+- name: Download lidar_centerpoint/pts_backbone_neck_head_centerpoint.onnx
+  become: true
+  ansible.builtin.get_url:
+    url: https://awf.ml.dev.web.auto/perception/models/centerpoint/v2/pts_backbone_neck_head_centerpoint.onnx
+    dest: "{{ data_dir }}/lidar_centerpoint/pts_backbone_neck_head_centerpoint.onnx"
+    mode: "644"
+    checksum: sha256:3fe7e128955646740c41a25be0c8f141d5a94594fe79d7405fe2a859e391542e
+
+- name: Download lidar_centerpoint/pts_voxel_encoder_centerpoint_tiny.onnx
+  become: true
+  ansible.builtin.get_url:
+    url: https://awf.ml.dev.web.auto/perception/models/centerpoint/v2/pts_voxel_encoder_centerpoint_tiny.onnx
+    dest: "{{ data_dir }}/lidar_centerpoint/pts_voxel_encoder_centerpoint_tiny.onnx"
+    mode: "644"
+    checksum: sha256:2c53465715c1fd2e9dc5727ef3fca74f4cdf0538f74286b0946e219d0ca5693b
+
+- name: Download lidar_centerpoint/pts_backbone_neck_head_centerpoint_tiny.onnx
+  become: true
+  ansible.builtin.get_url:
+    url: https://awf.ml.dev.web.auto/perception/models/centerpoint/v2/pts_backbone_neck_head_centerpoint_tiny.onnx
+    dest: "{{ data_dir }}/lidar_centerpoint/pts_backbone_neck_head_centerpoint_tiny.onnx"
+    mode: "644"
+    checksum: md5:e4658325b70222f7c3637fe00e586b82
