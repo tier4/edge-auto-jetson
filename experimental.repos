@@ -1,5 +1,5 @@
 repositories:
   lightnet_trt:
     type: git
-    url: https://github.com/daniel89710/lightNet-TRT
+    url: https://github.com/kminoda/lightNet-TRT-ROS2
     version: main
