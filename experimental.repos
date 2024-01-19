@@ -1,9 +1,5 @@
 repositories:
-  tensorrt_lightnet:
-    type: git
-    url: https://github.com/tier4/edge-auto-tensorrt-lightnet
-    version: main
-  tensorrt_lightnet/lib:
+  lightnet_trt:
     type: git
     url: https://github.com/daniel89710/lightNet-TRT
     version: main
