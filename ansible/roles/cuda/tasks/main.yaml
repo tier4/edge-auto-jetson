@@ -1,8 +1,9 @@
-- name: Remove OpenCV installation
+- name: Remove NVIDIA Jetpack installation and OpenCV installation
   become: true
   ansible.builtin.apt:
     name:
-      - "*opencv"
+      - "*nvidia-jetpack*"
+      - "*opencv*"
     state: absent
     purge: true
 

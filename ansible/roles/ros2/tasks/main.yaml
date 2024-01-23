@@ -137,6 +137,11 @@
         chdir: "{{ range_v3_directory }}/range-v3-0.11.0/build"
       become: true
 
+- name: Check ROS install directory existence
+  ansible.builtin.stat:
+    path: "{{ ros_root_dir }}/install"
+  register: ros_install_dir_exist
+
 - name: Build ROS2 Humble
   block:
     - name: Add the ROS deb repo to the apt sources list
@@ -205,6 +210,7 @@
           - scikit-build
           - cmake
         extra_args: "--upgrade --no-cache-dir"
+      become: true
     - name: Could NOT find Python3 workaround
       ansible.builtin.apt:
         name:
@@ -275,6 +281,16 @@
           ansible.builtin.apt:
             clean: true
       become: true
+  when: not ros_install_dir_exist.stat.exists
+
+- name: Add sourcing command in user's bashrc
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    state: present
+    marker: "# {mark} ros2"
+    block: |
+      source {{ ros_root_dir }}/install/setup.bash
+  when: not ros_install_dir_exist.stat.exists
 
 - name: Install extra edge-auto-jetson dependency
   ansible.builtin.apt:
