@@ -18,12 +18,17 @@
       prompt: |-
         [Warning] Do you want to configure the network? This configuration may overwrite the IP address of the specific network interface [y/N]
       private: false
+    - name: prompt_configure_user_resources
+      prompt: |-
+        [Warning] Do you want to configure user resources? Only necessary if CONFIG_RT_GROUP_SCHED is enabled [y/N]
   roles:
     - role: autoware
     - role: cuda
     - role: cyclonedds
     - role: vcstool
     - role: ros2
+    - role: cgroups
+      when: prompt_configure_user_resources == 'y'
     - role: ptp4l_host
       when: prompt_configure_network == 'y'
     - role: enlarge_txqueue
