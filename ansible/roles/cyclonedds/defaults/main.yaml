@@ -1,6 +1,5 @@
-cyclonedds:
-  minimum_socket_receive_buffer_size: 20MB
-  ipfrag_time: 3
-  ipfrag_high_thresh: 134217728
-  rmem_max: 2147483647
-  rmem_default: 8388608
+cyclonedds_minimum_socket_receive_buffer_size: 20MB
+cyclonedds_ipfrag_time: 3
+cyclonedds_ipfrag_high_thresh: 134217728
+cyclonedds_rmem_max: 2147483647
+cyclonedds_rmem_default: 8388608

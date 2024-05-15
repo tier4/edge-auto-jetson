@@ -9,6 +9,7 @@
   ansible.builtin.copy:
     src: ptp4l@.service
     dest: /etc/systemd/system/
+    mode: 0755
   become: true
 
 - name: Install ptp4l client service file
