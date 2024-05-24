@@ -411,7 +411,7 @@
       become: true
     - name: "{{ block_name }}: install pybind11-global"
       ansible.builtin.pip:
-        name: pybind11-global
+        name: pybind11-global==2.11.1
         extra_args: -U
       become: true
     - name: "{{ block_name }}: apt-get purge libyaml-cpp-dev"
