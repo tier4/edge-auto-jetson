@@ -339,7 +339,7 @@
         state: directory
       become: true
     - name: "{{ block_name }}: generate repository list using rosinstall_generator"
-      shell: rosinstall_generator --deps --rosdistro {{ ros_distro }} ros_base launch_xml launch_yaml launch_testing launch_testing_ament_cmake demo_nodes_cpp demo_nodes_py example_interfaces camera_calibration_parsers camera_info_manager cv_bridge vision_opencv vision_msgs image_geometry image_pipeline image_transport compressed_image_transport compressed_depth_image_transport pcl_msgs perception_pcl --exclude rmw_connextdds > /tmp/ros2.{{ ros_distro }}.ros_base.rosinstall
+      shell: rosinstall_generator --deps --rosdistro {{ ros_distro }} ros_base launch_xml launch_yaml launch_testing launch_testing_ament_cmake demo_nodes_cpp demo_nodes_py example_interfaces camera_calibration_parsers camera_info_manager cv_bridge vision_opencv vision_msgs image_geometry image_pipeline image_transport compressed_image_transport compressed_depth_image_transport pcl_msgs perception_pcl launch_pytest --exclude rmw_connextdds > /tmp/ros2.{{ ros_distro }}.ros_base.rosinstall
     - name: "{{ block_name }}: copy repository list to target ddirectory"
       ansible.builtin.copy:
         src: /tmp/ros2.{{ ros_distro }}.ros_base.rosinstall
