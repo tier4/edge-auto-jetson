@@ -1,3 +1,16 @@
+- name: Remove OpenCV installation
+  become: true
+  ansible.builtin.apt:
+    name:
+      - "*opencv"
+    state: absent
+    purge: true
+
+- name: Remove OpenCV build directory
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/source_builds/jetson-containers"
+    state: absent
+
 - name: Install apt packages
   become: true
   ansible.builtin.apt:
