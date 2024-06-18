@@ -58,3 +58,11 @@ repositories:
     type: git
     url: https://github.com/tier4/tensorrt_cmake_module.git
     version: main
+  demos:
+    type: git
+    url: https://github.com/ros2/demos.git
+    version: humble
+  autoware_internal_msgs:
+    type: git
+    url: https://github.com/autowarefoundation/autoware_internal_msgs.git
+    version: main
