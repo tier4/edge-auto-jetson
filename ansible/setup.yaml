@@ -19,6 +19,7 @@
         [Warning] Do you want to configure the network? This configuration may overwrite the IP address of the specific network interface [y/N]
       private: false
   roles:
+    - role: artifacts
     - role: autoware
     - role: cuda
     - role: cyclonedds

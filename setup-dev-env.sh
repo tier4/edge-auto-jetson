@@ -49,7 +49,7 @@ export PATH="$HOME/.local/bin:$PATH"
 echo -e "\e[36mRunning ansible playbook to setup ECU.\e[0m"
 
 # Run ansible
-if ansible-playbook "${SCRIPT_DIR}"/ansible/setup.yaml --ask-become-pass; then
+if ansible-playbook "${SCRIPT_DIR}"/ansible/setup.yaml --ask-become-pass --extra-vars data_dir=$HOME/autoware_data; then
     echo -e "\e[32mCompleted.\e[0m"
     exit 0
 else
