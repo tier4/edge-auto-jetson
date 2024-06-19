@@ -32,7 +32,7 @@
         ros2_build_script: "{{ jetson_script_dir }}/ros2_build.sh"
     - name: Download OpenCV deps script
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R35.3.1/scripts/opencv_install_deps.sh
+        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R35.4.1/packages/opencv/opencv_builder/opencv_install_deps.sh
         dest: "{{ opencv_install_deps_script }}"
     - name: Make OpenCV deps script executable
       ansible.builtin.file:
@@ -40,7 +40,7 @@
         mode: u+x
     - name: Download OpenCV install script
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R35.3.1/scripts/opencv_install.sh
+        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R35.4.1/packages/opencv/opencv_install.sh
         dest: "{{ opencv_install_script }}"
     - name: Make OpenCV install script executable
       ansible.builtin.file:
@@ -48,7 +48,7 @@
         mode: u+x
     - name: Download ROS2 Humble install script
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R35.3.1/scripts/ros2_build.sh
+        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R35.4.1/packages/ros/ros2_build.sh
         dest: "{{ ros2_build_script }}"
     - name: Make ROS2 Humble install script executable
       ansible.builtin.file:
@@ -194,7 +194,6 @@
       ansible.builtin.pip:
         name:
           - colcon-common-extensions
-          - catkin-pkg-modules
           - argcomplete
           - flake8-blind-except
           - flake8-builtins
@@ -227,7 +226,7 @@
       become: true
     - name: Download ROS packages
       ansible.builtin.shell:
-        cmd: "rosinstall_generator --deps --rosdistro {{ ros_distro }} {{ ros_pkg }} launch_xml launch_yaml launch_testing launch_testing_ament_cmake demo_nodes_cpp demo_nodes_py example_interfaces camera_calibration_parsers camera_info_manager cv_bridge v4l2_camera vision_opencv vision_msgs image_geometry image_pipeline image_transport compressed_image_transport compressed_depth_image_transport pcl_msgs perception_pcl logging_demo udp_msgs angles diagnostics tf_transformations mrt_cmake_modules gtest_vendor grid_map filters nav2_msgs tf2-eigen ament_cmake_clang_format > {{ ros_root_dir }}/ros2.{{ ros_distro }}.{{ ros_pkg }}.rosinstall"
+        cmd: "rosinstall_generator --deps --rosdistro {{ ros_distro }} {{ ros_package }} launch_xml launch_yaml launch_testing launch_testing_ament_cmake demo_nodes_cpp demo_nodes_py example_interfaces camera_calibration_parsers camera_info_manager cv_bridge v4l2_camera vision_opencv vision_msgs image_geometry image_pipeline image_transport compressed_image_transport compressed_depth_image_transport pcl_msgs perception_pcl logging_demo udp_msgs angles diagnostics tf_transformations mrt_cmake_modules gtest_vendor grid_map filters nav2_msgs tf2-eigen ament_cmake_clang_format > {{ ros_root_dir }}/ros2.{{ ros_distro }}.{{ ros_package }}.rosinstall"
       become: true
     - name: Import packages to source directory
       ansible.builtin.shell:
@@ -252,7 +251,7 @@
       block:
         - name: Remove .rosinstall file
           ansible.builtin.file:
-            path: ros2.{{ ros_distro }}.{{ ros_pkg }}.rosinstall
+            path: ros2.{{ ros_distro }}.{{ ros_package }}.rosinstall
             state: absent
         - name: Remove source directory
           ansible.builtin.file:
