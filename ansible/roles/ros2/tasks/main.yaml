@@ -17,13 +17,13 @@
           - apt-transport-https
         install_recommends: false
         update_cache: true
-    # - name: Add ROS 2 source list
-    #   shell: echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
-    # - name: Download gpg key
-    #   ansible.builtin.uri:
-    #     url: https://raw.githubusercontent.com/ros/rosdistro/master/ros.key
-    #     dest: /usr/share/keyrings/ros-archive-keyring.gpg
-    #     follow_redirects: all
+    - name: Add ROS 2 source list
+      shell: echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+    - name: Download gpg key
+      ansible.builtin.uri:
+        url: https://raw.githubusercontent.com/ros/rosdistro/master/ros.key
+        dest: /usr/share/keyrings/ros-archive-keyring.gpg
+        follow_redirects: all
     - name: Apt install
       ansible.builtin.apt:
         name:
@@ -266,34 +266,34 @@
     block_name: YAML
   when: not yaml_cpp_build_dir_exist.stat.exists
 
-# - name: Upgrade CMake
-#   block:
-    # - name: "{{ block_name }}: update gpg key"
-    #   shell: wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
-    # # Follow drirections here: https://apt.kitware.com/
-    # - name: "{{ block_name }}: update repository info"
-    #   ansible.builtin.apt_repository:
-    #     repo: deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ {{ ansible_distribution_release }} main
-    #     filename: kitware
-    # - name: "{{ block_name }}: apt update"
-    #   ansible.builtin.apt:
-    #     update_cache: true
-    #     state: present
-    # - name: "{{ block_name }}: delete gpg key"
-    #   ansible.builtin.file:
-    #     path: /usr/share/keyrings/kitware-archive-keyring.gpg
-    #     state: absent
-    # - name: "{{ block_name }}: install kitware-arcyhive-keyring"
-    #   ansible.builtin.apt:
-    #     name: kitware-archive-keyring
-    # - name: "{{ block_name }}: install newer cmake"
-    #   ansible.builtin.apt:
-    #     name: cmake
-    #     install_recommends: false
-    #     state: latest
-  # become: true
-  # vars:
-  #   block_name: Upgrade CMake
+- name: Upgrade CMake
+  block:
+    # Follow drirections here: https://apt.kitware.com/
+    - name: "{{ block_name }}: update repository info"
+      ansible.builtin.apt_repository:
+        repo: deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ {{ ansible_distribution_release }} main
+        filename: kitware
+    - name: "{{ block_name }}: delete gpg key"
+      ansible.builtin.file:
+        path: /usr/share/keyrings/kitware-archive-keyring.gpg
+        state: absent
+    - name: "{{ block_name }}: update gpg key"
+      shell: wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
+    - name: "{{ block_name }}: apt update"
+      ansible.builtin.apt:
+        update_cache: true
+        state: present
+    - name: "{{ block_name }}: install kitware-archive-keyring"
+      ansible.builtin.apt:
+        name: kitware-archive-keyring
+    - name: "{{ block_name }}: install newer cmake"
+      ansible.builtin.apt:
+        name: cmake
+        install_recommends: false
+        state: latest
+  become: true
+  vars:
+    block_name: Upgrade CMake
 
 - name: update GCC
   block:
