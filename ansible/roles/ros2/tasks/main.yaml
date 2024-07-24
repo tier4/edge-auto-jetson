@@ -269,23 +269,16 @@
 - name: Upgrade CMake
   block:
     # Follow drirections here: https://apt.kitware.com/
+    - name: "{{ block_name }}: update gpg key"
+      shell: wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
     - name: "{{ block_name }}: update repository info"
       ansible.builtin.apt_repository:
         repo: deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ {{ ansible_distribution_release }} main
         filename: kitware
-    - name: "{{ block_name }}: delete gpg key"
-      ansible.builtin.file:
-        path: /usr/share/keyrings/kitware-archive-keyring.gpg
-        state: absent
-    - name: "{{ block_name }}: update gpg key"
-      shell: wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
     - name: "{{ block_name }}: apt update"
       ansible.builtin.apt:
         update_cache: true
         state: present
-    - name: "{{ block_name }}: install kitware-archive-keyring"
-      ansible.builtin.apt:
-        name: kitware-archive-keyring
     - name: "{{ block_name }}: install newer cmake"
       ansible.builtin.apt:
         name: cmake
