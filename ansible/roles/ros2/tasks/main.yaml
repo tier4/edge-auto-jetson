@@ -194,7 +194,7 @@
       ansible.builtin.pip:
         name:
           - colcon-common-extensions
-          - catkin-pkg-modules
+          # - catkin-pkg-modules
           - argcomplete
           - flake8-blind-except
           - flake8-builtins
