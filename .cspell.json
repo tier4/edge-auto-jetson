@@ -154,6 +154,7 @@
     "txqueue",
     "txqueuelen",
     "semseg",
-    "adlinktech"
+    "adlinktech",
+    "covdep"
   ]
 }
