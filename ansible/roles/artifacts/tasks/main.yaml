@@ -76,5 +76,3 @@
     dest: "{{ data_dir }}/tensorrt_yolox/semseg_color_map.csv"
     mode: "644"
     checksum: sha256:3d93ca05f31b63424d7d7246a01a2365953705a0ed3323ba5b6fddd744a4bfea
-
-
