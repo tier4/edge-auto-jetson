@@ -19,6 +19,13 @@
         [Warning] Do you want to configure the network? This configuration may overwrite the IP address of the specific network interface [y/N]
       private: false
   roles:
+    - role: artifacts
+    - role: ptp4l_client
+      when: prompt_configure_network == 'y'
+    - role: enlarge_txqueue
+      when: prompt_configure_network == 'y'
+    - role: netplan
+      when: prompt_configure_network == 'y'
     - role: autoware
     - role: cuda
     - role: cyclonedds
@@ -28,9 +35,3 @@
     - role: tier4_hdr_camera_driver
       when: prompt_install_camera_driver == 'y'
     - role: ros2
-    - role: ptp4l_client
-      when: prompt_configure_network == 'y'
-    - role: enlarge_txqueue
-      when: prompt_configure_network == 'y'
-    - role: netplan
-      when: prompt_configure_network == 'y'

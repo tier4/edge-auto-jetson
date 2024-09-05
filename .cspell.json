@@ -152,6 +152,9 @@
     "soruce",
     "TIERIV",
     "txqueue",
-    "txqueuelen"
+    "txqueuelen",
+    "semseg",
+    "adlinktech",
+    "covdep"
   ]
 }
