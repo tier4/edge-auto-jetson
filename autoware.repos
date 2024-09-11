@@ -3,66 +3,66 @@ repositories:
   launcher:
     type: git
     url: https://github.com/tier4/edge_auto_jetson_launch.git
-    version: main
+    version: c54858fa743e927a4a1b070ae9b060da0d249958
   individual_params:
     type: git
     url: https://github.com/tier4/edge_auto_individual_params.git
-    version: main
+    version: 5551281f0780d8fd209fb1808104ba4ba99a35d7
   sensor_trigger:
     type: git
     url: https://github.com/tier4/sensor_trigger.git
-    version: galactic
+    version: 60c9e5bd1ff67c8256205fdd05d516b8fe9a9067
   ros2_v4l2_camera:
     type: git
     url: https://github.com/tier4/ros2_v4l2_camera.git
-    version: galactic
+    version: 37b5fd0b7f7df173e77ed0dd48242223fad9c0cb
   autoware.universe:
     type: git
     url: https://github.com/autowarefoundation/autoware.universe.git
-    version: main
+    version: a60637702103d9cdac3976d4a5eaf6ed35b418c9
   calibration_tools:
     type: git
     url: https://github.com/tier4/CalibrationTools.git
-    version: tier4/universe
+    version: feature/edge_auto
   # package dependencies
   autoware_common_msgs:
     type: git
     url: https://github.com/autowarefoundation/autoware_msgs.git
-    version: main
+    version: f3ee114e1f3bf66a4df96d7dbfa209903c9cb75a
   autoware_common:
     type: git
     url: https://github.com/autowarefoundation/autoware_common.git
-    version: main
+    version: cf44343ae17205a4d684e2b71fbf51041c0bef3e
   tier4_autoware_msgs:
     type: git
     url: https://github.com/tier4/tier4_autoware_msgs.git
-    version: tier4/universe
+    version: 12504f69041fb8c895ffb5625da63be2ea69da4b
   autoware_auto_msgs:
     type: git
     url: https://github.com/tier4/autoware_auto_msgs.git
-    version: tier4/main
+    version: 624aae9feb142eb2a4e16069ed06bf4050ccc3ea
   image_pipeline:
     type: git
     url: https://github.com/tier4/image_pipeline.git
-    version: tier4/main
+    version: 8413f087568ce9e43b46e410490cb2a60ce14add
   image_transport_plugins:
     type: git
     url: https://github.com/ros-perception/image_transport_plugins.git
-    version: foxy-devel
+    version: 6d4faa5cb8bbc777c486b352f1c393a89d8d9296
   # build dependencies
   cudnn_cmake_module:
     type: git
     url: https://github.com/tier4/cudnn_cmake_module.git
-    version: main
+    version: 0.0.1
   tensorrt_cmake_module:
     type: git
     url: https://github.com/tier4/tensorrt_cmake_module.git
-    version: main
+    version: 0.0.3
   demos:
     type: git
     url: https://github.com/ros2/demos.git
-    version: humble
+    version: 0.20.5
   autoware_internal_msgs:
     type: git
     url: https://github.com/autowarefoundation/autoware_internal_msgs.git
-    version: main
+    version: cfd1e44bc1bedda65c6a6b79bb711b3700274aca
