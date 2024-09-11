@@ -38,7 +38,7 @@
           - python3-flake8
           - python3-pip
           - python3-numpy
-          - python3-pytest-covdep
+          - python3-pytest-cov
           - python3-setuptools
           - libasio-dev
           - libtinyxml2-dev
