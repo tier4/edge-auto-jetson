@@ -19,7 +19,7 @@ repositories:
   autoware.universe:
     type: git
     url: https://github.com/autowarefoundation/autoware.universe.git
-    version: a60637702103d9cdac3976d4a5eaf6ed35b418c9
+    version: 61f317e08339798963e40431b30126c1a220dd94
   calibration_tools:
     type: git
     url: https://github.com/tier4/CalibrationTools.git
