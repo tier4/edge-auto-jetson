@@ -64,12 +64,33 @@
       ansible.builtin.apt:
         name:
           - libflann-dev
-          - libboost-filesystem-dev
-          - libboost-date-time-dev
-          - libboost-iostreams-dev
           - libvtk7-dev
         install_recommends: false
         update_cache: true
+  become: true
+
+- name: Install Boost
+  block:
+    - name: Define directory name
+      set_fact:
+        boost_directory: "{{ ansible_env.HOME }}/boost"
+    - name: Create build directory
+      ansible.builtin.file:
+        path: "{{ boost_directory }}"
+        state: directory
+    - name: Download and extract boost 1.74.0 source
+      ansible.builtin.unarchive:
+        src: https://boostorg.jfrog.io/artifactory/main/release/1.74.0/source/boost_1_74_0.tar.gz
+        dest: "{{ boost_directory }}"
+        remote_src: yes
+    - name: Bootstrap Boost
+      command: ./bootstrap.sh --prefix=/usr/local --with-python=python3
+      args:
+        chdir: "{{ boost_directory }}/boost_1_74_0"
+    - name: Install Boost
+      command: ./b2 install -j4
+      args:
+        chdir: "{{ boost_directory }}/boost_1_74_0"
   become: true
 
 - name: Install PCL
@@ -101,6 +122,20 @@
         cmd: make -j7 install
         chdir: "{{ pcl_directory }}/pcl/build"
       become: true
+
+- name: Fix opencv install script1
+  ansible.builtin.replace:
+    path: "{{ opencv_install_script }}"
+    regexp: mkdir opencv
+    replace: mkdir /tmp/opencv
+  become: yes
+
+- name: Fix opencv install script2
+  ansible.builtin.replace:
+    path: "{{ opencv_install_script }}"
+    regexp: cd opencv
+    replace: cd /tmp/opencv
+  become: yes
 
 - name: Install OpenCV
   ansible.builtin.command:
