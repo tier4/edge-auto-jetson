@@ -246,6 +246,12 @@
           - cmake
         extra_args: "--upgrade --no-cache-dir"
       become: true
+    - name: Install EmPy with specific version
+      ansible.builtin.pip:
+        name: 
+          - empy==3.3.4
+        extra_args: "--no-cache-dir"
+      become: true
     - name: Could NOT find Python3 workaround
       ansible.builtin.apt:
         name:
