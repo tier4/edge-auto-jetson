@@ -75,6 +75,7 @@
       - vcstool
       - colcon-common-extensions
       - rosinstall-generator
+      - empy==3.3.4
     extra_args: -U
   become: true # need to sudo privilege to install packages globally
 
