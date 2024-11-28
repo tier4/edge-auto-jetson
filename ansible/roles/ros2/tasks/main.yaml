@@ -7,14 +7,14 @@
     - name: Apt install
       ansible.builtin.apt:
         name:
-          - curl
-          - wget
-          - gnupg
-          - gnupg2
-          - lsb-release
-          - ca-certificates
-          - software-properties-common
-          - apt-transport-https
+          - curl=7.58.0-2ubuntu3.16
+          - wget=1.19.4-1ubuntu2.2 
+          - gnupg=2.2.4-1ubuntu1.6
+          - gnupg2=2.2.4-1ubuntu1.6
+          - lsb-release=9.20170808ubuntu1
+          - ca-certificates=20230311ubuntu0.18.04.1
+          - software-properties-common=0.96.24.32.22
+          - apt-transport-https=1.6.17
         install_recommends: false
         update_cache: true
     - name: Add ROS 2 source list
@@ -27,23 +27,23 @@
     - name: Apt install
       ansible.builtin.apt:
         name:
-          - nvidia-jetpack
-          - nvidia-opencv
-          - build-essential
-          - cmake
-          - git
-          - libbullet-dev
-          - libpython3-dev
-          - python3-wheel
-          - python3-flake8
-          - python3-pip
-          - python3-numpy
-          - python3-pytest-cov
-          - python3-setuptools
-          - libasio-dev
-          - libtinyxml2-dev
-          - libcunit1-dev
-          - libflann-dev
+          - nvidia-jetpack=4.6-b199
+          - nvidia-opencv=4.6-b199
+          - build-essential=12.4ubuntu1
+          - cmake=3.10.2-1ubuntu2.18.04.2
+          - git=1:2.17.1-1ubuntu0.8
+          - libbullet-dev=2.87+dfsg-2
+          - libpython3-dev=3.6.7-1~18.04
+          - python3-wheel=0.30.0-0.2ubuntu0.1
+          - python3-flake8=3.5.0-1
+          - python3-pip=9.0.1-2.3~ubuntu1.18.04.8
+          - python3-numpy=1:1.13.3-2ubuntu1
+          - python3-pytest-cov=2.5.1-1
+          - python3-setuptools=39.0.1-2ubuntu0.1
+          - libasio-dev=1:1.10.8-1
+          - libtinyxml2-dev=6.0.0+dfsg-1
+          - libcunit1-dev=2.1-3-dfsg-2
+          - libflann-dev=1.9.1+dfsg-2
         install_recommends: false
         update_cache: true
   become: true
@@ -56,25 +56,25 @@
 - name: Python parts
   ansible.builtin.pip:
     name:
-      - wheel
-      - argcomplete
-      - flake8-blind-except
-      - flake8-builtins
-      - flake8-class-newline
-      - flake8-comprehensions
-      - flake8-deprecated
-      - flake8-docstrings
-      - flake8-import-order
-      - flake8-quotes
-      - pytest-repeat
-      - pytest-rerunfailures
-      - pytest
-      - pybind11-global
-      - importlib_resources
-      - rosdep
-      - vcstool
-      - colcon-common-extensions
-      - rosinstall-generator
+      - wheel==0.37.1
+      - argcomplete==3.1.2
+      - flake8-blind-except==0.2.1
+      - flake8-builtins==2.0.0
+      - flake8-class-newline==1.6.0
+      - flake8-comprehensions==3.7.0
+      - flake8-deprecated==1.3
+      - flake8-docstrings==1.6.0
+      - flake8-import-order==0.18.2
+      - flake8-quotes==3.4.0
+      - pytest-repeat==0.9.1
+      - pytest-rerunfailures==10.3
+      - pytest==7.0.1
+      - pybind11-global==2.11.1
+      - importlib_resources==5.4.0
+      - rosdep==0.25.1
+      - vcstool==0.3.0
+      - colcon-common-extensions==0.3.0
+      - rosinstall-generator==0.1.23
       - empy==3.3.4
     extra_args: -U
   become: true # need to sudo privilege to install packages globally
@@ -312,11 +312,9 @@
         path: "{{ ros_base_dir }}/src"
         state: directory
       become: true
-    - name: "{{ block_name }}: generate repository list using rosinstall_generator"
-      shell: rosinstall_generator --deps --rosdistro {{ ros_distro }} ros_base launch_xml launch_yaml launch_testing launch_testing_ament_cmake demo_nodes_cpp demo_nodes_py example_interfaces camera_calibration_parsers camera_info_manager cv_bridge vision_opencv vision_msgs image_geometry image_pipeline image_transport compressed_image_transport compressed_depth_image_transport pcl_msgs perception_pcl launch_pytest --exclude rmw_connextdds > /tmp/ros2.{{ ros_distro }}.ros_base.rosinstall
     - name: "{{ block_name }}: copy repository list to target ddirectory"
       ansible.builtin.copy:
-        src: /tmp/ros2.{{ ros_distro }}.ros_base.rosinstall
+        src: ros_packages.txt
         dest: "{{ ros_base_dir }}/ros2.{{ ros_distro }}.ros_base.rosinstall"
       become: true
     - name: "{{ block_name }}: clone all repositories via vcs"
