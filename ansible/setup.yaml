@@ -10,10 +10,6 @@
           interface_name: eth0
     - ptp4l_client_interface: eth1
   vars_prompt:
-    - name: prompt_install_camera_driver
-      prompt: |-
-        [Warning] Do you want to install/update the TIER IV camera driver? [y/N]
-      private: false
     - name: prompt_configure_network
       prompt: |-
         [Warning] Do you want to configure the network? This configuration may overwrite the IP address of the specific network interface [y/N]
@@ -36,9 +32,5 @@
     - role: autoware
     - role: cuda
     - role: cyclonedds
-    - role: docker
     - role: vcstool
-    - role: calibration_tools
-    - role: tier4_hdr_camera_driver
-      when: prompt_install_camera_driver == 'y'
     - role: ros2
