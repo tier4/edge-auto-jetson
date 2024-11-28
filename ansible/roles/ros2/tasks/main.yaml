@@ -1,6 +1,6 @@
 - name: Fix python interpreter version to 3
   set_fact:
-    ansible_python_interpreter: /usr/bin/python3.6
+    ansible_python_interpreter: /usr/bin/python3.10
 
 - name: Setup dependencies
   block:
@@ -394,7 +394,7 @@
         purge: true
       become: true
     - name: "{{ block_name }}: colcon build"
-      shell: colcon build --merge-install --cmake-args -DCMAKE_BUILD_TYPE=Release -DPython3_EXECUTABLE=$(which python3.6)
+      shell: colcon build --merge-install --cmake-args -DCMAKE_BUILD_TYPE=Release -DPython3_EXECUTABLE=$(which python3.10)
       args:
         chdir: "{{ ros_base_dir }}"
       become: true
