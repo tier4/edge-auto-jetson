@@ -34,3 +34,6 @@
     - role: cyclonedds
     - role: vcstool
     - role: ros2
+
+  environment:
+    DEBIAN_FRONTEND: noninteractive
