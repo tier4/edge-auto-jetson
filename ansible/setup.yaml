@@ -1,7 +1,7 @@
 - name: Setup perception ECU
   hosts: localhost
   vars:
-    - ros_distro: humble
+    - rosdistro: humble
     - network_config:
         ros:
           interface_address: 192.168.2.2
