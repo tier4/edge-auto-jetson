@@ -25,6 +25,8 @@
     - role: artifacts
     - role: cgroups
       when: prompt_configure_user_resources == 'y'
+    - role: ptp4l_host
+      when: prompt_configure_network == 'y':
     - role: ptp4l_client
       when: prompt_configure_network == 'y'
     - role: enlarge_txqueue
