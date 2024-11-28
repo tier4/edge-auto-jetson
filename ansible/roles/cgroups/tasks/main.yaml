@@ -1,0 +1,13 @@
+- name: Create directory for user cgroup config
+  ansible.builtin.file:
+    path: /etc/systemd/system/user@.service.d
+    state: directory
+    mode: 0755
+  become: true
+
+- name: Copy user cgroup config
+  ansible.builtin.copy:
+    src: user-resources.conf
+    dest: /etc/systemd/system/user@.service.d/user-resources.conf
+    mode: 0755
+  become: true
