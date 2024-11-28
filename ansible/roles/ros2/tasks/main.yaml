@@ -319,6 +319,9 @@
         src: /tmp/ros2.{{ ros_distro }}.ros_base.rosinstall
         dest: "{{ ros_base_dir }}/ros2.{{ ros_distro }}.ros_base.rosinstall"
       become: true
+    - name: "{{ block_name }}: fix fastrtsp version"
+      shell: sed -i "s/release\/humble\/fastrtps\/2.6.9-1/release\/humble\/fastrtps\/2.6.8-1/" {{ ros_base_dir }}/ros2.{{ ros_distro }}.ros_base.rosinstall
+      become: true
     - name: "{{ block_name }}: clone all repositories via vcs"
       shell: vcs import src < ros2.{{ ros_distro }}.ros_base.rosinstall
       args:
