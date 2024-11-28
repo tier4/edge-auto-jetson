@@ -18,8 +18,8 @@ repositories:
     version: 37b5fd0b7f7df173e77ed0dd48242223fad9c0cb
   autoware.universe:
     type: git
-    url: https://github.com/autowarefoundation/autoware.universe.git
-    version: 61f317e08339798963e40431b30126c1a220dd94
+    url: https://github.com/MapIV/autowarefoundation.universe.git
+    version: fix/tensorrt_10
   calibration_tools:
     type: git
     url: https://github.com/tier4/CalibrationTools.git
