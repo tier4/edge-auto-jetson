@@ -3,11 +3,11 @@
     - name: Download setup script
       ansible.builtin.uri:
         url: https://packagecloud.io/install/repositories/dirk-thomas/vcstool/script.deb.sh
-        dest: "{{ script_download_dir }}"
+        dest: "{{ vcstool_script_download_dir }}"
         mode: 0755
       register: script_deb_sh
     - name: Execute setup script
-      ansible.builtin.command: bash {{ script_download_dir }}/script.deb.sh
+      ansible.builtin.command: bash {{ vcstool_script_download_dir }}/script.deb.sh
       become: true
       # noqa no-changed-when
       # TODO: check vcstool existing

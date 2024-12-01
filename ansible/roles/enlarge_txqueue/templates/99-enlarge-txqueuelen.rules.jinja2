@@ -1,5 +1,5 @@
 {% for key in network_config %}
 {% if 'dhcp' not in key %}
-SUBSYSTEM=="net",ACTION=="add|change",KERNEL=="{{ network_config[key].interface_name }}",ATTR{tx_queue_len}="{{ txqueue_length }}"
+SUBSYSTEM=="net",ACTION=="add|change",KERNEL=="{{ network_config[key].interface_name }}",ATTR{tx_queue_len}="{{ enlarge_txqueue_length }}"
 {% endif %}
 {% endfor %}

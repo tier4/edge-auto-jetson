@@ -63,27 +63,27 @@
 
 - name: Setup C1 configuration
   block:
-    - name: "{{ block_name }} : Change trigger mode to Fsync mode"
-      include_tasks: mod_or_add.yaml
+    - name: Change trigger mode to Fsync mode
+      ansible.builtin.include_tasks: mod_or_add.yaml
       vars:
         target_item: trigger_mode
         target_val: "1"
     # Set the same value to min/mid/max exposure time
     # so that exposure time can be estimated under any brightness condition
-    - name: "{{ block_name }} : Fix exposure time"
+    - name: Fix exposure time
       block:
-        - name: "{{ block_name }} : Set min exposure"
-          include_tasks: mod_or_add.yaml
+        - name: Set min exposure
+          ansible.builtin.include_tasks: mod_or_add.yaml
           vars:
             target_item: shutter_time_min
             target_val: "{{ exposure_time }}"
-        - name: "{{ block_name }} : Set mid exposure"
-          include_tasks: mod_or_add.yaml
+        - name: Set mid exposure
+          ansible.builtin.include_tasks: mod_or_add.yaml
           vars:
             target_item: shutter_time_mid
             target_val: "{{ exposure_time }}"
-        - name: "{{ block_name }} : Set max exposure"
-          include_tasks: mod_or_add.yaml
+        - name: Set max exposure
+          ansible.builtin.include_tasks: mod_or_add.yaml
           vars:
             target_item: shutter_time_max
             target_val: "{{ exposure_time }}"
@@ -94,28 +94,28 @@
 
 - name: Setup C2 configuration
   block:
-    - name: "{{ block_name }} : Change trigger mode to Fsync mode"
-      include_tasks: mod_or_add.yaml
+    - name: Change trigger mode to Fsync mode
+      ansible.builtin.include_tasks: mod_or_add.yaml
       vars:
         target_item: trigger_mode
         target_val: "1"
 
     # Set the same value to min/mid/max exposure time
     # so that exposure time can be estimated under any brightness condition
-    - name: "{{ block_name }} : Fix exposure time"
+    - name: Fix exposure time
       block:
-        - name: "{{ block_name }} : Set min exposure"
-          include_tasks: mod_or_add.yaml
+        - name: Set min exposure
+          ansible.builtin.include_tasks: mod_or_add.yaml
           vars:
             target_item: shutter_time_min
             target_val: "{{ exposure_time }}"
-        - name: "{{ block_name }} : Set mid exposure"
-          include_tasks: mod_or_add.yaml
+        - name: Set mid exposure
+          ansible.builtin.include_tasks: mod_or_add.yaml
           vars:
             target_item: shutter_time_mid
             target_val: "{{ exposure_time }}"
-        - name: "{{ block_name }} : Set max exposure"
-          include_tasks: mod_or_add.yaml
+        - name: Set max exposure
+          ansible.builtin.include_tasks: mod_or_add.yaml
           vars:
             target_item: shutter_time_max
             target_val: "{{ exposure_time }}"
