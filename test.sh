@@ -4,8 +4,8 @@
 echo -e "\e[36m--- [PREPARATION] camera trigger start ---\e[0m"
 source install/setup.bash
 RMW_IMPLEMENTATION=
-ros2 launch sensor_trigger sensor_trigger.launch.xml frame_rate:=30.0 gpio:=51 & trigger_video0=$!
-ros2 launch sensor_trigger sensor_trigger.launch.xml frame_rate:=30.0 gpio:=52 & trigger_video1=$!
+ros2 launch sensor_trigger sensor_trigger.launch.xml frame_rate:=30.0 gpio:=51 & pid_trigger_video0=$!
+ros2 launch sensor_trigger sensor_trigger.launch.xml frame_rate:=30.0 gpio:=52 & pid_trigger_video1=$!
 sleep 5
 
 # tier4 C1 camera(/dev/video0) streaming test
@@ -32,13 +32,13 @@ else
     echo -e "\e[31m[FAILED] /dev/video1 streaming failed. [exit code ${test2_result} ... unknown]\e[0m"
 fi
 
-# 
-kill -n 9 $trigger_video0
-kill -n 9 $trigger_video1
+# post processes
+kill -9 $pid_trigger_video0
+kill -9 $pid_trigger_video1
 
 # show result
 if [ $test1_result = 0 ] && [ $test1_result = 0 ]; then
     echo -e "\e[32m[RESULT] Success.\e[0m"
 else
-    echo -e "\e[31m[RESULT] failed.\e[0m"
+    echo -e "\e[31m[RESULT] Failed.\e[0m"
 fi
