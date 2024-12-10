@@ -187,6 +187,7 @@
           - libgeographic-dev
           - libgtest-dev
           - libcgal-dev
+          - libfmt-dev
         install_recommends: false
         update_cache: true
       become: true
@@ -208,6 +209,7 @@
           - pytest
           - scikit-build
           - cmake
+          - empy==3.3.4
         extra_args: "--upgrade --no-cache-dir"
       become: true
     - name: Could NOT find Python3 workaround

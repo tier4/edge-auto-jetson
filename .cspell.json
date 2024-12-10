@@ -1,0 +1,160 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "allowCompoundWords": false,
+  "ignorePaths": [
+    "**/*.caffemodel",
+    "**/*.cpr",
+    "**/*.cspell.json",
+    "**/*.css",
+    "**/*.cu",
+    "**/*.dae",
+    "**/*.html",
+    "**/*.m4a",
+    "**/*.mp3",
+    "**/*.onnx",
+    "**/*.osm",
+    "**/*.pcd",
+    "**/*.pt",
+    "**/*.stl",
+    "**/*.wav",
+    "**/*.zip",
+    "**/*.zst",
+    "**/.git/**",
+    "**/.gitignore",
+    "**/.idea/**",
+    "**/.mypy_cache/**",
+    "**/.vscode/**",
+    "**/__pycache__/**",
+    "**/build/**",
+    "**/CPPLINT.cfg",
+    "**/dist/**",
+    "**/external/**",
+    "**/install/**",
+    "**/log/**",
+    "**/package-lock.json",
+    "**/public/**",
+    "**/reports*/**"
+  ],
+  "ignoreRegExpList": [
+    "\\[.*/.*\\]\\(https://github.com",
+    "github.com[/:][\\w._\\-]+(/[\\w._\\-]+)?"
+  ],
+  "overrides": [
+    {
+      "filename": "**/*.md",
+      "ignoreRegExpList": [
+        "\\(Contribution by .+?\\)",
+        "\\]\\(#.+?\\)",
+        "^\\| GPU  Name.+$",
+        "^gdown .+$",
+        "uses: .+/.+@.+"
+      ]
+    },
+    {
+      "filename": "**/*.py",
+      "ignoreRegExpList": ["author(_email)?=.*$", "maintainer(_email)?=.*$"]
+    },
+    {
+      "filename": "**/*.rst",
+      "ignoreRegExpList": [
+        "^.*Co-authored-by:.+$",
+        "^.*Contributors:.+$",
+        "^.*Merge branch.+$",
+        "^.*Merge pull request .*$"
+      ]
+    },
+    {
+      "filename": "**/*.toml",
+      "ignoreRegExpList": ["authors = .*?$", "maintainers = .*?$"]
+    },
+    {
+      "filename": "**/*.txt",
+      "ignoreRegExpList": ["download\\(.+\\)"]
+    },
+    {
+      "filename": "**/*.xosc",
+      "ignoreRegExpList": ["author=\".*?\""]
+    },
+    {
+      "filename": "**/*.yaml",
+      "ignoreRegExpList": ["author: .+$", "git_email: .+$", "git_user: .+$", "uses: .+$"]
+    },
+    {
+      "filename": "**/package.json",
+      "ignoreRegExpList": ["\"author\": .*"]
+    },
+    {
+      "filename": "**/package.xml",
+      "ignoreRegExpList": ["<author.*?</author>", "<maintainer.*?</maintainer>"]
+    },
+    {
+      "filename": "**/sync-files.yaml",
+      "ignoreRegExpList": ["dest: .*", "repository: .*", "source: .*"]
+    },
+    {
+      "filename": "**/{*.cpp,*.hpp,*.py,*.sh,*.xml,*.yaml,CMakeLists.txt}",
+      "ignoreRegExpList": ["Copyright (\\(c\\))?.+$", "FIXME( )?\\(.+?\\)", "TODO( )?\\(.+?\\)"]
+    },
+    {
+      "filename": "**/{*.cpp,*.hpp}",
+      "ignoreRegExpList": ["@author .*$", "\\author .*$", "Author(s)?( )?: .*$"]
+    },
+    {
+      "filename": "**/{*.drawio,*.svg}",
+      "ignoreRegExpList": [
+        "<text .*?>.*?\\.\\.\\.</text>",
+        "^.*?\\.\\.\\.(</text>)?$",
+        "data:image/png,.*;",
+        "etag=&quot;[a-zA-Z0-9 +-/_]+&quot;",
+        "filter=\"[a-zA-Z0-9 +-/_#()]+\"",
+        "id=\"[a-zA-Z0-9 +-/_]+\"",
+        "id=&quot;[a-zA-Z0-9 +-/_]+&quot;",
+        "name=&quot;[^>]+"
+      ]
+    },
+    {
+      "filename": "**/{*.js,*.ts}",
+      "ignoreRegExpList": ["owner: .*$", "repo:: .*$"]
+    }
+  ],
+  "flagWords": [],
+  "words": [
+    "ADLINK",
+    "apriltags",
+    "arcyhive",
+    "backrefs",
+    "connextdds",
+    "DBUILD",
+    "ddirectory",
+    "debhelper",
+    "debmake",
+    "devscripts",
+    "DRANGE",
+    "drirections",
+    "gmsl",
+    "GMSL",
+    "imgproc",
+    "ipfrag",
+    "kitware",
+    "libasio",
+    "libbullet",
+    "libcunit",
+    "libflann",
+    "libpython",
+    "libtinyxml",
+    "libyaml",
+    "linuxptp",
+    "pyside",
+    "rmem",
+    "rosinstall",
+    "ruamel",
+    "soruce",
+    "TIERIV",
+    "txqueue",
+    "txqueuelen",
+    "semseg",
+    "adlinktech",
+    "covdep"
+  ]
+}
