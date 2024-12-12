@@ -24,6 +24,9 @@
     - name: prompt_configure_t4_driver
       prompt: |-
         [Warning] Do you want to configure the TierIV drivers? [y/N]
+    - name: prompt_use_local_c2_driver
+      prompt: |-
+        [Warning] Do you want to use a local C2 driver? [y/N]
   roles:
     - role: artifacts
     - role: cgroups
@@ -40,7 +43,9 @@
     - role: vcstool
     - role: ros2
     - role: tier4_hdr_camera_driver
-      when: prompt_configure_t4_driver == 'y'
+      when: prompt_configure_t4_driver == 'y' and not prompt_use_local_c2_driver == 'y'
+    - role: tier4_anvil_c2
+      when: prompt_configure_t4_driver == 'y' and prompt_use_local_c2_driver == 'y'
 
   environment:
     DEBIAN_FRONTEND: noninteractive
