@@ -21,6 +21,9 @@
     - name: prompt_configure_user_resources
       prompt: |-
         [Warning] Do you want to configure user resources? Only necessary if CONFIG_RT_GROUP_SCHED is enabled [y/N]
+    - name: prompt_configure_t4_driver
+      prompt: |-
+        [Warning] Do you want to configure the TierIV drivers? [y/N]
   roles:
     - role: artifacts
     - role: cgroups
@@ -36,6 +39,8 @@
     - role: cyclonedds
     - role: vcstool
     - role: ros2
+    - role: tier4_hdr_camera_driver
+      when: prompt_configure_t4_driver == 'y'
 
   environment:
     DEBIAN_FRONTEND: noninteractive
