@@ -5,10 +5,14 @@
     - network_config:
         ros:
           interface_address: 192.168.2.2
-          interface_name: eth1
+          interface_name: eqos0
         dhcp:
+          interface_name: mgbe1
+        lidar:
+          interface_address: 192.168.1.100
           interface_name: eth0
-    - ptp4l_client_interface: eth1
+    - ptp4l_client_interface: eqos0
+    - ptp4l_host_interface: eth0
   vars_prompt:
     - name: prompt_configure_network
       prompt: |-
@@ -21,8 +25,6 @@
     - role: artifacts
     - role: cgroups
       when: prompt_configure_user_resources == 'y'
-    - role: ptp4l_host
-      when: prompt_configure_network == 'y':
     - role: ptp4l_client
       when: prompt_configure_network == 'y'
     - role: enlarge_txqueue
