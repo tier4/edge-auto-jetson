@@ -22,7 +22,7 @@ if ! (command -v git >/dev/null 2>&1); then
     sudo apt-get -y install git
 fi
 
-# Install python3.8 for ansible
+# Install python3.10 for ansible
 if ! (command -v python3.10 >/dev/null 2>&1); then
     sudo apt-get -y update
     sudo apt-get -y install python3.10
