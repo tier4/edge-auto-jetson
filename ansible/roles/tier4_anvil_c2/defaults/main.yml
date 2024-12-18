@@ -1,7 +1,11 @@
 deb_file: "tier4-camera-gmsl_1.5.0_arm64.deb"
 dtb_file: "kernel_tegra234-orin-agx-cti-AGX201-t4.dtb"
 # overlay_file: "tier4-imx490-gmsl-device-tree-overlay-anvil-r36.dtbo"
-overlay_file: "tier4-isx021-gmsl-device-tree-overlay-anvil-r36.dtbo"
-extlinux_label: "t4_primary_c2x8"
+overlay_files:
+  "t4_primary_c1x8": "tier4-isx021-gmsl-device-tree-overlay-anvil-r36.dtbo"
+  "t4_primary_c2x8": "tier4-imx490-gmsl-device-tree-overlay-anvil-r36.dtbo"
+  "t4_primary_c3x8": "tier4-imx728-gmsl-device-tree-overlay-anvil-r36.dtbo"
+  "t4_primary_c1x4_c2x4": "tier4-isx021-imx490-gmsl-device-tree-overlay-anvil-r36.dtbo"
+  "t4_primary_c1x2_c2x2_c3x4": "tier4-isx021-imx490-imx728-gmsl-device-tree-overlay-anvil-r36.dtbo"
 extlinux_append: "root=/dev/mmcblk0p1 rw rootwait rootfstype=ext4 mminit_loglevel=4 console=ttyTCU0,115200 console=ttyAMA0,115200 firmware_class.path=/etc/firmware fbcon=map:0 nospectre_bhb video=efifb:off console=tty0"
 exposure_time: 11000

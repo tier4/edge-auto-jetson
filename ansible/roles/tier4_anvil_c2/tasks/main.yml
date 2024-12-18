@@ -11,15 +11,17 @@
     mode: '0755'
 
 - name: Copy DTB file to /boot/dtb
+  become: true
   ansible.builtin.copy:
     src: "{{ role_path }}/files/{{ dtb_file }}"
     dest: "/boot/dtb/{{ dtb_file }}"
     mode: '0644'
     force: no # Don't overwrite if exists
 
-- name: Ensure the overlay file exists in /boot
+- name: Verify overlay file exists
+  loop: "{{ overlay_files | dict2items }}"
   ansible.builtin.stat:
-    path: "/boot/{{ overlay_file }}"
+    path: "/boot/{{ item.value }}"
   register: overlay_stat
   failed_when: not overlay_stat.stat.exists
 
@@ -31,16 +33,17 @@
 
 - name: Create new extlinux entry
   become: true
+  loop: "{{ overlay_files | dict2items }}"
   ansible.builtin.blockinfile:
     path: /boot/extlinux/extlinux.conf
-    marker: "# {mark} ANSIBLE MANAGED BLOCK FOR {{ extlinux_label }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK FOR {{ item.key }}"
     block: |
-      LABEL {{ extlinux_label }}
-              MENU LABEL Custom Header Config: <CSI TIERIV GMSL2 Camera Device Tree Overlay: C2x8>
+      LABEL {{ item.key }}
+              MENU LABEL Custom Header Config: {{ item.key }}
               LINUX /boot/Image
               INITRD /boot/initrd
               FDT /boot/dtb/{{ dtb_file }}
-              OVERLAYS /boot/{{ overlay_file }}
+              OVERLAYS /boot/{{ item.value }}
               APPEND ${cbootargs} {{ extlinux_append }}
     state: present
     create: yes
@@ -53,16 +56,11 @@
   register: dtb_stat
   failed_when: not dtb_stat.stat.exists
 
-- name: Verify overlay file exists
-  ansible.builtin.stat:
-    path: "/boot/{{ overlay_file }}"
-  register: overlay_stat
-  failed_when: not overlay_stat.stat.exists
-
 - name: Verify extlinux.conf contains new entry
+  loop: "{{ overlay_files | dict2items }}"
   ansible.builtin.lineinfile:
     path: /boot/extlinux/extlinux.conf
-    regexp: "LABEL {{ extlinux_label }}"
+    regexp: "LABEL {{ item.key }}"
     state: present
   check_mode: yes
   register: extlinux_check
