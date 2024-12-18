@@ -41,6 +41,22 @@
     state: latest
     update_cache: true
 
+- name: Install colcon-common-extensions
+  become: true
+  ansible.builtin.apt:
+    name:
+      - python3-colcon-common-extensions
+    state: latest
+    update_cache: true
+
+- name: Install rmw-cyclonedds-cpp
+  become: true
+  ansible.builtin.apt:
+    name:
+      - ros-{{ rosdistro }}-rmw-cyclonedds-cpp
+    state: latest
+    update_cache: true
+
 - name: Add PATH to .bashrc
   ansible.builtin.lineinfile:
     dest: ~/.bashrc
