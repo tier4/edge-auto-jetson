@@ -66,3 +66,6 @@ repositories:
     type: git
     url: https://github.com/autowarefoundation/autoware_internal_msgs.git
     version: cfd1e44bc1bedda65c6a6b79bb711b3700274aca
+  nebula:
+    type: git
+    url: https://github.com/tier4/nebula.git
