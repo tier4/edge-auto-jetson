@@ -80,7 +80,7 @@
         state: directory
     - name: Download and extract boost 1.74.0 source
       ansible.builtin.unarchive:
-        src: https://boostorg.jfrog.io/artifactory/main/release/1.74.0/source/boost_1_74_0.tar.gz
+        src: https://archives.boost.io/release/1.74.0/source/boost_1_74_0.tar.gz
         dest: "{{ boost_directory }}"
         remote_src: yes
     - name: Bootstrap Boost
