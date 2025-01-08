@@ -98,7 +98,7 @@
   block:
     - name: "{{ block_name }}: Download and extract source"
       ansible.builtin.unarchive:
-        src: https://archives.boost.io/release/1.74.0/source/boost_1_74_0.tar.bz2
+        src: https://archives.boost.io/release/1.74.0/source/boost_1_74_0.tar.gz
         dest: "{{ source_build_dir }}"
         remote_src: true
     - name: "{{ block_name }}: Build boost"
