@@ -248,7 +248,7 @@
       become: true
     - name: Install EmPy with specific version
       ansible.builtin.pip:
-        name: 
+        name:
           - empy==3.3.4
         extra_args: "--no-cache-dir"
       become: true
