@@ -18,8 +18,12 @@ repositories:
     version: 37b5fd0b7f7df173e77ed0dd48242223fad9c0cb
   autoware.universe:
     type: git
-    url: https://github.com/MapIV/autowarefoundation.universe.git
-    version: fix/tensorrt_10
+    url: https://github.com/autowarefoundation/autoware.universe.git
+    version: 7f9cdb68c8c710f2508be7364954dea7ba758bf9
+  autoware.core:
+    type: git
+    url: https://github.com/autowarefoundation/autoware.core.git
+    version: 63f86cfaff85dab2c1c7f1f78f859d9e0879fcae
   calibration_tools:
     type: git
     url: https://github.com/tier4/CalibrationTools.git
@@ -28,11 +32,19 @@ repositories:
   autoware_common_msgs:
     type: git
     url: https://github.com/autowarefoundation/autoware_msgs.git
-    version: f3ee114e1f3bf66a4df96d7dbfa209903c9cb75a
+    version: 0631905d402bd94ca5092c03dc2188a8c20f7bfb
   autoware_common:
     type: git
     url: https://github.com/autowarefoundation/autoware_common.git
     version: cf44343ae17205a4d684e2b71fbf51041c0bef3e
+  autoware_adapi_msgs:
+    type: git
+    url: https://github.com/autowarefoundation/autoware_adapi_msgs.git
+    version: beta/1.7.0
+  autoware_lanelet2_extension:
+    type: git
+    url: https://github.com/autowarefoundation/autoware_lanelet2_extension.git
+    version: 0.6.1
   tier4_autoware_msgs:
     type: git
     url: https://github.com/tier4/tier4_autoware_msgs.git
@@ -57,7 +69,7 @@ repositories:
   tensorrt_cmake_module:
     type: git
     url: https://github.com/tier4/tensorrt_cmake_module.git
-    version: 0.0.3
+    version: 0.0.4
   demos:
     type: git
     url: https://github.com/ros2/demos.git
@@ -65,7 +77,8 @@ repositories:
   autoware_internal_msgs:
     type: git
     url: https://github.com/autowarefoundation/autoware_internal_msgs.git
-    version: cfd1e44bc1bedda65c6a6b79bb711b3700274aca
+    version: 1.5.0
+
   nebula:
     type: git
     url: https://github.com/tier4/nebula.git
