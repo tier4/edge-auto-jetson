@@ -62,14 +62,6 @@ repositories:
     url: https://github.com/ros-perception/image_transport_plugins.git
     version: 6d4faa5cb8bbc777c486b352f1c393a89d8d9296
   # build dependencies
-  cudnn_cmake_module:
-    type: git
-    url: https://github.com/tier4/cudnn_cmake_module.git
-    version: 0.0.1
-  tensorrt_cmake_module:
-    type: git
-    url: https://github.com/tier4/tensorrt_cmake_module.git
-    version: 0.0.4
   demos:
     type: git
     url: https://github.com/ros2/demos.git
