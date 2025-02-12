@@ -41,6 +41,14 @@
     state: latest
     update_cache: true
 
+- name: Install rosdep
+  become: true
+  ansible.builtin.apt:
+    name:
+      - python3-rosdep
+    state: latest
+    update_cache: true
+
 - name: Install colcon-common-extensions
   become: true
   ansible.builtin.apt:
