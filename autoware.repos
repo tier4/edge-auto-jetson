@@ -4,6 +4,10 @@ repositories:
     type: git
     url: https://github.com/tier4/edge_auto_jetson_launch.git
     version: c54858fa743e927a4a1b070ae9b060da0d249958
+  x86_launcher:
+    type: git
+    url: https://github.com/MapIV/edge_auto_launch.git
+    version: 2296018ef3e3cdf020360cc467ec6676cc645d63
   individual_params:
     type: git
     url: https://github.com/tier4/edge_auto_individual_params.git
