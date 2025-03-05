@@ -1,3 +1,4 @@
+# cSpell:disable
 - name: Confirm locale
   block:
     - name: Generate locale files
@@ -64,6 +65,9 @@
       ansible.builtin.apt:
         name:
           - libflann-dev
+          - libboost-filesystem-dev
+          - libboost-date-time-dev
+          - libboost-iostreams-dev
           - libvtk7-dev
         install_recommends: false
         update_cache: true
@@ -71,27 +75,20 @@
 
 - name: Install Boost
   block:
-    - name: Define directory name
-      set_fact:
-        boost_directory: "{{ ansible_env.HOME }}/boost"
-    - name: Create build directory
-      ansible.builtin.file:
-        path: "{{ boost_directory }}"
-        state: directory
-    - name: Download and extract boost 1.74.0 source
+    - name: get boost from url
+      ansible.builtin.get_url:
+        url: https://archives.boost.io/release/1.74.0/source/boost_1_74_0.tar.gz
+        dest: /tmp/boost_1_74_0.tar.gz
+    - name: extract boost
       ansible.builtin.unarchive:
-        src: https://archives.boost.io/release/1.74.0/source/boost_1_74_0.tar.gz
-        dest: "{{ boost_directory }}"
-        remote_src: yes
-    - name: Bootstrap Boost
-      command: ./bootstrap.sh --prefix=/usr/local --with-python=python3
-      args:
-        chdir: "{{ boost_directory }}/boost_1_74_0"
-    - name: Install Boost
-      command: ./b2 install -j4
-      args:
-        chdir: "{{ boost_directory }}/boost_1_74_0"
-  become: true
+        src: /tmp/boost_1_74_0.tar.gz
+        dest: /tmp
+        remote_src: true
+    - name: install boost
+      ansible.builtin.shell:
+        cmd: ./bootstrap.sh --prefix=/usr/local --with-python=python3 && sudo ./b2 install -j10
+        chdir: /tmp/boost_1_74_0
+      become: true
 
 - name: Install PCL
   block:
@@ -106,7 +103,7 @@
       ansible.builtin.unarchive:
         src: https://github.com/PointCloudLibrary/pcl/releases/download/pcl-1.12.1/source.tar.gz
         dest: "{{ pcl_directory }}"
-        remote_src: yes
+        remote_src: true
     - name: Create build directory
       ansible.builtin.file:
         path: "{{ pcl_directory }}/pcl/build"
@@ -116,30 +113,17 @@
         cmd: cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc ..
         chdir: "{{ pcl_directory }}/pcl/build"
       environment:
-        PATH: "/usr/local/cuda/bin:{{ ansible_env.PATH }}"
+        PATH: /usr/local/cuda/bin:{{ ansible_env.PATH }}
     - name: Install PCL
       ansible.builtin.command:
         cmd: make -j7 install
         chdir: "{{ pcl_directory }}/pcl/build"
       become: true
 
-- name: Fix opencv install script1
-  ansible.builtin.replace:
-    path: "{{ opencv_install_script }}"
-    regexp: mkdir opencv
-    replace: mkdir /tmp/opencv
-  become: yes
-
-- name: Fix opencv install script2
-  ansible.builtin.replace:
-    path: "{{ opencv_install_script }}"
-    regexp: cd opencv
-    replace: cd /tmp/opencv
-  become: yes
-
 - name: Install OpenCV
   ansible.builtin.command:
     cmd: "{{ opencv_install_script }} https://nvidia.box.com/shared/static/2hssa5g3v28ozvo3tc3qwxmn78yerca9.gz OpenCV-4.5.0-aarch64.tar.gz"
+    chdir: "{{ jetson_script_dir }}"
   become: true
 
 - name: Install range-v3 0.11.0
@@ -155,7 +139,7 @@
       ansible.builtin.unarchive:
         src: https://github.com/ericniebler/range-v3/archive/refs/tags/0.11.0.tar.gz
         dest: "{{ range_v3_directory }}"
-        remote_src: yes
+        remote_src: true
     - name: Create build directory
       ansible.builtin.file:
         path: "{{ range_v3_directory }}/range-v3-0.11.0/build"
@@ -165,7 +149,7 @@
         cmd: cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc ..
         chdir: "{{ range_v3_directory }}/range-v3-0.11.0/build"
       environment:
-        PATH: "/usr/local/cuda/bin:{{ ansible_env.PATH }}"
+        PATH: /usr/local/cuda/bin:{{ ansible_env.PATH }}
     - name: Install range-v3
       ansible.builtin.command:
         cmd: make -j7 install
@@ -193,10 +177,10 @@
             update_cache: true
         - name: Download ros.key
           ansible.builtin.command:
-            cmd: "curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg"
+            cmd: curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
         - name: "TODO: add name"
-          ansible.builtin.command:
-            cmd: 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null'
+          ansible.builtin.shell:
+            cmd: echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
       become: true
     - name: Install apt packages
       ansible.builtin.apt:
@@ -222,6 +206,7 @@
           - libgeographic-dev
           - libgtest-dev
           - libcgal-dev
+          - libfmt-dev
         install_recommends: false
         update_cache: true
       become: true
@@ -229,7 +214,6 @@
       ansible.builtin.pip:
         name:
           - colcon-common-extensions
-          # - catkin-pkg-modules
           - argcomplete
           - flake8-blind-except
           - flake8-builtins
@@ -244,13 +228,13 @@
           - pytest
           - scikit-build
           - cmake
-        extra_args: "--upgrade --no-cache-dir"
+        extra_args: --upgrade --no-cache-dir
       become: true
     - name: Install EmPy with specific version
       ansible.builtin.pip:
         name:
           - empy==3.3.4
-        extra_args: "--no-cache-dir"
+        extra_args: --no-cache-dir
       become: true
     - name: Could NOT find Python3 workaround
       ansible.builtin.apt:
@@ -268,20 +252,29 @@
       become: true
     - name: Download ROS packages
       ansible.builtin.shell:
-        cmd: "rosinstall_generator --deps --rosdistro {{ ros_distro }} {{ ros_pkg }} launch_xml launch_yaml launch_testing launch_testing_ament_cmake demo_nodes_cpp demo_nodes_py example_interfaces camera_calibration_parsers camera_info_manager cv_bridge v4l2_camera vision_opencv vision_msgs geographic_msgs image_geometry image_pipeline image_transport compressed_image_transport compressed_depth_image_transport pcl_msgs perception_pcl logging_demo udp_msgs angles diagnostics tf_transformations mrt_cmake_modules gtest_vendor grid_map filters nav2_msgs tf2-eigen ament_cmake_clang_format > {{ ros_root_dir }}/ros2.{{ ros_distro }}.{{ ros_pkg }}.rosinstall"
+        cmd: rosinstall_generator --deps --rosdistro {{ ros_distro }} {{ ros_pkg }} launch_xml launch_yaml launch_testing launch_testing_ament_cmake demo_nodes_cpp demo_nodes_py example_interfaces camera_calibration_parsers camera_info_manager cv_bridge v4l2_camera vision_opencv libstatistics_collector geographic_msgs vision_msgs image_geometry image_pipeline image_transport compressed_image_transport compressed_depth_image_transport pcl_msgs perception_pcl logging_demo udp_msgs angles diagnostics tf_transformations mrt_cmake_modules gtest_vendor  grid_map filters nav2_msgs tf2-eigen ament_cmake_clang_format > {{ ros_root_dir }}/ros2.{{ ros_distro }}.{{ ros_pkg }}.rosinstall
       become: true
     - name: Import packages to source directory
       ansible.builtin.shell:
-        cmd: "vcs import src < ros2.humble.ros_base.rosinstall"
+        cmd: vcs import src < ros2.humble.ros_base.rosinstall
         chdir: "{{ ros_root_dir }}"
       become: true
     - name: Install dependencies with rosdep
       block:
+        - name: Check if rosdep sources.list file exists
+          ansible.builtin.stat:
+            path: /etc/ros/rosdep/sources.list.d/20-default.list
+          register: rosdep_list_file
+        - name: Initialize rosdep
+          ansible.builtin.shell:
+            cmd: rosdep init
+          become: true
+          when: not rosdep_list_file.stat.exists
         - name: Update rosdep
           ansible.builtin.shell:
             cmd: rosdep update
         - name: Run rosdep
-          shell: "rosdep install -y --ignore-src --from-paths src --rosdistro humble --skip-keys 'libopencv-dev python3-catkin-pkg-modules python3-rosdistro-modules libignition-math6-dev rti-connext-dds-6.0.1 ignition-math6'"
+          shell: rosdep install -y --ignore-src --from-paths src --rosdistro humble --skip-keys 'libopencv-dev python3-catkin-pkg-modules python3-rosdistro-modules libignition-math6-dev rti-connext-dds-6.0.1 ignition-math6'
           args:
             chdir: "{{ ros_root_dir }}"
     - name: Colcon build
