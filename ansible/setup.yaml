@@ -1,3 +1,4 @@
+# cspell:ignore eqos mgbe SCHED
 - name: Setup perception ECU
   hosts: localhost
   vars:
