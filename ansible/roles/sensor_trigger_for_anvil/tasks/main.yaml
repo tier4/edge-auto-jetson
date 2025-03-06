@@ -1,3 +1,4 @@
+# cspell:ignore libgpiod
 - name: Install gpio library
   ansible.builtin.apt:
     name:
