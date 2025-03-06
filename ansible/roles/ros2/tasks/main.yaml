@@ -75,6 +75,7 @@
       - vcstool
       - colcon-common-extensions
       - rosinstall-generator
+      - empy==3.3.4
     extra_args: -U
   become: true # need to sudo privilege to install packages globally
 
@@ -97,7 +98,7 @@
   block:
     - name: "{{ block_name }}: Download and extract source"
       ansible.builtin.unarchive:
-        src: https://boostorg.jfrog.io/artifactory/main/release/1.74.0/source/boost_1_74_0.tar.gz
+        src: https://archives.boost.io/release/1.74.0/source/boost_1_74_0.tar.gz
         dest: "{{ source_build_dir }}"
         remote_src: true
     - name: "{{ block_name }}: Build boost"
@@ -317,6 +318,9 @@
       ansible.builtin.copy:
         src: /tmp/ros2.{{ ros_distro }}.ros_base.rosinstall
         dest: "{{ ros_base_dir }}/ros2.{{ ros_distro }}.ros_base.rosinstall"
+      become: true
+    - name: "{{ block_name }}: fix fastrtsp version"
+      shell: sed -i "s/release\/humble\/fastrtps\/2.6.9-1/release\/humble\/fastrtps\/2.6.8-1/" {{ ros_base_dir }}/ros2.{{ ros_distro }}.ros_base.rosinstall
       become: true
     - name: "{{ block_name }}: clone all repositories via vcs"
       shell: vcs import src < ros2.{{ ros_distro }}.ros_base.rosinstall
