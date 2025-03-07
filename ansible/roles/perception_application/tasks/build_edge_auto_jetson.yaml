@@ -1,0 +1,50 @@
+### Build local stuffs
+- name: Create Autoware directory
+  ansible.builtin.file:
+    path: "{{ perception_application_base_path }}"
+    state: directory
+    mode: "0755"
+
+- name: Clone edge-auto-jetson repository
+  ansible.builtin.git:
+    repo: git@github.com:tier4/edge-auto-jetson.xx1_gen2.0.git
+    dest: "{{ perception_application_base_path }}/edge-auto-jetson"
+    version: "{{ perception_application_edge_auto_version }}"
+
+- name: Create src directory
+  ansible.builtin.file:
+    path: "{{ perception_application_base_path }}/edge-auto-jetson/src"
+    state: directory
+    mode: "0755"
+
+- name: Import VCS repositories
+  ansible.builtin.shell:
+    cmd: vcs import src < autoware.repos
+    chdir: "{{ perception_application_base_path }}/edge-auto-jetson"
+  changed_when: false
+
+- name: Upgrade pyOpenSSL using pip
+  ansible.builtin.pip:
+    name: pyopenssl
+    state: latest
+    executable: pip3
+
+# Source path will be common setup path if perception_application_native_built_ros not true
+- name: Set Source Path for X86
+  ansible.builtin.set_fact:
+    perception_application_ros_source_path: "source /opt/ros/humble/setup.bash"
+  when: not perception_application_native_built_ros|bool
+
+# Source path will be different if perception_application_native_built_ros true
+- name: Set Source Path for ARM
+  ansible.builtin.set_fact:
+    perception_application_ros_source_path: "source /opt/ros/humble/install/setup.bash"
+  when: perception_application_native_built_ros|bool
+
+
+- name: Build Edge Auto Jetson package
+  ansible.builtin.shell:
+    cmd: source {{ perception_application_ros_source_path }} && ./build.sh {{ perception_type }}
+    chdir: "{{ perception_application_base_path }}/edge-auto-jetson"
+    executable: /bin/bash
+  changed_when: false

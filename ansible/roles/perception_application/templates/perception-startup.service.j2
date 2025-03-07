@@ -1,0 +1,21 @@
+[Unit]
+Description=perception launch
+After=network.target
+Requires=network.target
+
+# cspell: ignore pkill
+# cspell: ignore RTPRIO
+[Service]
+TimeoutStartSec=0
+Restart=always
+ExecStart=/opt/autoware/perception-startup-service/run.sh
+ExecStop=/usr/bin/pkill -f edge_auto_jetson_launch && /usr/bin/pkill -f jetson_{{ perception_type }}_launch
+KillMode=control-group
+KillSignal=SIGQUIT
+LimitRTPRIO=98
+# https://answers.ros.org/question/367935/systemd-does-not-work-with-ros2/
+# Set environment to make ros2 command available in run.sh
+Environment="HOME=root"
+
+[Install]
+WantedBy=multi-user.target

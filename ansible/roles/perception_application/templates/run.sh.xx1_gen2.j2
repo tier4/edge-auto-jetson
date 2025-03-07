@@ -1,0 +1,25 @@
+#!/bin/bash
+# NOTE: We cannot use $HOME in this script because perception-startup.service overrides $HOME as root
+
+while [[ ! -e /dev/video0 || ! -e /dev/video1  || ! -e /dev/video2  || ! -e /dev/video3 ]]; do
+    sleep 1
+done
+
+# wait for netplan applied
+flag=""
+while [[ -n  $flag ]]; do
+        echo waiting for 192.168.30.x $flag
+        sleep 1
+        flag=$(ip a |grep "192.168.30")
+done
+
+# load all env files
+source /opt/ros/humble/install/setup.bash
+source {{ autoware_env_dir }}/autoware.env
+source {{ autoware_env_dir }}/vehicle.env
+
+{% if perception_type == 'tlr' %}
+ros2 launch edge_auto_jetson_launch jetson_tlr.launch.xml \
+{% else %}
+ros2 launch edge_auto_jetson_launch perception_multiple.launch.xml \
+{% endif %}

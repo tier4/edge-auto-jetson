@@ -1,0 +1,7 @@
+perception_application_base_path: /home/autoware
+perception_application_edge_auto_repo : git@github.com:tier4/edge-auto-jetson.xx1_gen2.0.git
+# perception_application_edge_auto_repo : git@github.com:tier4/edge-auto-jetson.x2.git
+perception_application_edge_auto_version: beta/v0.48
+# perception_application_edge_auto_version: beta/v4.1.0
+perception_application_native_built_ros: true # true: native built, false: apt install
+perception_application_service_run_templates_file: run.sh.xx1_gen2.j2 # run.sh.x2.j2
