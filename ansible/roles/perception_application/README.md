@@ -27,6 +27,8 @@ perception_application/
   - Example: `/home/autoware`
 - `perception_application_edge_auto_version`: Git version/tag for Edge Auto Jetson repository
   - Example: `beta/v0.48`
+- `perception_application_directory_name`: resulting directory of the cloned repository in the file system.
+  - Example: `edge-auto-jetson` / `overlay_ws`
 - `perception_application_edge_auto_repo`: Git repository URL for Edge Auto Jetson
   - Default: `git@github.com:tier4/edge-auto-jetson.xx1_gen2.0.git`
 - `perception_application_native_built_ros`: Controls ROS build type

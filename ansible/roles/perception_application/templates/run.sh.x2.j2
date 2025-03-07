@@ -5,7 +5,7 @@ source {{ autoware_env_dir }}/vehicle.env
 source {{ autoware_env_dir }}/jetson.env
 
 source /opt/ros/humble/install/setup.bash
-source {{ jetson_container_install_dir }}/overlay_ws/install/setup.bash
+source {{ jetson_container_install_dir }}/{{ perception_application_directory_name }}/install/setup.bash
 
 if [ "$VEHICLE_MODEL" == "j6_gen2" ]; then
     while [[ ! -e /var/run/mgbe1-ready ]]; do
@@ -26,8 +26,4 @@ while [[ ! -e /dev/video{{ i }} ]]; do
 done
 {%endfor%}
 
-{% if perception_type == "tlr" %}
-ros2 launch jetson_tlr_launch jetson_tlr.launch.xml
-{% else %}
-ros2 launch jetson_or_launch jetson_or.launch.xml
-{% endif %}
+ros2 launch jetson_{{ perception_type }}_launch jetson_{{ perception_type }}.launch.xml
