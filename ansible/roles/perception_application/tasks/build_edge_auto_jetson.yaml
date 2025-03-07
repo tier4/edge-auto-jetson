@@ -32,13 +32,13 @@
 # Source path will be common setup path if perception_application_native_built_ros not true
 - name: Set Source Path for X86
   ansible.builtin.set_fact:
-    perception_application_ros_source_path: "source /opt/ros/humble/setup.bash"
+    perception_application_ros_source_path: "/opt/ros/humble/setup.bash"
   when: not perception_application_native_built_ros|bool
 
 # Source path will be different if perception_application_native_built_ros true
 - name: Set Source Path for ARM
   ansible.builtin.set_fact:
-    perception_application_ros_source_path: "source /opt/ros/humble/install/setup.bash"
+    perception_application_ros_source_path: "/opt/ros/humble/install/setup.bash"
   when: perception_application_native_built_ros|bool
 
 
