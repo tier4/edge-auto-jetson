@@ -8,7 +8,7 @@
 
 - name: Install script of perception launch shell
   ansible.builtin.template:
-    src: "{{ perception_startup_service_templates_file }}"
+    src: "{{ perception_application_service_run_templates_file }}"
     dest: /opt/autoware/perception-startup-service/run.sh
     owner: root
     mode: 0755
