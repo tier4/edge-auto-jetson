@@ -5,11 +5,17 @@
     state: directory
     mode: "0755"
 
+- name: Clone repository that contain install script
+  ansible.builtin.set_fact:
+    github_token: "{{ lookup('env', 'GITHUB_TOKEN') }}"
+
 - name: Clone edge-auto-jetson repository
   ansible.builtin.git:
     repo: "{{ perception_application_edge_auto_repo }}"
     dest: "{{ perception_application_base_path }}/{{ perception_application_directory_name }}"
     version: "{{ perception_application_edge_auto_version }}"
+  environment:
+      GITHUB_TOKEN: "{{ github_token }}"
 
 - name: Create src directory
   ansible.builtin.file:
@@ -22,6 +28,8 @@
     cmd: vcs import src < autoware.repos
     chdir: "{{ perception_application_base_path }}/{{ perception_application_directory_name }}"
   changed_when: false
+  environment:
+      GITHUB_TOKEN: "{{ github_token }}"
 
 - name: Upgrade pyOpenSSL using pip
   ansible.builtin.pip:
