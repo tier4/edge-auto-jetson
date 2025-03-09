@@ -17,7 +17,7 @@
 - name: Install perception startup service file
   ansible.builtin.template:
     src: perception-startup.service.j2
-    dest: /etc/systemd/system/
+    dest: /etc/systemd/system/perception-startup.service
     mode: 0755
   become: true
 
