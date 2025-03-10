@@ -57,6 +57,17 @@
     state: latest
     update_cache: true
 
+- name: Install ros2 dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - ros-humble-camera-info-manager
+      - ros-humble-camera-calibration-parsers
+      - ros-humble-cudnn-cmake-module
+      - ros-humble-pcl-ros
+    state: latest
+    update_cache: true
+
 - name: Install rmw-cyclonedds-cpp
   become: true
   ansible.builtin.apt:

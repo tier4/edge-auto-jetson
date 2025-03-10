@@ -89,3 +89,7 @@ repositories:
     type: git
     url: https://github.com/autowarefoundation/ros2_socketcan
     version: main
+  tensorrt_cmake_module:
+    type: git
+    url: https://github.com/tier4/tensorrt_cmake_module
+    version: main
