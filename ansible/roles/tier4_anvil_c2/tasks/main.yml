@@ -14,14 +14,14 @@
   become: true
   ansible.builtin.copy:
     src: "{{ role_path }}/files/{{ dtb_file }}"
-    dest: "/boot/dtb/{{ dtb_file }}"
+    dest: /boot/dtb/{{ dtb_file }}
     mode: "0644"
-    force: no # Don't overwrite if exists
+    force: false # Don't overwrite if exists
 
 - name: Verify overlay file exists
   loop: "{{ overlay_files | dict2items }}"
   ansible.builtin.stat:
-    path: "/boot/{{ item.value }}"
+    path: /boot/{{ item.value }}
   register: overlay_stat
   failed_when: not overlay_stat.stat.exists
 
@@ -46,13 +46,13 @@
               OVERLAYS /boot/{{ item.value }}
               APPEND ${cbootargs} {{ extlinux_append }}
     state: present
-    create: yes
+    create: true
     mode: "0644"
 
 # Optional: Validate configuration
 - name: Verify DTB file exists
   ansible.builtin.stat:
-    path: "/boot/dtb/{{ dtb_file }}"
+    path: /boot/dtb/{{ dtb_file }}
   register: dtb_stat
   failed_when: not dtb_stat.stat.exists
 
@@ -60,9 +60,9 @@
   loop: "{{ overlay_files | dict2items }}"
   ansible.builtin.lineinfile:
     path: /boot/extlinux/extlinux.conf
-    regexp: "LABEL {{ item.key }}"
+    regexp: LABEL {{ item.key }}
     state: present
-  check_mode: yes
+  check_mode: true
   register: extlinux_check
   failed_when: extlinux_check.changed
 
