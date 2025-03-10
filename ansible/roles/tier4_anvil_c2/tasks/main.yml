@@ -8,14 +8,14 @@
   ansible.builtin.file:
     path: /boot/dtb
     state: directory
-    mode: '0755'
+    mode: "0755"
 
 - name: Copy DTB file to /boot/dtb
   become: true
   ansible.builtin.copy:
     src: "{{ role_path }}/files/{{ dtb_file }}"
     dest: "/boot/dtb/{{ dtb_file }}"
-    mode: '0644'
+    mode: "0644"
     force: no # Don't overwrite if exists
 
 - name: Verify overlay file exists
@@ -47,7 +47,7 @@
               APPEND ${cbootargs} {{ extlinux_append }}
     state: present
     create: yes
-    mode: '0644'
+    mode: "0644"
 
 # Optional: Validate configuration
 - name: Verify DTB file exists

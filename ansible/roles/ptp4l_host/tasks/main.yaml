@@ -19,4 +19,3 @@
     masked: false
   become: true
   with_items: "{{ ptp4l_host_interface }}"
-
