@@ -5,8 +5,6 @@ This repository provides a sample ROS 2 environment working on a Jetson-based EC
 As a sample application, the following images show object detection results using the contents of this repository. Various perception applications will be added in
 the future and you can develop them in this provided environment.
 
-[Edge.Auto](https://sensor.tier4.jp/) sensor fusion system can be realized by using this with [edge-auto](https://github.com/tier4/edge-auto) repository.
-
 ![object detection example](docs/sample.png "edge-auto-jetson object detection example")
 
 ## Prerequisites
@@ -19,14 +17,17 @@ This repository is based on a natively built ROS 2 environment. The system overv
 
 ### System Requirement
 
-- Camera: v4l2 compatible cameras, including [TIER IV Automotive HDR Camera C1](https://sensor.tier4.jp/automotive-hdr-camera)
-- ECU: Jetson AGX Xavier based ECU, including [RQX-58G](https://www.adlinktech.com/Products/ROS2_Solution/ROS2_Controller/RQX-580_58G) from ADLINK Technology Inc. and [Developer Kit](https://www.nvidia.com/ja-jp/autonomous-machines/embedded-systems/jetson-agx-xavier) from NVIDIA Corp.
-- NVIDIA L4T: R32.6.1 (including Ubuntu 18.04)
+> [!NOTE]
+> If you are using Jetson AGX Xavier based ECU, please refer to [this branch](https://github.com/tier4/edge-auto-jetson/tree/release/RQX-58G?tab=readme-ov-file).
+
+- Camera: v4l2 compatible cameras, including [TIER IV Automotive HDR Camera C2](https://sensor.tier4.jp/automotive-hdr-camera)
+- ECU: Jetson AGX Orin based ECU, including [ConnectTech Anvil](https://connecttech.com/product/anvil-embedded-system-with-nvidia-jetson-agx-orin/) from ADLINK Technology Inc. and [Developer Kit](https://www.nvidia.com/ja-jp/autonomous-machines/embedded-systems/jetson-orin/) from NVIDIA Corp.
+- NVIDIA L4T: R36.4 (including Ubuntu 22.04)
 - ROS: ROS 2 Humble (native build)
 
 ## Getting Started
 
-Please see [Tutorials](https://github.com/tier4/edge-auto/tree/main/docs/tutorials.md).
+Please see [Tutorials](https://tier4.github.io/edge-auto-docs/getting_started/sensor_fusion_kit_v2_getting_started_guide.html).
 
 ## Related repositories
 

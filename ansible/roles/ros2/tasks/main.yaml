@@ -1,437 +1,74 @@
-- name: Fix python interpreter version to 3
-  set_fact:
-    ansible_python_interpreter: /usr/bin/python3.6
-
-- name: Setup dependencies
-  block:
-    - name: Apt install
-      ansible.builtin.apt:
-        name:
-          - curl
-          - wget
-          - gnupg
-          - gnupg2
-          - lsb-release
-          - ca-certificates
-          - software-properties-common
-          - apt-transport-https
-        install_recommends: false
-        update_cache: true
-    - name: Add ROS 2 source list
-      shell: echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
-    - name: Download gpg key
-      ansible.builtin.uri:
-        url: https://raw.githubusercontent.com/ros/rosdistro/master/ros.key
-        dest: /usr/share/keyrings/ros-archive-keyring.gpg
-        follow_redirects: all
-    - name: Apt install
-      ansible.builtin.apt:
-        name:
-          - nvidia-jetpack
-          - nvidia-opencv
-          - build-essential
-          - cmake
-          - git
-          - libbullet-dev
-          - libpython3-dev
-          - python3-wheel
-          - python3-flake8
-          - python3-pip
-          - python3-numpy
-          - python3-pytest-cov
-          - python3-setuptools
-          - libasio-dev
-          - libtinyxml2-dev
-          - libcunit1-dev
-          - libflann-dev
-        install_recommends: false
-        update_cache: true
+- name: Install dependencies for setting up apt sources
   become: true
-
-- name: add CUDA into PATH
-  set_fact:
-    environment:
-      PATH: /usr/local/cuda/bin:{{ ansible_env.PATH }}
-
-- name: Python parts
-  ansible.builtin.pip:
+  ansible.builtin.apt:
     name:
-      - wheel
-      - argcomplete
-      - flake8-blind-except
-      - flake8-builtins
-      - flake8-class-newline
-      - flake8-comprehensions
-      - flake8-deprecated
-      - flake8-docstrings
-      - flake8-import-order
-      - flake8-quotes
-      - pytest-repeat
-      - pytest-rerunfailures
-      - pytest
-      - pybind11-global
-      - importlib_resources
-      - rosdep
-      - vcstool
-      - colcon-common-extensions
-      - rosinstall-generator
-      - empy==3.3.4
-    extra_args: -U
-  become: true # need to sudo privilege to install packages globally
+      - curl
+      - gnupg
+      - lsb-release
+    update_cache: true
 
-- name: Prepare for dependencies' source build
-  block:
-    - name: Define directory name
-      set_fact:
-        source_build_dir: "{{ ansible_env.HOME }}/source_builds"
-    - name: Create directory
-      ansible.builtin.file:
-        path: "{{ source_build_dir }}"
-        state: directory
-
-- name: Check Boost build directory existence
-  ansible.builtin.stat:
-    path: "{{ source_build_dir }}/boost_1_74_0"
-  register: boost_build_dir_exist
-
-- name: Build and install Boost
-  block:
-    - name: "{{ block_name }}: Download and extract source"
-      ansible.builtin.unarchive:
-        src: https://archives.boost.io/release/1.74.0/source/boost_1_74_0.tar.gz
-        dest: "{{ source_build_dir }}"
-        remote_src: true
-    - name: "{{ block_name }}: Build boost"
-      shell: ./bootstrap.sh --prefix=/usr/local --with-python=python3 && ./b2 install -j7
-      args:
-        chdir: "{{ source_build_dir }}/boost_1_74_0"
-      become: true
-  vars:
-    block_name: Boost
-  when: not boost_build_dir_exist.stat.exists
-
-- name: Check PCL build directory existence
-  ansible.builtin.stat:
-    path: "{{ source_build_dir }}/pcl"
-  register: pcl_build_dir_exist
-
-- name: Build and install PCL
-  block:
-    - name: "{{ block_name }}: Download and extract source"
-      ansible.builtin.unarchive:
-        src: https://github.com/PointCloudLibrary/pcl/releases/download/pcl-1.12.1/source.tar.gz
-        dest: "{{ source_build_dir }}"
-        remote_src: true
-    - set_fact:
-        pcl_build_dir: "{{ source_build_dir }}/pcl/build"
-    - name: "{{ block_name }}: Create build directory"
-      ansible.builtin.file:
-        path: "{{ pcl_build_dir }}"
-        state: directory
-    - name: "{{ block_name }}: cmake"
-      shell: cmake -DCMAKE_BUILD_TYPE=Release ..
-      args:
-        chdir: "{{ pcl_build_dir }}"
-      environment:
-        PATH: /usr/local/cuda/bin:{{ ansible_env.PATH }}
-    - name: "{{ block_name }}: build"
-      shell: make -j7 install
-      args:
-        chdir: "{{ pcl_build_dir }}"
-      become: true
-  vars:
-    block_name: PCL
-  when: not pcl_build_dir_exist.stat.exists
-
-- name: Check fmt build directory existence
-  ansible.builtin.stat:
-    path: "{{ source_build_dir }}/fmt-8.1.1"
-  register: fmt_build_dir_exist
-
-- name: Build and install fmt
-  block:
-    - name: "{{ block_name }}: Download and extract source"
-      ansible.builtin.unarchive:
-        src: https://github.com/fmtlib/fmt/archive/refs/tags/8.1.1.tar.gz
-        dest: "{{ source_build_dir }}"
-        remote_src: true
-    - set_fact:
-        fmt_build_dir: "{{ source_build_dir }}/fmt-8.1.1/build"
-    - name: "{{ block_name }}: Create build directory"
-      ansible.builtin.file:
-        path: "{{ fmt_build_dir }}"
-        state: directory
-    - name: "{{ block_name }}: cmake"
-      shell: cmake -DBUILD_SHARED_LIBS=TRUE ..
-      args:
-        chdir: "{{ fmt_build_dir }}"
-    - name: "{{ block_name }}: build"
-      shell: make -j7 install
-      args:
-        chdir: "{{ fmt_build_dir }}"
-      become: true
-  vars:
-    block_name: fmt
-  when: not fmt_build_dir_exist.stat.exists
-
-- name: Check Range-v3 build directory existence
-  ansible.builtin.stat:
-    path: "{{ source_build_dir }}/range-v3"
-  register: range_v3_build_dir_exist
-
-- name: Build and install Range-v3
-  block:
-    - name: "{{ block_name }}: Download source"
-      ansible.builtin.git:
-        repo: https://github.com/ericniebler/range-v3.git
-        dest: "{{ source_build_dir }}/range-v3"
-        depth: 1
-        version: 0.11.0
-    - set_fact:
-        range_v3_build_dir: "{{ source_build_dir }}/range-v3/build"
-    - name: "{{ block_name }}: Create build directory"
-      ansible.builtin.file:
-        path: "{{ range_v3_build_dir }}"
-        state: directory
-    - name: "{{ block_name }}: cmake"
-      shell: cmake -DCMAKE_BUILD_TYPE=Release -DRANGE_V3_TESTS=Off -DRANGE_V3_EXAMPLES=Off ..
-      args:
-        chdir: "{{ range_v3_build_dir }}"
-    - name: "{{ block_name }}: build"
-      shell: make -j7 install
-      args:
-        chdir: "{{ range_v3_build_dir }}"
-      become: true
-  vars:
-    block_name: Range-v3
-  when: not range_v3_build_dir_exist.stat.exists
-
-- name: Check OpenCV build directory existence
-  ansible.builtin.stat:
-    path: "{{ source_build_dir }}/jetson-containers"
-  register: opencv_build_dir_exist
-
-- name: Check YAML build directory existence
-  ansible.builtin.stat:
-    path: "{{ source_build_dir }}/yaml-cpp"
-  register: yaml_cpp_build_dir_exist
-
-- name: Build and install YAML
-  block:
-    - name: "{{ block_name }}: Download source"
-      ansible.builtin.git:
-        repo: https://github.com/jbeder/yaml-cpp.git
-        dest: "{{ source_build_dir }}/yaml-cpp"
-        version: yaml-cpp-0.6.0
-    - set_fact:
-        yaml_cpp_build_dir: "{{ source_build_dir }}/yaml-cpp/build"
-    - name: "{{ block_name }}: Create build directory"
-      ansible.builtin.file:
-        path: "{{ yaml_cpp_build_dir }}"
-        state: directory
-    - name: "{{ block_name }}: cmake"
-      shell: cmake -DBUILD_SHARED_LIBS=ON ..
-      args:
-        chdir: "{{ yaml_cpp_build_dir }}"
-    - name: "{{ block_name }}: build"
-      shell: make -j7 install
-      args:
-        chdir: "{{ yaml_cpp_build_dir }}"
-      become: true
-  vars:
-    block_name: YAML
-  when: not yaml_cpp_build_dir_exist.stat.exists
-
-- name: Upgrade CMake
-  block:
-    # Follow directions here: https://apt.kitware.com/
-    - name: "{{ block_name }}: update gpg key"
-      shell: wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
-    - name: "{{ block_name }}: update repository info"
-      ansible.builtin.apt_repository:
-        repo: deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ {{ ansible_distribution_release }} main
-        filename: kitware
-    - name: "{{ block_name }}: apt update"
-      ansible.builtin.apt:
-        update_cache: true
-        state: present
-    - name: "{{ block_name }}: install newer cmake"
-      ansible.builtin.apt:
-        name: cmake
-        install_recommends: false
-        state: latest
+# sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+- name: Authorize ROS GPG key
   become: true
-  vars:
-    block_name: Upgrade CMake
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/ros/rosdistro/master/ros.key
+    dest: /usr/share/keyrings/ros-archive-keyring.gpg
+    mode: 644
 
-- name: update GCC
-  block:
-    - name: "{{ block_name }}: update repository info"
-      ansible.builtin.apt_repository:
-        repo: ppa:ubuntu-toolchain-r/test
-    - name: "{{ block_name }}: install gcc11"
-      ansible.builtin.apt:
-        name:
-          - gcc-11
-          - g++-11
-        install_recommends: false
-        update_cache: true
-    - name: "{{ block_name }}: set gcc11 as default"
-      community.general.alternatives:
-        name: gcc
-        path: /usr/bin/gcc-11
-        link: /usr/bin/gcc
-        state: selected
-        subcommands:
-          - name: g++
-            path: /usr/bin/g++-11
-            link: /usr/bin/g++
+- name: Save result of 'dpkg --print-architecture'
+  ansible.builtin.command: dpkg --print-architecture
+  register: ros2__deb_architecture
+  changed_when: false
 
+- name: Save result of 'source /etc/os-release && echo $UBUNTU_CODENAME'
+  ansible.builtin.shell: bash -c 'source /etc/os-release && echo $UBUNTU_CODENAME'
+  register: ros2__ubuntu_codename
+  changed_when: false
+
+# echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(source /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+- name: Add ROS 2 apt repository to source list
   become: true
-  vars:
-    block_name: update GCC
-
-- name: Check ROS build directory existence
-  ansible.builtin.stat:
-    path: /opt/ros/{{ ros_distro }}
-  register: ros_build_dir_exist
-
-- name: Build ROS
-  block:
-    - set_fact:
-        ros_base_dir: /opt/ros/{{ ros_distro }}
-    - set_fact:
-        ros_src_dir: "{{ ros_base_dir }}/src"
-    - name: "{{ block_name }}: Create base directory"
-      ansible.builtin.file:
-        path: "{{ ros_base_dir }}"
-        state: directory
-      become: true
-    - name: "{{ block_name }}: Create soruce directory"
-      ansible.builtin.file:
-        path: "{{ ros_base_dir }}/src"
-        state: directory
-      become: true
-    - name: "{{ block_name }}: generate repository list using rosinstall_generator"
-      shell: rosinstall_generator --deps --rosdistro {{ ros_distro }} ros_base launch_xml launch_yaml launch_testing launch_testing_ament_cmake demo_nodes_cpp demo_nodes_py example_interfaces camera_calibration_parsers camera_info_manager cv_bridge vision_opencv vision_msgs image_geometry image_pipeline image_transport compressed_image_transport compressed_depth_image_transport pcl_msgs perception_pcl geographic_msgs launch_pytest --exclude rmw_connextdds > /tmp/ros2.{{ ros_distro }}.ros_base.rosinstall
-    - name: "{{ block_name }}: copy repository list to target ddirectory"
-      ansible.builtin.copy:
-        src: /tmp/ros2.{{ ros_distro }}.ros_base.rosinstall
-        dest: "{{ ros_base_dir }}/ros2.{{ ros_distro }}.ros_base.rosinstall"
-      become: true
-    - name: "{{ block_name }}: fix fastrtsp version"
-      shell: sed -i "s/release\/humble\/fastrtps\/2.6.9-1/release\/humble\/fastrtps\/2.6.8-1/" {{ ros_base_dir }}/ros2.{{ ros_distro }}.ros_base.rosinstall
-      become: true
-    - name: "{{ block_name }}: clone all repositories via vcs"
-      shell: vcs import src < ros2.{{ ros_distro }}.ros_base.rosinstall
-      args:
-        chdir: "{{ ros_base_dir }}"
-      become: true
-    - name: "{{ block_name }}: remove ament_cmake for update"
-      ansible.builtin.file:
-        path: "{{ ros_src_dir }}/ament_cmake"
-        state: absent
-      become: true
-    - name: "{{ block_name }}: clone ament_cmake from git"
-      ansible.builtin.git:
-        repo: https://github.com/ament/ament_cmake
-        dest: "{{ ros_src_dir }}/ament_cmake"
-        version: humble
-      become: true
-    - name: "{{ block_name }}: clone diagnostics from git"
-      ansible.builtin.git:
-        repo: https://github.com/ros/diagnostics
-        dest: "{{ ros_src_dir }}/diagnostics"
-        version: ros2
-      become: true
-    - name: "{{ block_name }}: remove rmw_connextdds entry from rmw_implementation"
-      ansible.builtin.replace:
-        path: "{{ ros_src_dir }}/rmw_implementation/package.xml"
-        regexp: .*rmw_connextdds.*\n
-      become: true
-    - stat:
-        path: /etc/ros/rosdep/sources.list.d/20-default.list
-      register: ros_sources_list_file
-    - name: "{{ block_name }}: rosdep init"
-      shell: rosdep init
-      become: true
-      when: not ros_sources_list_file.stat.exists
-    - name: "{{ block_name }}: rosdep update"
-      shell: rosdep update
-      become: true
-    - name: rosdep install
-      shell: rosdep install -y --ignore-src --from-paths src --rosdistro humble --skip-keys "libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv"
-      args:
-        chdir: "{{ ros_base_dir }}"
-      become: true
-    - name: "{{ block_name }}: correct file list under /var/lib/apt/lists"
-      ansible.builtin.find:
-        paths: /var/lib/apt/lists
-        hidden: true
-        recurse: true
-        file_type: any
-      register: file_under_var_lib_apt_lists
-    - name: "{{ block_name }}: remove all file under /var/lib/apt/lists"
-      ansible.builtin.file:
-        path: "{{ item.path }}"
-        state: absent
-      with_items: "{{ file_under_var_lib_apt_lists.files }}"
-      become: true
-    - name: "{{ block_name }}: apt-get clean"
-      ansible.builtin.apt:
-        clean: true
-      become: true
-    - name: "{{ block_name }}: apt-get purge pybind11-dev"
-      ansible.builtin.apt:
-        name: pybind11-dev
-        purge: true
-      become: true
-    - name: "{{ block_name }}: install pybind11-global"
-      ansible.builtin.pip:
-        name: pybind11-global==2.11.1
-        extra_args: -U
-      become: true
-    - name: "{{ block_name }}: apt-get purge libyaml-cpp-dev"
-      ansible.builtin.apt:
-        name: libyaml-cpp-dev
-        purge: true
-      become: true
-    - name: "{{ block_name }}: colcon build"
-      shell: colcon build --merge-install --cmake-args -DCMAKE_BUILD_TYPE=Release -DPython3_EXECUTABLE=$(which python3.6)
-      args:
-        chdir: "{{ ros_base_dir }}"
-      become: true
-  vars:
-    block_name: Build ROS
-  when: not ros_build_dir_exist.stat.exists
-
-- name: Downgrade GCC as version 11 is too high for old CUDA version that is used in L4T
-  block:
-    - name: "{{ block_name }}: install gcc-8"
-      ansible.builtin.apt:
-        name:
-          - gcc-8
-          - g++-8
-        update_cache: true
-    - name: "{{ block_name }}: set gcc-8 as default"
-      community.general.alternatives:
-        name: gcc
-        path: /usr/bin/gcc-8
-        link: /usr/bin/gcc
-        state: selected
-        subcommands:
-          - name: g++
-            path: /usr/bin/g++-8
-            link: /usr/bin/g++
-  become: true
-  vars:
-    block_name: Downgrade gcc to 8
-
-- name: Add sourcing command in user's bashrc
-  ansible.builtin.blockinfile:
-    path: "{{ ansible_env.HOME }}/.bashrc"
+  ansible.builtin.apt_repository:
+    repo: deb [arch={{ ros2__deb_architecture.stdout }} signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu {{ ros2__ubuntu_codename.stdout }} main
+    filename: ros2
     state: present
-    marker: "# {mark} ros2"
-    block: |
-      source {{ ros_base_dir }}/install/setup.bash
-  when: not ros_build_dir_exist.stat.exists
+    update_cache: true
+
+- name: Install ros-{{ rosdistro + '-' + installation_type }}
+  become: true
+  ansible.builtin.apt:
+    name: ros-{{ rosdistro }}-{{ installation_type }}
+    state: latest
+    update_cache: true
+
+- name: Install rosdep
+  become: true
+  ansible.builtin.apt:
+    name:
+      - python3-rosdep
+    state: latest
+    update_cache: true
+
+- name: Install colcon-common-extensions
+  become: true
+  ansible.builtin.apt:
+    name:
+      - python3-colcon-common-extensions
+    state: latest
+    update_cache: true
+
+- name: Install rmw-cyclonedds-cpp
+  become: true
+  ansible.builtin.apt:
+    name:
+      - ros-{{ rosdistro }}-rmw-cyclonedds-cpp
+    state: latest
+    update_cache: true
+
+- name: Add PATH to .bashrc
+  ansible.builtin.lineinfile:
+    dest: ~/.bashrc
+    line: source /opt/ros/{{ rosdistro }}/setup.bash
+    state: present
+    create: true
+    mode: 0644

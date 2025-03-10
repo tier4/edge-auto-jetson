@@ -1,25 +1,37 @@
 - name: Setup perception ECU
   hosts: localhost
   vars:
-    - ros_distro: humble
+    - rosdistro: humble
     - network_config:
         ros:
           interface_address: 192.168.2.2
-          interface_name: eth1
+          interface_name: eqos0
         dhcp:
+          interface_name: mgbe1
+        lidar:
+          interface_address: 192.168.1.100
           interface_name: eth0
-    - ptp4l_client_interface: eth1
+    - ptp4l_client_interface: eqos0
+    - ptp4l_host_interface: eth0
+    - artifacts_script_download_dir: /home/autoware/autoware_data
   vars_prompt:
-    - name: prompt_install_camera_driver
-      prompt: |-
-        [Warning] Do you want to install/update the TIER IV camera driver? [y/N]
-      private: false
     - name: prompt_configure_network
       prompt: |-
         [Warning] Do you want to configure the network? This configuration may overwrite the IP address of the specific network interface [y/N]
       private: false
+    - name: prompt_configure_user_resources
+      prompt: |-
+        [Warning] Do you want to configure user resources? Only necessary if CONFIG_RT_GROUP_SCHED is enabled [y/N]
+    - name: prompt_configure_t4_driver
+      prompt: |-
+        [Warning] Do you want to configure the TierIV drivers? [y/N]
+    - name: prompt_use_local_c2_driver
+      prompt: |-
+        [Warning] Do you want to use a local C2 driver? [y/N]
   roles:
     - role: artifacts
+    - role: cgroups
+      when: prompt_configure_user_resources == 'y'
     - role: ptp4l_client
       when: prompt_configure_network == 'y'
     - role: enlarge_txqueue
@@ -29,9 +41,12 @@
     - role: autoware
     - role: cuda
     - role: cyclonedds
-    - role: docker
     - role: vcstool
-    - role: calibration_tools
-    - role: tier4_hdr_camera_driver
-      when: prompt_install_camera_driver == 'y'
     - role: ros2
+    - role: tier4_hdr_camera_driver
+      when: prompt_configure_t4_driver == 'y' and not prompt_use_local_c2_driver == 'y'
+    - role: tier4_anvil_c2
+      when: prompt_configure_t4_driver == 'y' and prompt_use_local_c2_driver == 'y'
+
+  environment:
+    DEBIAN_FRONTEND: noninteractive
