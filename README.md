@@ -21,7 +21,7 @@ This repository is based on a natively built ROS 2 environment. The system overv
 > If you are using Jetson AGX Xavier based ECU, please refer to [this branch](https://github.com/tier4/edge-auto-jetson/tree/release/RQX-58G?tab=readme-ov-file).
 
 - Camera: v4l2 compatible cameras, including [TIER IV Automotive HDR Camera C2](https://sensor.tier4.jp/automotive-hdr-camera)
-- ECU: Jetson AGX Orin based ECU, including [ConnectTech Anvil](https://connecttech.com/product/anvil-embedded-system-with-nvidia-jetson-agx-orin/) from ADLINK Technology Inc. and [Developer Kit](https://www.nvidia.com/ja-jp/autonomous-machines/embedded-systems/jetson-orin/) from NVIDIA Corp.
+- ECU: Jetson AGX Orin based ECU, including [ConnectTech Anvil](https://connecttech.com/product/anvil-embedded-system-with-nvidia-jetson-agx-orin/).
 - NVIDIA L4T: R36.4 (including Ubuntu 22.04)
 - ROS: ROS 2 Humble (native build)
 
