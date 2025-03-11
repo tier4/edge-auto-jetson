@@ -55,6 +55,59 @@
         state: present
       when: sdk_deb_download_url is defined
 
+- name: Verify overlay file exists
+  loop: "{{ overlay_files | dict2items }}"
+  ansible.builtin.stat:
+    path: /boot/{{ item.value }}
+  register: overlay_stat
+  failed_when: not overlay_stat.stat.exists
+
+- name: Ensure extlinux.conf exists
+  ansible.builtin.stat:
+    path: /boot/extlinux/extlinux.conf
+  register: extlinux_stat
+  failed_when: not extlinux_stat.stat.exists
+
+- name: Create new extlinux entry
+  become: true
+  loop: "{{ overlay_files | dict2items }}"
+  ansible.builtin.blockinfile:
+    path: /boot/extlinux/extlinux.conf
+    marker: "# {mark} ANSIBLE MANAGED BLOCK FOR {{ item.key }}"
+    block: |
+      LABEL {{ item.key }}
+              MENU LABEL Custom Header Config: {{ item.key }}
+              LINUX /boot/Image
+              INITRD /boot/initrd
+              FDT /boot/dtb/{{ dtb_file }}
+              OVERLAYS /boot/{{ item.value }}
+              APPEND ${cbootargs} {{ extlinux_append }}
+    state: present
+    create: true
+    mode: "0644"
+
+- name: Set DEFAULT extlinux entry
+  block:
+  - name: Check item existence
+    lineinfile:
+      dest: "/boot/extlinux/extlinux.conf"
+      regexp: ^(.*)DEFAULT primery(.*)$
+      state: absent
+    check_mode: true
+    changed_when: false
+    register: does_exist
+    when default_entry is defined
+    become: true
+
+  - name: Modify
+    lineinfile:
+      dest: "/boot/extlinux/extlinux.conf"
+      regexp: ^(.*)DEFAULT primery(.*)$
+      line: DEFAULT primery_{{ default_entry }}
+      backrefs: true
+    when: does_exist.found and default_entry is defined
+    become: true
+
 - name: Setup C1 configuration
   block:
     - name: "{{ block_name }} : Change trigger mode to Fsync mode"
