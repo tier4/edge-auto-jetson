@@ -96,7 +96,7 @@
     check_mode: true
     changed_when: false
     register: does_exist
-    when default_entry is defined
+    when: default_entry is defined
     become: true
 
   - name: Modify
