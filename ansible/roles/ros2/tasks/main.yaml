@@ -153,35 +153,35 @@
         chdir: /tmp/boost_1_82_0
       become: true
 
-- name: Install PCL
-  block:
-    - name: Define directory name
-      set_fact:
-        pcl_directory: "{{ ansible_env.HOME }}/pcl"
-    - name: Create build directory
-      ansible.builtin.file:
-        path: "{{ pcl_directory }}"
-        state: directory
-    - name: Download and extract PCL 1.15.0 source
-      ansible.builtin.unarchive:
-        src: https://github.com/PointCloudLibrary/pcl/releases/download/pcl-1.15.0/source.tar.gz
-        dest: "{{ pcl_directory }}"
-        remote_src: true
-    - name: Create build directory
-      ansible.builtin.file:
-        path: "{{ pcl_directory }}/pcl/build"
-        state: directory
-    - name: Run cmake
-      ansible.builtin.command:
-        cmd: cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc ..
-        chdir: "{{ pcl_directory }}/pcl/build"
-      environment:
-        PATH: /usr/local/cuda/bin:{{ ansible_env.PATH }}
-    - name: Install PCL
-      ansible.builtin.command:
-        cmd: make -j7 install
-        chdir: "{{ pcl_directory }}/pcl/build"
-      become: true
+# - name: Install PCL
+#   block:
+#     - name: Define directory name
+#       set_fact:
+#         pcl_directory: "{{ ansible_env.HOME }}/pcl"
+#     - name: Create build directory
+#       ansible.builtin.file:
+#         path: "{{ pcl_directory }}"
+#         state: directory
+#     - name: Download and extract PCL 1.15.0 source
+#       ansible.builtin.unarchive:
+#         src: https://github.com/PointCloudLibrary/pcl/releases/download/pcl-1.15.0/source.tar.gz
+#         dest: "{{ pcl_directory }}"
+#         remote_src: true
+#     - name: Create build directory
+#       ansible.builtin.file:
+#         path: "{{ pcl_directory }}/pcl/build"
+#         state: directory
+#     - name: Run cmake
+#       ansible.builtin.command:
+#         cmd: cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc ..
+#         chdir: "{{ pcl_directory }}/pcl/build"
+#       environment:
+#         PATH: /usr/local/cuda/bin:{{ ansible_env.PATH }}
+#     - name: Install PCL
+#       ansible.builtin.command:
+#         cmd: make -j7 install
+#         chdir: "{{ pcl_directory }}/pcl/build"
+#       become: true
 
 - name: Install OpenCV
   ansible.builtin.command:
