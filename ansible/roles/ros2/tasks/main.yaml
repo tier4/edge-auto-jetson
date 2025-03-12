@@ -162,9 +162,9 @@
       ansible.builtin.file:
         path: "{{ pcl_directory }}"
         state: directory
-    - name: Download and extract PCL 1.12.1 source
+    - name: Download and extract PCL 1.15.0 source
       ansible.builtin.unarchive:
-        src: https://github.com/PointCloudLibrary/pcl/releases/download/pcl-1.12.1/source.tar.gz
+        src: https://github.com/PointCloudLibrary/pcl/releases/download/pcl-1.15.0/source.tar.gz
         dest: "{{ pcl_directory }}"
         remote_src: true
     - name: Create build directory
