@@ -56,7 +56,6 @@
         dest: "{{ ros2_build_script }}"
         mode: u+x
 
----
 - name: Install OpenCV build dependencies
   hosts: localhost
   become: true # sudo 権限が必要
