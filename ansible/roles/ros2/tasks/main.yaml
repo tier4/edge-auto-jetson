@@ -56,14 +56,14 @@
         dest: "{{ ros2_build_script }}"
         mode: u+x
 
-- name: Install OpenCV build dependencies
-  hosts: localhost
-  become: true # sudo 権限が必要
+# - name: Install OpenCV build dependencies
+#   hosts: localhost
+#   become: true # sudo 権限が必要
 
-  tasks:
-    - name: Update apt cache
-      apt:
-        update_cache: yes
+#   tasks:
+#     - name: Update apt cache
+#       apt:
+#         update_cache: yes
 
 - name: Install OpenCV build dependencies
   apt:
