@@ -191,6 +191,13 @@
 
 - name: Install range-v3 0.11.0
   block:
+    - name: Install dependencies
+      ansible.builtin.apt:
+        name:
+          - libdc1394-22
+          - libgdk-pixbuf2.0-0
+        install_recommends: false
+        update_cache: true
     - name: Define directory name
       set_fact:
         range_v3_directory: "{{ ansible_env.HOME }}/range-v3"
