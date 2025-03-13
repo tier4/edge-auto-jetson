@@ -1,7 +1,7 @@
 camera_driver_repo: https://api.github.com/repos/tier4/tier4_automotive_hdr_camera/releases/194607346
 camera_driver_download_dir: /tmp
 default_entry: c2x8
-dtb_file: kernel_tegra234-orin-agx-cti-AGX201-t4.dtb
+dtb_file: tegra234-orin-agx-cti-AGX201.dtb
 overlay_files:
   primary_t4_c1x8: tier4-isx021-gmsl-device-tree-overlay-anvil-r36.dtbo
   primary_t4_c2x8: tier4-imx490-gmsl-device-tree-overlay-anvil-r36.dtbo

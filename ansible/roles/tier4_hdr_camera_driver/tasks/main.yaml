@@ -79,7 +79,7 @@
               MENU LABEL Custom Header Config: {{ item.key }}
               LINUX /boot/Image
               INITRD /boot/initrd
-              FDT /boot/dtb/{{ dtb_file }}
+              FDT /boot/{{ dtb_file }}
               OVERLAYS /boot/{{ item.value }}
               APPEND ${cbootargs} {{ extlinux_append }}
     state: present
@@ -87,26 +87,13 @@
     mode: "0644"
 
 - name: Set DEFAULT extlinux entry
-  block:
-  - name: Check item existence
-    lineinfile:
-      dest: "/boot/extlinux/extlinux.conf"
-      regexp: ^(.*)DEFAULT primery(.*)$
-      state: absent
-    check_mode: true
-    changed_when: false
-    register: does_exist
-    when: default_entry is defined
-    become: true
-
-  - name: Modify
-    lineinfile:
-      dest: "/boot/extlinux/extlinux.conf"
-      regexp: ^(.*)DEFAULT primery(.*)$
-      line: DEFAULT primery_{{ default_entry }}
-      backrefs: true
-    when: does_exist.found and default_entry is defined
-    become: true
+  lineinfile:
+    dest: "/boot/extlinux/extlinux.conf"
+    regexp: ^DEFAULT
+    line: DEFAULT primary_t4_{{ default_entry }}
+    backrefs: true
+  when: default_entry is defined
+  become: true
 
 - name: Setup C1 configuration
   block:
