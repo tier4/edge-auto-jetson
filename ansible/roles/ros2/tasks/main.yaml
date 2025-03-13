@@ -317,8 +317,8 @@
     - name: Could NOT find Python3 workaround
       ansible.builtin.apt:
         name:
-          - python3.9
-          - libpython3.9*
+          - python3.10
+          - libpython3.10*
         purge: true
         state: absent
       become: true
