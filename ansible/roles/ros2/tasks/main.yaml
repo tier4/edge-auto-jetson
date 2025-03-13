@@ -109,6 +109,9 @@
           - qv4l2
           - v4l-utils
           - zlib1g-dev
+          - libdc1394-22
+          - libgdk-pixbuf2.0-0
+
 
         install_recommends: false
         update_cache: true
@@ -182,14 +185,6 @@
 #         cmd: make -j7 install
 #         chdir: "{{ pcl_directory }}/pcl/build"
 #       become: true
-
-- name: Install dependencies
-  ansible.builtin.apt:
-    name:
-      - libdc1394-22
-      - libgdk-pixbuf2.0-0
-    install_recommends: false
-    update_cache: true
 
 - name: Install OpenCV
   ansible.builtin.command:
