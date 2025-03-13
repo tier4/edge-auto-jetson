@@ -186,11 +186,23 @@
 #         chdir: "{{ pcl_directory }}/pcl/build"
 #       become: true
 
+# - name: Install OpenCV
+#   ansible.builtin.command:
+#     cmd: "{{ opencv_install_script }} https://nvidia.box.com/shared/static/2hssa5g3v28ozvo3tc3qwxmn78yerca9.gz OpenCV-4.5.0-aarch64.tar.gz"
+#     chdir: "{{ jetson_script_dir }}"
+#   become: true
+
 - name: Install OpenCV
-  ansible.builtin.command:
-    cmd: "{{ opencv_install_script }} https://nvidia.box.com/shared/static/2hssa5g3v28ozvo3tc3qwxmn78yerca9.gz OpenCV-4.5.0-aarch64.tar.gz"
-    chdir: "{{ jetson_script_dir }}"
-  become: true
+  block:
+    - name: Apt install libopencv
+      ansible.builtin.apt:
+        name:
+          - libopencv-dev
+        install_recommends: false
+        update_cache: true
+      become: true
+  vars:
+    block_name: OpenCV
 
 - name: Install range-v3 0.11.0
   block:
