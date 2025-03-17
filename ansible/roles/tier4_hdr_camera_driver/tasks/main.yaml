@@ -134,6 +134,13 @@
         target_item: trigger_mode
         target_val: "1"
 
+    # change fsync mfp parameter for connect tech anvil
+    - name: "{{ block_name }} : Change fsync mfp"
+      include_tasks: mod_or_add.yaml
+      vars:
+        target_item: fsync_mfp
+        target_val: "7"
+
     # Set the same value to min/mid/max exposure time
     # so that exposure time can be estimated under any brightness condition
     - name: "{{ block_name }} : Fix exposure time"
