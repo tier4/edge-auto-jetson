@@ -4,6 +4,9 @@
     - rosdistro: humble
     - network_config:
         ros:
+          interface_address: 127.0.0.1
+          interface_name: lo
+        ptp:
           interface_address: 192.168.2.2
           interface_name: eqos0
         dhcp:
