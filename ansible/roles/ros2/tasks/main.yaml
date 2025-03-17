@@ -133,13 +133,11 @@
 
 - name: Install OpenCV
   ansible.builtin.shell:
-    cmd: "{{ opencv_install_script }}"
+    cmd: "{{ opencv_install_deb_script }} {{ opencv_url }} {{ opencv_deb }}"
     chdir: "{{ jetson_script_dir }}"
-  environment:
-    OPENCV_URL: "https://nvidia.box.com/shared/static/ngp26xb9hb7dqbu6pbs7cs9flztmqwg0.gz"
-    OPENCV_VERSION: "4.8.1"
-    TAR_INDEX_URL: "{{ opencv_url_base | default('') }}"
-    OPENCV_DEB: "OpenCV-4.8.1-aarch64.tar.gz"
+  vars:
+    opencv_url: "https://nvidia.box.com/shared/static/ngp26xb9hb7dqbu6pbs7cs9flztmqwg0.gz"
+    opencv_deb: "OpenCV-4.8.1-aarch64.tar.gz"
   become: true
 
 - name: Install range-v3 0.11.0
