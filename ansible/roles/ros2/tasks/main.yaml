@@ -155,7 +155,7 @@
       tar -xzf "$OPENCV_DEB"
       cd OpenCV-4.8.1-aarch64
 
-      apt install -y --no-install-recommends ./opencv-4.8.1-aarch64-dev.deb ./opencv-4.8.1-aarch64-licenses.deb ./opencv-4.8.1-aarch64-libs.deb ./opencv-4.8.1-aarch64-main.deb ./opencv-4.8.1-aarch64-python.deb ./opencv-4.8.1-aarch64-samples.deb
+      apt install -y --no-install-recommends ./OpenCV-4.8.1-dirty-aarch64-dev.deb ./OpenCV-4.8.1-dirty-aarch64-licenses.deb ./OpenCV-4.8.1-dirty-aarch64-libs.deb ./OpenCV-4.8.1-dirty-aarch64-main.deb ./OpenCV-4.8.1-dirty-aarch64-python.deb ./OpenCV-4.8.1-dirty-aarch64-scripts.deb
 
       cd "$DOWNLOAD_DIR"
       rm -rf "$OPENCV_DEB" OpenCV-4.8.1-aarch64
