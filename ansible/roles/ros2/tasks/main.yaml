@@ -27,6 +27,9 @@
         opencv_install_deps_script: "{{ jetson_script_dir }}/opencv_install_deps.sh"
     - name: Define file name
       set_fact:
+        opencv_install_dep_script: "{{ jetson_script_dir }}/install_dep.sh"
+    - name: Define file name
+      set_fact:
         opencv_install_script: "{{ jetson_script_dir }}/opencv_install.sh"
     - name: Define file name
       set_fact:
@@ -35,9 +38,17 @@
       ansible.builtin.get_url:
         url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R36.4.2/packages/opencv/install_deps.sh
         dest: "{{ opencv_install_deps_script }}"
+    - name: Download OpenCV deps script
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R36.4.2/packages/opencv/install_dep.sh
+        dest: "{{ opencv_install_dep_script }}"
     - name: Make OpenCV deps script executable
       ansible.builtin.file:
         dest: "{{ opencv_install_deps_script }}"
+        mode: u+x
+    - name: Make OpenCV deps script executable
+      ansible.builtin.file:
+        dest: "{{ opencv_install_dep_script }}"
         mode: u+x
     - name: Download OpenCV install script
       ansible.builtin.get_url:
