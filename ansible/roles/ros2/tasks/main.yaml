@@ -131,13 +131,42 @@
         chdir: "{{ pcl_directory }}/pcl/build"
       become: true
 
-- name: Install OpenCV
-  ansible.builtin.shell:
-    cmd: "{{ opencv_install_deb_script }} {{ opencv_url }} {{ opencv_deb }}"
-    chdir: "{{ jetson_script_dir }}"
-  vars:
-    opencv_url: "https://nvidia.box.com/shared/static/ngp26xb9hb7dqbu6pbs7cs9flztmqwg0.gz"
-    opencv_deb: "OpenCV-4.8.1-aarch64.tar.gz"
+- name: Create custom OpenCV installation script
+  ansible.builtin.copy:
+    dest: "{{ jetson_script_dir }}/custom_opencv_install.sh"
+    content: |
+      #!/bin/bash
+      set -e
+
+      OPENCV_URL="https://nvidia.box.com/shared/static/ngp26xb9hb7dqbu6pbs7cs9flztmqwg0.gz"
+      OPENCV_DEB="OpenCV-4.8.1-aarch64.tar.gz"
+      DOWNLOAD_DIR="/tmp"
+
+      apt-get purge -y libopencv* nvidia-opencv* opencv*
+
+      cd "$DOWNLOAD_DIR"
+      wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate "$OPENCV_URL" -O "$OPENCV_DEB"
+
+      if [ ! -f "$OPENCV_DEB" ]; then
+        echo "Error: Failed to download $OPENCV_DEB"
+        exit 1
+      fi
+
+      tar -xzf "$OPENCV_DEB"
+      cd OpenCV-4.8.1-aarch64
+
+      apt install -y --no-install-recommends ./opencv-4.8.1-aarch64-dev.deb ./opencv-4.8.1-aarch64-licenses.deb ./opencv-4.8.1-aarch64-libs.deb ./opencv-4.8.1-aarch64-main.deb ./opencv-4.8.1-aarch64-python.deb ./opencv-4.8.1-aarch64-samples.deb
+
+      cd "$DOWNLOAD_DIR"
+      rm -rf "$OPENCV_DEB" OpenCV-4.8.1-aarch64
+
+      echo "OpenCV 4.8.1 installation completed successfully"
+    mode: "0755"
+  become: true
+
+- name: Install OpenCV with custom script
+  ansible.builtin.command:
+    cmd: "{{ jetson_script_dir }}/custom_opencv_install.sh"
   become: true
 
 - name: Install range-v3 0.11.0
