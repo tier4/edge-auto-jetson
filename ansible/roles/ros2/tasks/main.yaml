@@ -38,7 +38,7 @@
       ansible.builtin.get_url:
         url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R36.4.2/packages/opencv/install_deps.sh
         dest: "{{ opencv_install_deps_script }}"
-    - name: Download OpenCV deps script
+    - name: Download OpenCV dep script
       ansible.builtin.get_url:
         url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R36.4.2/packages/opencv/install_dep.sh
         dest: "{{ opencv_install_dep_script }}"
@@ -46,7 +46,7 @@
       ansible.builtin.file:
         dest: "{{ opencv_install_deps_script }}"
         mode: u+x
-    - name: Make OpenCV deps script executable
+    - name: Make OpenCV dep script executable
       ansible.builtin.file:
         dest: "{{ opencv_install_dep_script }}"
         mode: u+x
