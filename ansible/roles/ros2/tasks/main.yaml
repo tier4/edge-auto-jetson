@@ -122,7 +122,7 @@
 
 - name: Install OpenCV
   ansible.builtin.command:
-    cmd: "{{ opencv_install_script }} https://nvidia.box.com/shared/static/2hssa5g3v28ozvo3tc3qwxmn78yerca9.gz OpenCV-4.5.0-aarch64.tar.gz"
+    cmd: "{{ opencv_install_script }} https://nvidia.box.com/shared/static/ngp26xb9hb7dqbu6pbs7cs9flztmqwg0.gz OpenCV-4.8.1-aarch64.tar.gz"
     chdir: "{{ jetson_script_dir }}"
   become: true
 
