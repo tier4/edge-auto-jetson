@@ -22,26 +22,26 @@
       ansible.builtin.file:
         path: "{{ jetson_script_dir }}"
         state: directory
-    # - name: Define file name
-    #   set_fact:
-    #     opencv_install_deps_script: "{{ jetson_script_dir }}/opencv_install_deps.sh"
+    - name: Define file name
+      set_fact:
+        opencv_install_deps_script: "{{ jetson_script_dir }}/opencv_install_deps.sh"
     - name: Define file name
       set_fact:
         opencv_install_script: "{{ jetson_script_dir }}/opencv_install.sh"
     - name: Define file name
       set_fact:
         ros2_build_script: "{{ jetson_script_dir }}/ros2_build.sh"
-    # - name: Download OpenCV deps script
-    #   ansible.builtin.get_url:
-    #     url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R35.3.1/scripts/opencv_install_deps.sh
-    #     dest: "{{ opencv_install_deps_script }}"
-    # - name: Make OpenCV deps script executable
-    #   ansible.builtin.file:
-    #     dest: "{{ opencv_install_deps_script }}"
-    #     mode: u+x
+    - name: Download OpenCV deps script
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R36.4.2/packages/opencv/install_deps.sh
+        dest: "{{ opencv_install_deps_script }}"
+    - name: Make OpenCV deps script executable
+      ansible.builtin.file:
+        dest: "{{ opencv_install_deps_script }}"
+        mode: u+x
     - name: Download OpenCV install script
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R35.3.1/scripts/opencv_install.sh
+        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R36.4.2/packages/opencv/install.sh
         dest: "{{ opencv_install_script }}"
     - name: Make OpenCV install script executable
       ansible.builtin.file:
@@ -49,84 +49,18 @@
         mode: u+x
     - name: Download ROS2 Humble install script
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R35.3.1/scripts/ros2_build.sh
+        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R36.4.2/packages/ros/ros2_build.sh
         dest: "{{ ros2_build_script }}"
     - name: Make ROS2 Humble install script executable
       ansible.builtin.file:
         dest: "{{ ros2_build_script }}"
         mode: u+x
 
-- name: Check architecture
-  shell: uname -i
-  register: arch
-
-
 - name: Install dependencies
   block:
-    # - name: Install OpenCV deps
-    #   ansible.builtin.command:
-    #     cmd: "{{ opencv_install_deps_script }}"
     - name: Install OpenCV deps
-      ansible.builtin.apt:
-        name:
-          - build-essential
-          - gfortran
-          - cmake
-          - git
-          - file
-          - tar
-          - libatlas-base-dev
-          - libavcodec-dev
-          - libavformat-dev
-          - ffmpeg # libavresample-devの代替
-          - libcanberra-gtk3-module
-          - libeigen3-dev
-          - libglew-dev
-          - libgstreamer-plugins-base1.0-dev
-          - libgstreamer-plugins-good1.0-dev
-          - libgstreamer1.0-dev
-          - libgtk-3-dev
-          - libjpeg-dev
-          - libjpeg8-dev
-          - libjpeg-turbo8-dev
-          - liblapack-dev
-          - liblapacke-dev
-          - libopenblas-dev
-          - libpng-dev
-          - libpostproc-dev
-          - libswscale-dev
-          - libtbb-dev
-          - libtbb2
-          - libtesseract-dev
-          - libtiff-dev
-          - libv4l-dev
-          - libxine2-dev
-          - libxvidcore-dev
-          - libx264-dev
-          - libgtkglext1
-          - libgtkglext1-dev
-          - pkg-config
-          - qv4l2
-          - v4l-utils
-          - zlib1g-dev
-          - libdc1394-25
-          - libgdk-pixbuf2.0-0
-
-
-        install_recommends: false
-        update_cache: true
-
-    - name: Install Python3 dev packages (aarch64 only)
-      apt:
-        name:
-          - python3-pip
-          - python3-dev
-          - python3-numpy
-          - python3-distutils
-          - python3-setuptools
-        install_recommends: false
-        update_cache: true
-
+      ansible.builtin.command:
+        cmd: "{{ opencv_install_deps_script }}"
     - name: Install PCL deps
       ansible.builtin.apt:
         name:
@@ -156,53 +90,41 @@
         chdir: /tmp/boost_1_82_0
       become: true
 
-# - name: Install PCL
-#   block:
-#     - name: Define directory name
-#       set_fact:
-#         pcl_directory: "{{ ansible_env.HOME }}/pcl"
-#     - name: Create build directory
-#       ansible.builtin.file:
-#         path: "{{ pcl_directory }}"
-#         state: directory
-#     - name: Download and extract PCL 1.15.0 source
-#       ansible.builtin.unarchive:
-#         src: https://github.com/PointCloudLibrary/pcl/releases/download/pcl-1.15.0/source.tar.gz
-#         dest: "{{ pcl_directory }}"
-#         remote_src: true
-#     - name: Create build directory
-#       ansible.builtin.file:
-#         path: "{{ pcl_directory }}/pcl/build"
-#         state: directory
-#     - name: Run cmake
-#       ansible.builtin.command:
-#         cmd: cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc ..
-#         chdir: "{{ pcl_directory }}/pcl/build"
-#       environment:
-#         PATH: /usr/local/cuda/bin:{{ ansible_env.PATH }}
-#     - name: Install PCL
-#       ansible.builtin.command:
-#         cmd: make -j7 install
-#         chdir: "{{ pcl_directory }}/pcl/build"
-#       become: true
-
-# - name: Install OpenCV
-#   ansible.builtin.command:
-#     cmd: "{{ opencv_install_script }} https://nvidia.box.com/shared/static/2hssa5g3v28ozvo3tc3qwxmn78yerca9.gz OpenCV-4.5.0-aarch64.tar.gz"
-#     chdir: "{{ jetson_script_dir }}"
-#   become: true
+- name: Install PCL
+  block:
+    - name: Define directory name
+      set_fact:
+        pcl_directory: "{{ ansible_env.HOME }}/pcl"
+    - name: Create build directory
+      ansible.builtin.file:
+        path: "{{ pcl_directory }}"
+        state: directory
+    - name: Download and extract PCL 1.15.0 source
+      ansible.builtin.unarchive:
+        src: https://github.com/PointCloudLibrary/pcl/releases/download/pcl-1.15.0/source.tar.gz
+        dest: "{{ pcl_directory }}"
+        remote_src: true
+    - name: Create build directory
+      ansible.builtin.file:
+        path: "{{ pcl_directory }}/pcl/build"
+        state: directory
+    - name: Run cmake
+      ansible.builtin.command:
+        cmd: cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc ..
+        chdir: "{{ pcl_directory }}/pcl/build"
+      environment:
+        PATH: /usr/local/cuda/bin:{{ ansible_env.PATH }}
+    - name: Install PCL
+      ansible.builtin.command:
+        cmd: make -j7 install
+        chdir: "{{ pcl_directory }}/pcl/build"
+      become: true
 
 - name: Install OpenCV
-  block:
-    - name: Apt install libopencv
-      ansible.builtin.apt:
-        name:
-          - libopencv-dev
-        install_recommends: false
-        update_cache: true
-      become: true
-  vars:
-    block_name: OpenCV
+  ansible.builtin.command:
+    cmd: "{{ opencv_install_script }} https://nvidia.box.com/shared/static/2hssa5g3v28ozvo3tc3qwxmn78yerca9.gz OpenCV-4.5.0-aarch64.tar.gz"
+    chdir: "{{ jetson_script_dir }}"
+  become: true
 
 - name: Install range-v3 0.11.0
   block:
