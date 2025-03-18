@@ -203,6 +203,13 @@
     path: "{{ ros_root_dir }}/install"
   register: ros_install_dir_exist
 
+- name: Update OpenCV CUDA version in OpenCVConfig.cmake
+  lineinfile:
+    path: /usr/lib/cmake/opencv4/OpenCVConfig.cmake
+    regexp: 'set\(OpenCV_CUDA_VERSION "12\.2"\)'
+    line: 'set(OpenCV_CUDA_VERSION "12.6")'
+  become: yes
+
 - name: Build ROS2 Humble
   block:
     - name: Add the ROS deb repo to the apt sources list
