@@ -285,14 +285,14 @@
           - empy==3.3.4
         extra_args: --no-cache-dir
       become: true
-    - name: Could NOT find Python3 workaround
-      ansible.builtin.apt:
-        name:
-          - python3.9
-          - libpython3.9*
-        purge: true
-        state: absent
-      become: true
+    # - name: Could NOT find Python3 workaround
+    #   ansible.builtin.apt:
+    #     name:
+    #       - python3.9
+    #       - libpython3.9*
+    #     purge: true
+    #     state: absent
+    #   become: true
     - name: Create the ROS root directory and src directory
       ansible.builtin.file:
         path: "{{ ros_root_dir }}/src"
