@@ -33,6 +33,9 @@
         opencv_install_script: "{{ jetson_script_dir }}/opencv_install.sh"
     - name: Define file name
       set_fact:
+        opencv_build_script: "{{ jetson_script_dir }}/opencv_build.sh"
+    - name: Define file name
+      set_fact:
         ros2_build_script: "{{ jetson_script_dir }}/ros2_build.sh"
     - name: Download OpenCV deps script
       ansible.builtin.get_url:
@@ -42,6 +45,10 @@
       ansible.builtin.get_url:
         url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R36.4.2/packages/opencv/install_deb.sh
         dest: "{{ opencv_install_deb_script }}"
+    - name: Download OpenCV dep script
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R36.4.2/packages/opencv/build.sh
+        dest: "{{ opencv_build_script }}"
     - name: Make OpenCV deps script executable
       ansible.builtin.file:
         dest: "{{ opencv_install_deps_script }}"
@@ -49,6 +56,10 @@
     - name: Make OpenCV dep script executable
       ansible.builtin.file:
         dest: "{{ opencv_install_deb_script }}"
+        mode: u+x
+    - name: Make OpenCV build script executable
+      ansible.builtin.file:
+        dest: "{{ opencv_build_script }}"
         mode: u+x
     - name: Download OpenCV install script
       ansible.builtin.get_url:
@@ -131,41 +142,23 @@
         chdir: "{{ pcl_directory }}/pcl/build"
       become: true
 
-- name: Create custom OpenCV installation script
-  ansible.builtin.copy:
-    dest: "{{ jetson_script_dir }}/custom_opencv_install.sh"
-    content: |
-      #!/bin/bash
-      set -e
+- name: Set OpenCV environment variables
+  set_fact:
+    opencv_version: "{{ OPENCV_VERSION | default('4.9.0') }}"
+    opencv_url: "{{ OPENCV_URL }}"
+    force_build: "{{ FORCE_BUILD | default('on') }}"
+    cuda_arch_bin: "{{ CUDA_ARCH_BIN | default('') }}"
 
-      OPENCV_URL="https://nvidia.box.com/shared/static/ngp26xb9hb7dqbu6pbs7cs9flztmqwg0.gz"
-      OPENCV_DEB="OpenCV-4.8.1-aarch64.tar.gz"
-      DOWNLOAD_DIR="/tmp"
-
-      apt-get purge -y libopencv* nvidia-opencv* opencv*
-
-      cd "$DOWNLOAD_DIR"
-      wget --quiet --show-progress --progress=bar:force:noscroll --no-check-certificate "$OPENCV_URL" -O "$OPENCV_DEB"
-
-      if [ ! -f "$OPENCV_DEB" ]; then
-        echo "Error: Failed to download $OPENCV_DEB"
-        exit 1
-      fi
-
-      tar -xzf "$OPENCV_DEB"
-
-      apt install -y --no-install-recommends ./OpenCV-4.8.1-dirty-aarch64-dev.deb ./OpenCV-4.8.1-dirty-aarch64-licenses.deb ./OpenCV-4.8.1-dirty-aarch64-libs.deb ./OpenCV-4.8.1-dirty-aarch64-main.deb ./OpenCV-4.8.1-dirty-aarch64-python.deb ./OpenCV-4.8.1-dirty-aarch64-scripts.deb
-
-      cd "$DOWNLOAD_DIR"
-      rm -rf "$OPENCV_DEB" OpenCV-4.8.1-aarch64
-
-      echo "OpenCV 4.8.1 installation completed successfully"
-    mode: "0755"
-  become: true
-
-- name: Install OpenCV with custom script
-  ansible.builtin.command:
-    cmd: "{{ jetson_script_dir }}/custom_opencv_install.sh"
+- name: Install OpenCV
+  block:
+    - name: Run install.sh script
+      ansible.builtin.shell:
+        cmd: cd {{ jetson_script_dir }} && ./opencv_build.sh || echo "BUILD FAILED (OpenCV ${OPENCV_VERSION})"
+      environment:
+        OPENCV_VERSION: "{{ opencv_version }}"
+        OPENCV_URL: "{{ opencv_url }}"
+        FORCE_BUILD: "{{ force_build }}"
+        CUDA_ARCH_BIN: "{{ cuda_arch_bin }}"
   become: true
 
 - name: Install range-v3 0.11.0
