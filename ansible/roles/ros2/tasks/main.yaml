@@ -166,6 +166,30 @@
     state: absent
   become: true
 
+- name: check function patch_opencv() in opencv_build.sh file
+  lineinfile:
+    path: /path/to/your/build_script.sh
+    regexp: '^function patch_opencv\(\)'
+    line: "function patch_opencv()"
+    state: present
+  check_mode: yes
+  register: function_line
+
+- name: Modify function patch_opencv() opencv_build.sh file
+  blockinfile:
+    path: /path/to/your/build_script.sh
+    insertafter: '^function patch_opencv\(\)'
+    block: |
+      {
+          [ -f opencv/modules/dnn/src/cuda4dnn/primitives/normalize_bbox.hpp ] && sed -i 's|weight != 1.0|(float)weight != 1.0f|' opencv/modules/dnn/src/cuda4dnn/primitives/normalize_bbox.hpp || true
+          [ -f opencv/modules/dnn/src/cuda4dnn/primitives/region.hpp ] && sed -i 's|nms_iou_threshold > 0|(float)nms_iou_threshold > 0.0f|' opencv/modules/dnn/src/cuda4dnn/primitives/region.hpp || true
+          [ -f opencv/modules/dnn/src/cuda4dnn/primitives/normalize_bbox.hpp ] && grep 'weight' opencv/modules/dnn/src/cuda4dnn/primitives/normalize_bbox.hpp 2>/dev/null || true
+          [ -f opencv/modules/dnn/src/cuda4dnn/primitives/region.hpp ] && grep 'nms_iou_threshold' opencv/modules/dnn/src/cuda4dnn/primitives/region.hpp 2>/dev/null || true
+      }
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
+    state: present
+    backup: yes
+
 - name: Install OpenCV
   block:
     - name: Run install.sh script
