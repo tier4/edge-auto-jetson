@@ -136,7 +136,7 @@
     opencv_version: "{{ OPENCV_VERSION | default('4.9.0') }}"
     opencv_python: "{{ OPENCV_PYTHON | default('4.x') }}"
     force_build: "{{ FORCE_BUILD | default('on') }}"
-    cuda_arch_bin: "{{ CUDA_ARCH_BIN | default('') }}"
+    cuda_arch_bin: "{{ CUDA_ARCH_BIN | default('8.7') }}"
 
 - name: Modify opencv_build.sh file
   ansible.builtin.replace:
