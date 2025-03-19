@@ -73,6 +73,12 @@
           - libboost-date-time-dev
           - libboost-iostreams-dev
           - libvtk7-dev
+          - clang-format-14
+          - libusb-1.0-0-dev
+          - qtbase5-dev
+          - qtdeclarative5-dev
+          - libpcap-dev
+          - freeglut3-dev
         install_recommends: false
         update_cache: true
   become: true
@@ -123,11 +129,11 @@
         cmd: make -j7 install
         chdir: "{{ pcl_directory }}/pcl/build"
       become: true
+      ignore_errors: true
 
 - name: Set OpenCV environment variables
   set_fact:
     opencv_version: "{{ OPENCV_VERSION | default('4.9.0') }}"
-    opencv_url: "{{ OPENCV_URL }}"
     opencv_python: "{{ OPENCV_PYTHON | default('4.x') }}"
     force_build: "{{ FORCE_BUILD | default('on') }}"
     cuda_arch_bin: "{{ CUDA_ARCH_BIN | default('') }}"
@@ -154,7 +160,6 @@
       environment:
         OPENCV_VERSION: "{{ opencv_version }}"
         OPENCV_PYTHON: "{{ opencv_python }}"
-        OPENCV_URL: "{{ opencv_url }}"
         FORCE_BUILD: "{{ force_build }}"
         CUDA_ARCH_BIN: "{{ cuda_arch_bin }}"
   become: true
