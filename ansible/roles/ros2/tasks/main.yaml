@@ -72,7 +72,7 @@
           - libboost-filesystem-dev
           - libboost-date-time-dev
           - libboost-iostreams-dev
-          - libvtk7-dev
+          - libvtk9-dev
         install_recommends: false
         update_cache: true
   become: true
