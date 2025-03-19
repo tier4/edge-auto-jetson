@@ -152,6 +152,20 @@
     replace: "{{ jetson_script_dir }}/opencv_patches.diff"
   become: true
 
+- name: Modify opencv_build.sh file
+  ansible.builtin.replace:
+    path: "{{ jetson_script_dir }}/opencv_build.sh"
+    regexp: "ln -s"
+    replace: "ln -s -f"
+  become: true
+
+- name: Modify opencv_build.sh file
+  ansible.builtin.lineinfile:
+    path: "{{ jetson_script_dir }}/opencv_build.sh"
+    regexp: "git diff"
+    state: absent
+  become: true
+
 - name: Install OpenCV
   block:
     - name: Run install.sh script
