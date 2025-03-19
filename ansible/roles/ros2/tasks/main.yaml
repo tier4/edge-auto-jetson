@@ -136,7 +136,7 @@
   ansible.builtin.replace:
     path: "{{ jetson_script_dir }}/opencv_build.sh"
     regexp: "bash /tmp/opencv/install_deps.sh"
-    replace: "bash ./install_deps.sh"
+    replace: "bash ./opencv_install_deps.sh"
   become: true
 
 - name: Modify opencv_build.sh file
