@@ -27,52 +27,37 @@
         opencv_install_deps_script: "{{ jetson_script_dir }}/opencv_install_deps.sh"
     - name: Define file name
       set_fact:
-        opencv_install_deb_script: "{{ jetson_script_dir }}/install_deb.sh"
-    - name: Define file name
-      set_fact:
-        opencv_install_script: "{{ jetson_script_dir }}/opencv_install.sh"
-    - name: Define file name
-      set_fact:
         opencv_build_script: "{{ jetson_script_dir }}/opencv_build.sh"
     - name: Define file name
       set_fact:
         ros2_build_script: "{{ jetson_script_dir }}/ros2_build.sh"
+    - name: Define file name
+      set_fact:
+        opencv_patches: "{{ jetson_script_dir }}/opencv_patches.diff"
     - name: Download OpenCV deps script
       ansible.builtin.get_url:
         url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R36.4.2/packages/opencv/install_deps.sh
         dest: "{{ opencv_install_deps_script }}"
-    - name: Download OpenCV dep script
-      ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R36.4.2/packages/opencv/install_deb.sh
-        dest: "{{ opencv_install_deb_script }}"
-    - name: Download OpenCV dep script
+    - name: Download OpenCV build script
       ansible.builtin.get_url:
         url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R36.4.2/packages/opencv/build.sh
         dest: "{{ opencv_build_script }}"
+    - name: Download OpenCV patches
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R36.4.2/packages/opencv/patches.diff
+        dest: "{{ opencv_patches }}"
+    - name: Download ROS2 Humble install script
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R36.4.2/packages/ros/ros2_build.sh
+        dest: "{{ ros2_build_script }}"
     - name: Make OpenCV deps script executable
       ansible.builtin.file:
         dest: "{{ opencv_install_deps_script }}"
-        mode: u+x
-    - name: Make OpenCV dep script executable
-      ansible.builtin.file:
-        dest: "{{ opencv_install_deb_script }}"
         mode: u+x
     - name: Make OpenCV build script executable
       ansible.builtin.file:
         dest: "{{ opencv_build_script }}"
         mode: u+x
-    - name: Download OpenCV install script
-      ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R36.4.2/packages/opencv/install.sh
-        dest: "{{ opencv_install_script }}"
-    - name: Make OpenCV install script executable
-      ansible.builtin.file:
-        dest: "{{ opencv_install_script }}"
-        mode: u+x
-    - name: Download ROS2 Humble install script
-      ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R36.4.2/packages/ros/ros2_build.sh
-        dest: "{{ ros2_build_script }}"
     - name: Make ROS2 Humble install script executable
       ansible.builtin.file:
         dest: "{{ ros2_build_script }}"
@@ -80,9 +65,6 @@
 
 - name: Install dependencies
   block:
-    - name: Install OpenCV deps
-      ansible.builtin.command:
-        cmd: "{{ opencv_install_deps_script }}"
     - name: Install PCL deps
       ansible.builtin.apt:
         name:
@@ -150,6 +132,20 @@
     force_build: "{{ FORCE_BUILD | default('on') }}"
     cuda_arch_bin: "{{ CUDA_ARCH_BIN | default('') }}"
 
+- name: Modify opencv_build.sh file
+  ansible.builtin.replace:
+    path: "{{ jetson_script_dir }}/opencv_build.sh"
+    regexp: "bash /tmp/opencv/install_deps.sh"
+    replace: "bash ./install_deps.sh"
+  become: true
+
+- name: Modify opencv_build.sh file
+  ansible.builtin.replace:
+    path: "{{ jetson_script_dir }}/opencv_build.sh"
+    regexp: "/tmp/opencv/patches.diff"
+    replace: "./opencv_patches.diff"
+  become: true
+
 - name: Install OpenCV
   block:
     - name: Run install.sh script
@@ -197,13 +193,6 @@
   ansible.builtin.stat:
     path: "{{ ros_root_dir }}/install"
   register: ros_install_dir_exist
-
-- name: Update OpenCV CUDA version in OpenCVConfig.cmake
-  lineinfile:
-    path: /usr/lib/cmake/opencv4/OpenCVConfig.cmake
-    regexp: 'set\(OpenCV_CUDA_VERSION "12\.2"\)'
-    line: 'set(OpenCV_CUDA_VERSION "12.6")'
-  become: yes
 
 - name: Build ROS2 Humble
   block:
