@@ -136,7 +136,7 @@
     opencv_version: "{{ OPENCV_VERSION | default('4.9.0') }}"
     opencv_python: "{{ OPENCV_PYTHON | default('4.x') }}"
     force_build: "{{ FORCE_BUILD | default('on') }}"
-    cuda_arch_bin: "{{ CUDA_ARCH_BIN | default('8.7') }}"
+    cuda_arch_bin: "{{ CUDA_ARCH_BIN | default('8.7') }}" # Jetson AGX Orin
 
 - name: Modify opencv_build.sh file
   ansible.builtin.replace:
@@ -149,7 +149,7 @@
   ansible.builtin.replace:
     path: "{{ jetson_script_dir }}/opencv_build.sh"
     regexp: "/tmp/opencv/patches.diff"
-    replace: "./opencv_patches.diff"
+    replace: "{{ jetson_script_dir }}/opencv_patches.diff"
   become: true
 
 - name: Install OpenCV
