@@ -133,7 +133,7 @@
 
 - name: Set OpenCV environment variables
   set_fact:
-    opencv_version: "{{ OPENCV_VERSION | default('4.9.0') }}"
+    opencv_version: "{{ OPENCV_VERSION | default('4.x') }}"
     opencv_python: "{{ OPENCV_PYTHON | default('4.x') }}"
     force_build: "{{ FORCE_BUILD | default('on') }}"
     cuda_arch_bin: "{{ CUDA_ARCH_BIN | default('8.7') }}" # Jetson AGX Orin
