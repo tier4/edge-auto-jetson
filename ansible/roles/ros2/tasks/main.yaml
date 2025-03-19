@@ -168,7 +168,7 @@
 
 - name: check function patch_opencv() in opencv_build.sh file
   lineinfile:
-    path: /path/to/your/build_script.sh
+    path: "{{ jetson_script_dir }}/opencv_build.sh"
     regexp: '^function patch_opencv\(\)'
     line: "function patch_opencv()"
     state: present
@@ -177,7 +177,7 @@
 
 - name: Modify function patch_opencv() opencv_build.sh file
   blockinfile:
-    path: /path/to/your/build_script.sh
+    path: "{{ jetson_script_dir }}/opencv_build.sh"
     insertafter: '^function patch_opencv\(\)'
     block: |
       {
