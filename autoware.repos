@@ -2,16 +2,12 @@ repositories:
   # perception stack
   launcher:
     type: git
-    url: https://github.com/MapIV/edge_auto_jetson_launch
+    url: https://github.com/tier4/edge_auto_jetson_launch.git
     version: feature/anvil_L4T-R36.4.0
-  x86_launcher:
-    type: git
-    url: https://github.com/MapIV/edge_auto_launch.git
-    version: feature/perception_on_anvil
   individual_params:
     type: git
     url: https://github.com/tier4/edge_auto_individual_params.git
-    version: 5551281f0780d8fd209fb1808104ba4ba99a35d7
+    version: 5b8a315a33d9c468991e26d02da8b5a9472c03ade
   sensor_trigger:
     type: git
     url: https://github.com/tier4/sensor_trigger.git
@@ -64,7 +60,11 @@ repositories:
   image_transport_plugins:
     type: git
     url: https://github.com/ros-perception/image_transport_plugins.git
-    version: 6d4faa5cb8bbc777c486b352f1c393a89d8d9296
+    version: 6d4faa5cb8bbc777c486b352f1c393a89d8d9296  
+  ros_perception:
+    type: git
+    url: https://github.com/ros-perception/vision_opencv.git
+    version: humble
   # build dependencies
   demos:
     type: git
@@ -93,3 +93,29 @@ repositories:
     type: git
     url: https://github.com/tier4/tensorrt_cmake_module
     version: main
+
+  # calibration deps
+  lidartag:
+    type: git
+    url: https://github.com/tier4/LiDARTag.git
+    version: 2e8526f549a662065a716edffc435436c257ac25 # humble
+  lidartag_msgs:
+    type: git
+    url: https://github.com/tier4/LiDARTag_msgs.git
+    version: a8e94d97270969aed14c5d83729068865454a9f9 # tier4/universe
+  apriltag_msgs:
+    type: git
+    url: https://github.com/christianrauch/apriltag_msgs.git
+    version: 2.0.0
+  apriltag_ros:
+    type: git
+    url: https://github.com/christianrauch/apriltag_ros.git
+    version: 3.0.0
+  ros2_numpy:
+    type: git
+    url: https://github.com/Box-Robotics/ros2_numpy.git
+    version: 974a491e66c5bf617cd4a28848b5584a58c43f5a # humble
+  universe/external/ndt_omp:
+    type: git
+    url: https://github.com/tier4/ndt_omp.git
+    version: e32ec1b9a3b887cc86e5559686184576d90e0efb
