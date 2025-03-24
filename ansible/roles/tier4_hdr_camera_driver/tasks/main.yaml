@@ -49,48 +49,73 @@
       ansible.builtin.apt:
         deb: "{{ camera_driver_download_dir }}/{{ driver_deb_name }}"
         state: present
-    - name: Post process
-      ansible.builtin.shell:
-        cmd: |
-          /opt/nvidia/jetson-io/config-by-hardware.py -n 2="TIERIV ISX021 GMSL2 Camera Device Tree Overlay"
-        # noqa no-changed-when
-        # TODO: check dtb file
+    # - name: Post process
+    #   ansible.builtin.shell:
+    #     cmd: |
+    #       /opt/nvidia/jetson-io/config-by-hardware.py -n 2="TIERIV ISX021 GMSL2 Camera Device Tree Overlay"
+    #     # noqa no-changed-when
+    #     # TODO: check dtb file
     - name: Install SDK from deb file
       ansible.builtin.apt:
         deb: "{{ camera_driver_download_dir }}/{{ sdk_deb_name }}"
         state: present
       when: sdk_deb_download_url is defined
 
-- name: Setup C1 configuration
-  block:
-    - name: "{{ block_name }} : Change trigger mode to Fsync mode"
-      include_tasks: mod_or_add.yaml
-      vars:
-        target_item: trigger_mode
-        target_val: "1"
-    # Set the same value to min/mid/max exposure time
-    # so that exposure time can be estimated under any brightness condition
-    - name: "{{ block_name }} : Fix exposure time"
-      block:
-        - name: "{{ block_name }} : Set min exposure"
-          include_tasks: mod_or_add.yaml
-          vars:
-            target_item: shutter_time_min
-            target_val: "{{ exposure_time }}"
-        - name: "{{ block_name }} : Set mid exposure"
-          include_tasks: mod_or_add.yaml
-          vars:
-            target_item: shutter_time_mid
-            target_val: "{{ exposure_time }}"
-        - name: "{{ block_name }} : Set max exposure"
-          include_tasks: mod_or_add.yaml
-          vars:
-            target_item: shutter_time_max
-            target_val: "{{ exposure_time }}"
-  vars:
-    target_file: /etc/modprobe.d/tier4-isx021.conf
-    config_prefix: options tier4_isx021
-    block_name: ISX021 configuration
+- name: Modify extlinux.conf
+  hosts: all
+  become: yes
+  tasks:
+    - name: Step 1 - Add new boot entry for CSI TIERIV GMSL2 Camera Device Tree Overlay  C2x8
+      blockinfile:
+        path: /boot/extlinux/extlinux.conf
+        block: |
+          LABEL t4_primary_c2x8
+                MENU LABEL Custom Header Config: <CSI TIERIV GMSL2 Camera Device Tree Overlay: C2x8>
+                LINUX /boot/Image
+                INITRD /boot/initrd
+                FDT /boot/dtb/kernel_tegra234-orin-agx-cti-AGX201.dtb
+                OVERLAYS /boot/tier4-imx490-gmsl-device-tree-overlay-anvil-r36.dtbo
+                APPEND ${cbootargs} root=/dev/mmcblk0p1 rw rootwait rootfstype=ext4 mminit_loglevel=4 console=ttyTCU0,115200 console=ttyAMA0,115200 firmware_class.path=/etc/firmware fbcon=map:0 nospectre_bhb video=efifb:off console=tty0
+        state: present
+        backup: yes
+
+    - name: Step 2 - Change DEFAULT primary to DEFAULT t4_primary_c2x8
+      replace:
+        path: /boot/extlinux/extlinux.conf
+        regexp: "^DEFAULT primary"
+        replace: "DEFAULT t4_primary_c2x8"
+        backup: no
+
+# - name: Setup C1 configuration
+#   block:
+#     - name: "{{ block_name }} : Change trigger mode to Fsync mode"
+#       include_tasks: mod_or_add.yaml
+#       vars:
+#         target_item: trigger_mode
+#         target_val: "1"
+#     # Set the same value to min/mid/max exposure time
+#     # so that exposure time can be estimated under any brightness condition
+#     - name: "{{ block_name }} : Fix exposure time"
+#       block:
+#         - name: "{{ block_name }} : Set min exposure"
+#           include_tasks: mod_or_add.yaml
+#           vars:
+#             target_item: shutter_time_min
+#             target_val: "{{ exposure_time }}"
+#         - name: "{{ block_name }} : Set mid exposure"
+#           include_tasks: mod_or_add.yaml
+#           vars:
+#             target_item: shutter_time_mid
+#             target_val: "{{ exposure_time }}"
+#         - name: "{{ block_name }} : Set max exposure"
+#           include_tasks: mod_or_add.yaml
+#           vars:
+#             target_item: shutter_time_max
+#             target_val: "{{ exposure_time }}"
+#   vars:
+#     target_file: /etc/modprobe.d/tier4-isx021.conf
+#     config_prefix: options tier4_isx021
+#     block_name: ISX021 configuration
 
 - name: Setup C2 configuration
   block:
