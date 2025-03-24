@@ -13,9 +13,9 @@
           interface_name: mgbe1
         lidar:
           interface_address: 192.168.1.100
-          interface_name: eth0
+          interface_name: enP1p1s0
     - ptp4l_client_interface: eqos0
-    - ptp4l_host_interface: eth0
+    - ptp4l_host_interface: enP1p1s0
     - artifacts_script_download_dir: /home/autoware/autoware_data
   vars_prompt:
     - name: prompt_configure_network
