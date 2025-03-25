@@ -45,31 +45,40 @@
 - name: Setup camera driver and SDK
   become: true
   block:
-    - name: Install driver from deb file
-      ansible.builtin.shell:
-        cmd: DEBIAN_FRONTEND=noninteractive dpkg --force-confdef --force-confold -i "{{ camera_driver_download_dir }}/{{ driver_deb_name }}"
-      register: dpkg_result
-      failed_when: false
-
-    - name: Debug installation output
-      ansible.builtin.debug:
-        var: dpkg_result
-
-    - name: Fix potential dependency issues
+    - name: Update apt cache
       ansible.builtin.apt:
         update_cache: yes
 
-    - name: Run apt --fix-broken install
+    - name: Install driver from deb file using apt
+      ansible.builtin.apt:
+        deb: "{{ camera_driver_download_dir }}/{{ driver_deb_name }}"
+        state: present
+      register: apt_install_result
+      failed_when: false
+      async: 600
+      poll: 30
+
+    - name: Debug installation output
+      ansible.builtin.debug:
+        var: apt_install_result
+
+    - name: Fix dependencies if installation failed
       ansible.builtin.shell:
         cmd: apt-get -f -y install
-      when: dpkg_result.rc != 0
+      when: when: apt_install_result is failed or apt_install_result.rc != 0
+      failed_when: false
+      async: 600
+      poll: 30
 
-    - name: Reinstall driver after fixing dependencies
-      ansible.builtin.shell:
-        cmd: DEBIAN_FRONTEND=noninteractive dpkg --force-confdef --force-confold -i "{{ camera_driver_download_dir }}/{{ driver_deb_name }}"
-      when: dpkg_result.rc != 0
-      register: reinstall_result
-      failed_when: reinstall_result.rc != 0
+    - name: Reinstall driver after fixing dependencies if needed
+      ansible.builtin.apt:
+        deb: "{{ camera_driver_download_dir }}/{{ driver_deb_name }}"
+        state: present
+      when: when: apt_install_result is failed or apt_install_result.rc != 0
+      failed_when: false
+      async: 600
+      poll: 30
+
     # - name: Post process
     #   ansible.builtin.shell:
     #     cmd: |
@@ -115,37 +124,6 @@
     regexp: "^DEFAULT primary"
     replace: "DEFAULT t4_primary_c2x8"
     backup: no
-
-# - name: Setup C1 configuration
-#   block:
-#     - name: "{{ block_name }} : Change trigger mode to Fsync mode"
-#       include_tasks: mod_or_add.yaml
-#       vars:
-#         target_item: trigger_mode
-#         target_val: "1"
-#     # Set the same value to min/mid/max exposure time
-#     # so that exposure time can be estimated under any brightness condition
-#     - name: "{{ block_name }} : Fix exposure time"
-#       block:
-#         - name: "{{ block_name }} : Set min exposure"
-#           include_tasks: mod_or_add.yaml
-#           vars:
-#             target_item: shutter_time_min
-#             target_val: "{{ exposure_time }}"
-#         - name: "{{ block_name }} : Set mid exposure"
-#           include_tasks: mod_or_add.yaml
-#           vars:
-#             target_item: shutter_time_mid
-#             target_val: "{{ exposure_time }}"
-#         - name: "{{ block_name }} : Set max exposure"
-#           include_tasks: mod_or_add.yaml
-#           vars:
-#             target_item: shutter_time_max
-#             target_val: "{{ exposure_time }}"
-#   vars:
-#     target_file: /etc/modprobe.d/tier4-isx021.conf
-#     config_prefix: options tier4_isx021
-#     block_name: ISX021 configuration
 
 - name: Setup C2 configuration
   block:
