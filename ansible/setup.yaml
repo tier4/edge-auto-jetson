@@ -41,6 +41,7 @@
       when: prompt_configure_network == 'y'
     - role: netplan
       when: prompt_configure_network == 'y'
+    - role: ptp4l_host
     - role: autoware
     - role: cuda
     - role: cyclonedds

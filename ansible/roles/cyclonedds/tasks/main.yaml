@@ -21,13 +21,13 @@
 
 - name: Enable multicast setup service
   ansible.builtin.systemd:
-    name: multicast@{{ item }}.service
+    name: multicast@{{ item.value.interface_name }}.service
     daemon_reload: true
     enabled: true
     masked: false
   become: true
-  when: item == "lo"
-  with_items: "{{ network_config }}"
+  when: item.key == "ros"
+  loop: "{{ network_config | dict2items }}"
 
 - name: Add kernel parameter config
   ansible.posix.sysctl:

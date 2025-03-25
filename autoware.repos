@@ -7,7 +7,7 @@ repositories:
   individual_params:
     type: git
     url: https://github.com/tier4/edge_auto_individual_params.git
-    version: 5b8a315a33d9c468991e26d02da8b5a9472c03ade
+    version: b8a315a33d9c468991e26d02da8b5a9472c03ade
   sensor_trigger:
     type: git
     url: https://github.com/tier4/sensor_trigger.git
