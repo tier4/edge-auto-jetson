@@ -99,6 +99,7 @@ After successful installation:
 ## Troubleshooting
 
 1. If the build fails:
+
    - Check ROS 2 Humble installation
    - Verify CUDA toolkit installation
    - Check network connectivity for git clone
