@@ -10,26 +10,12 @@
     driver_deb_name: "{{ item.name }}"
   when: item.name | regex_search('tier4-camera-gmsl_(.+)_arm64.deb')
 
-# - name: Parse download URL for SDK
-#   loop: "{{ github_api_return_info.json.assets }}"
-#   ansible.builtin.set_fact:
-#     sdk_deb_download_url: "{{ item.browser_download_url }}"
-#     sdk_deb_name: "{{ item.name }}"
-#   when: item.name | regex_search('t4cam_sdk-(.+)-rqx58g.deb')
-
 - name: Download driver deb file from public repo
   ansible.builtin.uri:
     url: "{{ driver_deb_download_url }}"
     dest: "{{ camera_driver_download_dir }}/{{ driver_deb_name }}"
     mode: 064
     status_code: [200, 304]
-
-# - name: Download SDK deb file from public repo
-#   ansible.builtin.uri:
-#     url: "{{ sdk_deb_download_url }}"
-#     dest: "{{ camera_driver_download_dir }}/{{ sdk_deb_name }}"
-#     mode: 0644
-#   when: sdk_deb_download_url is defined
 
 - name: Install apt packages
   become: true
@@ -59,105 +45,45 @@
       async: 600
       poll: 30
 
-    - name: Debug installation output
-      ansible.builtin.debug:
-        var: apt_install_result
-
-    - name: Fix dependencies if installation failed
-      ansible.builtin.shell:
-        cmd: apt-get -f -y install
-      when: apt_install_result is failed or (apt_install_result.rc | default(0)) != 0
-      failed_when: false
-      async: 600
-      poll: 30
-
-    - name: Reinstall driver after fixing dependencies if needed
-      ansible.builtin.apt:
-        deb: "{{ camera_driver_download_dir }}/{{ driver_deb_name }}"
-        state: present
-      when: apt_install_result is failed or (apt_install_result.rc | default(0)) != 0
-      failed_when: false
-      async: 600
-      poll: 30
-
-    # - name: Post process
-    #   ansible.builtin.shell:
-    #     cmd: |
-    #       /opt/nvidia/jetson-io/config-by-hardware.py -n 2="TIERIV ISX021 GMSL2 Camera Device Tree Overlay"
-    #     # noqa no-changed-when
-    #     # TODO: check dtb file
-    # - name: Install SDK from deb file
-    #   ansible.builtin.apt:
-    #     deb: "{{ camera_driver_download_dir }}/{{ sdk_deb_name }}"
-    #     state: present
-    #   when: sdk_deb_download_url is defined
-
-- name: Check for device tree overlay file
+- name: Copy device tree overlay file to /boot (overwrite if exists)
   become: true
-  ansible.builtin.stat:
-    path: /boot/tier4-imx490-gmsl-device-tree-overlay-anvil-r36.dtbo
-  register: dtbo_file
+  ansible.builtin.copy:
+    src: tier4-imx490-gmsl-device-tree-overlay-anvil-r36.dtbo
+    dest: /boot/tier4-imx490-gmsl-device-tree-overlay-anvil-r36.dtbo
+    mode: "0644"
+    owner: root
+    group: root
 
-- name: Warn if device tree overlay file is missing
-  ansible.builtin.debug:
-    msg: "Warning: Device tree overlay file is missing. Installation may fail."
-  when: not dtbo_file.stat.exists
+- name: Copy tier4-imx490.conf to /etc/modprobe.d (overwrite if exists)
+  become: true
+  ansible.builtin.copy:
+    src: tier4-imx490.conf
+    dest: /etc/modprobe.d/tier4-imx490.conf
+    mode: "0644"
+    owner: root
+    group: root
 
-- name: Modify extlinux.conf - Add new boot entry
-  become: yes
-  ansible.builtin.blockinfile:
-    path: /boot/extlinux/extlinux.conf
-    block: |
-      LABEL t4_primary_c2x8
-            MENU LABEL Custom Header Config: <CSI TIERIV GMSL2 Camera Device Tree Overlay: C2x8>
-            LINUX /boot/Image
-            INITRD /boot/initrd
-            FDT /boot/dtb/kernel_tegra234-orin-agx-cti-AGX201.dtb
-            OVERLAYS /boot/tier4-imx490-gmsl-device-tree-overlay-anvil-r36.dtbo
-            APPEND ${cbootargs} root=/dev/mmcblk0p1 rw rootwait rootfstype=ext4 mminit_loglevel=4 console=ttyTCU0,115200 console=ttyAMA0,115200 firmware_class.path=/etc/firmware fbcon=map:0 nospectre_bhb video=efifb:off console=tty0
-    state: present
-    backup: yes
+- name: Create camera driver installer script
+  become: true
+  ansible.builtin.template:
+    src: camera-driver-installer.sh.j2
+    dest: /usr/local/bin/camera-driver-installer.sh
+    mode: "0755"
+    owner: root
+    group: root
 
-- name: Modify extlinux.conf - Change DEFAULT primary to DEFAULT t4_primary_c2x8
-  become: yes
-  ansible.builtin.replace:
-    path: /boot/extlinux/extlinux.conf
-    regexp: "^DEFAULT primary"
-    replace: "DEFAULT t4_primary_c2x8"
-    backup: no
+- name: Create systemd service file
+  become: true
+  ansible.builtin.template:
+    src: camera-driver-installer.service.j2
+    dest: /etc/systemd/system/camera-driver-installer.service
+    mode: "0644"
+    owner: root
+    group: root
 
-- name: Setup C2 configuration
-  block:
-    - name: "{{ block_name }} : Change trigger mode to Fsync mode"
-      include_tasks: mod_or_add.yaml
-      vars:
-        target_item: trigger_mode
-        target_val: "1"
-
-    # Set the same value to min/mid/max exposure time
-    # so that exposure time can be estimated under any brightness condition
-    - name: "{{ block_name }} : Fix exposure time"
-      block:
-        - name: "{{ block_name }} : Set min exposure"
-          include_tasks: mod_or_add.yaml
-          vars:
-            target_item: shutter_time_min
-            target_val: "{{ exposure_time }}"
-        - name: "{{ block_name }} : Set mid exposure"
-          include_tasks: mod_or_add.yaml
-          vars:
-            target_item: shutter_time_mid
-            target_val: "{{ exposure_time }}"
-        - name: "{{ block_name }} : Set max exposure"
-          include_tasks: mod_or_add.yaml
-          vars:
-            target_item: shutter_time_max
-            target_val: "{{ exposure_time }}"
-  vars:
-    target_file: /etc/modprobe.d/tier4-imx490.conf
-    config_prefix: options tier4_imx490
-    block_name: IMX490 configuration
-
-- name: Notify about reboot requirement
-  ansible.builtin.debug:
-    msg: "Configuration complete. System needs to be rebooted for changes to take effect."
+- name: Enable camera driver installer service
+  become: true
+  ansible.builtin.systemd:
+    name: camera-driver-installer.service
+    enabled: yes
+    daemon_reload: yes

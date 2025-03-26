@@ -1,0 +1,13 @@
+[Unit]
+Description=Camera Driver Install Service
+After=network.target
+Before=autoware.service
+ConditionPathExists=/boot/tier4-imx490-gmsl-device-tree-overlay-anvil-r36.dtbo
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/camera-driver-installer.sh
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target
