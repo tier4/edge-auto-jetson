@@ -13,17 +13,10 @@ if [ "$VEHICLE_MODEL" == "j6_gen2" ]; then
     done
 fi
 
-{% if perception_type == "tlr" %}
-ros2 launch jetson_or_launch object_recognition.launch.py build_engine_only:=true data_path:="/opt/autoware" input/image:="none" container:="none" camera_id:="0"
-ros2 launch jetson_tlr_launch traffic_light.launch.xml build_engine_only:=true container:="none"
-{% else %}
-ros2 launch jetson_or_launch object_recognition.launch.py build_engine_only:=true data_path:="/opt/autoware" input/image:="none" container:="none" camera_id:="0"
-{% endif %}
+ros2 launch edge_auto_jetson_launch edge_auto_jetson.launch.xml
 
 {% for i in range(video_num) %}
 while [[ ! -e /dev/video{{ i }} ]]; do
     sleep 1
 done
 {%endfor%}
-
-ros2 launch jetson_{{ perception_type }}_launch jetson_{{ perception_type }}.launch.xml
