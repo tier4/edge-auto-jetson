@@ -65,7 +65,7 @@
     - name: Fix dependencies if installation failed
       ansible.builtin.shell:
         cmd: apt-get -f -y install
-      when: when: apt_install_result is failed or apt_install_result.rc != 0
+      when: apt_install_result is failed or apt_install_result.rc != 0
       failed_when: false
       async: 600
       poll: 30
@@ -74,7 +74,7 @@
       ansible.builtin.apt:
         deb: "{{ camera_driver_download_dir }}/{{ driver_deb_name }}"
         state: present
-      when: when: apt_install_result is failed or apt_install_result.rc != 0
+      when: apt_install_result is failed or apt_install_result.rc != 0
       failed_when: false
       async: 600
       poll: 30
