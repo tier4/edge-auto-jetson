@@ -17,6 +17,7 @@ done
 source /opt/ros/humble/install/setup.bash
 source {{ autoware_env_dir }}/autoware.env
 source {{ autoware_env_dir }}/vehicle.env
+source {{ perception_application_base_path }}/{{ perception_application_directory_name }}/install/setup.bash
 
 {% if perception_type == 'tlr' %}
 ros2 launch edge_auto_jetson_launch jetson_tlr.launch.xml \
