@@ -1,0 +1,58 @@
+### Build local stuffs
+- name: Create Autoware directory
+  ansible.builtin.file:
+    path: "{{ perception_application_base_path }}"
+    state: directory
+    mode: "0755"
+
+- name: Clone repository that contain install script
+  ansible.builtin.set_fact:
+    github_token: "{{ lookup('env', 'GITHUB_TOKEN') }}"
+
+- name: Clone edge-auto-jetson repository
+  ansible.builtin.git:
+    repo: "{{ perception_application_edge_auto_repo }}"
+    dest: "{{ perception_application_base_path }}/{{ perception_application_directory_name }}"
+    version: "{{ perception_application_edge_auto_version }}"
+  environment:
+      GITHUB_TOKEN: "{{ github_token }}"
+
+- name: Create src directory
+  ansible.builtin.file:
+    path: "{{ perception_application_base_path }}/{{ perception_application_directory_name }}/src"
+    state: directory
+    mode: "0755"
+
+- name: Import VCS repositories
+  ansible.builtin.shell:
+    cmd: vcs import src < autoware.repos
+    chdir: "{{ perception_application_base_path }}/{{ perception_application_directory_name }}"
+  changed_when: false
+  environment:
+      GITHUB_TOKEN: "{{ github_token }}"
+
+- name: Upgrade pyOpenSSL using pip
+  ansible.builtin.pip:
+    name: pyopenssl
+    state: latest
+    executable: pip3
+
+# Source path will be common setup path if perception_application_native_built_ros not true
+- name: Set Source Path for X86
+  ansible.builtin.set_fact:
+    perception_application_ros_source_path: "/opt/ros/humble/setup.bash"
+  when: not perception_application_native_built_ros|bool
+
+# Source path will be different if perception_application_native_built_ros true
+- name: Set Source Path for ARM
+  ansible.builtin.set_fact:
+    perception_application_ros_source_path: "/opt/ros/humble/install/setup.bash"
+  when: perception_application_native_built_ros|bool
+
+
+- name: Build Edge Auto Jetson package
+  ansible.builtin.shell:
+    cmd: source {{ perception_application_ros_source_path }} && ./build.sh {{ perception_type }}
+    chdir: "{{ perception_application_base_path }}/{{ perception_application_directory_name }}"
+    executable: /bin/bash
+  changed_when: false

@@ -1,0 +1,30 @@
+- name: Create directory
+  ansible.builtin.file:
+    path: /opt/autoware/perception-startup-service
+    state: directory
+    owner: root
+    mode: 0755
+  become: true
+
+- name: Install script of perception launch shell
+  ansible.builtin.template:
+    src: "{{ perception_application_service_run_templates_file }}"
+    dest: /opt/autoware/perception-startup-service/run.sh
+    owner: root
+    mode: 0755
+  become: true
+
+- name: Install perception startup service file
+  ansible.builtin.template:
+    src: perception-startup.service.j2
+    dest: /etc/systemd/system/perception-startup.service
+    mode: 0755
+  become: true
+
+- name: Enable service
+  ansible.builtin.systemd:
+    name: perception-startup.service
+    daemon_reload: "{{ daemon_reload }}"
+    enabled: true
+    masked: false
+  become: true

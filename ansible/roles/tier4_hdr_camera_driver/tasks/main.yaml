@@ -21,7 +21,8 @@
   ansible.builtin.uri:
     url: "{{ driver_deb_download_url }}"
     dest: "{{ camera_driver_download_dir }}/{{ driver_deb_name }}"
-    mode: 0644
+    mode: 064
+    status_code: [200, 304]
 
 # - name: Download SDK deb file from public repo
 #   ansible.builtin.uri:
@@ -65,7 +66,7 @@
     - name: Fix dependencies if installation failed
       ansible.builtin.shell:
         cmd: apt-get -f -y install
-      when: apt_install_result is failed or apt_install_result.rc != 0
+      when: apt_install_result is failed or (apt_install_result.rc | default(0)) != 0
       failed_when: false
       async: 600
       poll: 30
@@ -74,7 +75,7 @@
       ansible.builtin.apt:
         deb: "{{ camera_driver_download_dir }}/{{ driver_deb_name }}"
         state: present
-      when: apt_install_result is failed or apt_install_result.rc != 0
+      when: apt_install_result is failed or (apt_install_result.rc | default(0)) != 0
       failed_when: false
       async: 600
       poll: 30

@@ -1,0 +1,8 @@
+# include
+- name: Build Edge Auto Jetson
+  ansible.builtin.include_tasks:
+    file: build_edge_auto_jetson.yaml
+
+- name: Set up Automatic Launch System Service
+  ansible.builtin.include_tasks:
+    file: system_service.yaml
