@@ -77,7 +77,6 @@
     mode: "644"
     checksum: sha256:3d93ca05f31b63424d7d7246a01a2365953705a0ed3323ba5b6fddd744a4bfea
 
-
 # lidar_centerpoint
 - name: Create lidar_centerpoint directory inside {{ data_dir }}
   ansible.builtin.file:

@@ -60,7 +60,7 @@ repositories:
   image_transport_plugins:
     type: git
     url: https://github.com/ros-perception/image_transport_plugins.git
-    version: 6d4faa5cb8bbc777c486b352f1c393a89d8d9296  
+    version: 6d4faa5cb8bbc777c486b352f1c393a89d8d9296
   ros_perception:
     type: git
     url: https://github.com/ros-perception/vision_opencv.git
