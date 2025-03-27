@@ -29,21 +29,28 @@
       - dkms
     update_cache: true
 
-- name: Setup camera driver and SDK
-  become: true
+- name: Unpack camera driver deb without triggering postinst
   block:
     - name: Update apt cache
       ansible.builtin.apt:
         update_cache: yes
+      become: true
 
-    - name: Install driver from deb file using apt
-      ansible.builtin.apt:
-        deb: "{{ camera_driver_download_dir }}/{{ driver_deb_name }}"
-        state: present
-      register: apt_install_result
+    - name: Unpack deb
+      ansible.builtin.command: |
+        dpkg --unpack "{{ camera_driver_download_dir }}/{{ driver_deb_name }}"
+      register: driver_deb_unpack_result
+      become: true
+      changed_when: driver_deb_unpack_result.rc == 0
       failed_when: false
-      async: 600
-      poll: 30
+
+    - name: Hold the deb configuration
+      ansible.builtin.command: |
+        apt-mark hold tier4-camera-gmsl
+      register: driver_apt_mark_result
+      become: true
+      changed_when: driver_apt_mark_result.rc == 0
+      failed_when: false
 
 - name: Copy device tree overlay file to /boot (overwrite if exists)
   become: true
@@ -83,7 +90,20 @@
 
 - name: Enable camera driver installer service
   become: true
-  ansible.builtin.systemd:
-    name: camera-driver-installer.service
-    enabled: yes
-    daemon_reload: yes
+  block:
+    - name: Create systemd service directory if it doesn't exist
+      ansible.builtin.file:
+        path: /etc/systemd/system/multi-user.target.wants
+        state: directory
+        mode: "0755"
+        owner: root
+        group: root
+
+    - name: Create systemd enable symlink manually
+      ansible.builtin.file:
+        src: /etc/systemd/system/camera-driver-installer.service
+        dest: /etc/systemd/system/multi-user.target.wants/camera-driver-installer.service
+        state: link
+        force: yes
+        owner: root
+        group: root
