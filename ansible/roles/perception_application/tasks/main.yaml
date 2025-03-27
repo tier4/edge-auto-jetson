@@ -1,4 +1,14 @@
 # include
+- name: Add settings to jetson.env
+  ansible.builtin.blockinfile:
+    path: "{{ autoware_env_dir }}/jetson.env"
+    state: present
+    create: true
+    mode: 0644
+    block: |
+      export JETSON_ID={{ jetson_id }}
+  become: "{{ autoware_env_dir_privileged }}"
+
 - name: Build Edge Auto Jetson
   ansible.builtin.include_tasks:
     file: build_edge_auto_jetson.yaml
