@@ -4,15 +4,18 @@
     - rosdistro: humble
     - network_config:
         ros:
+          interface_address: 127.0.0.1
+          interface_name: lo
+        ptp:
           interface_address: 192.168.2.2
           interface_name: eqos0
         dhcp:
           interface_name: mgbe1
         lidar:
           interface_address: 192.168.1.100
-          interface_name: eth0
+          interface_name: enP1p1s0
     - ptp4l_client_interface: eqos0
-    - ptp4l_host_interface: eth0
+    - ptp4l_host_interface: enP1p1s0
     - artifacts_script_download_dir: /home/autoware/autoware_data
   vars_prompt:
     - name: prompt_configure_network
@@ -38,6 +41,7 @@
       when: prompt_configure_network == 'y'
     - role: netplan
       when: prompt_configure_network == 'y'
+    - role: ptp4l_host
     - role: autoware
     - role: cuda
     - role: cyclonedds

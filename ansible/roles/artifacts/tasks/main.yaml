@@ -76,3 +76,77 @@
     dest: "{{ data_dir }}/tensorrt_yolox/semseg_color_map.csv"
     mode: "644"
     checksum: sha256:3d93ca05f31b63424d7d7246a01a2365953705a0ed3323ba5b6fddd744a4bfea
+
+# lidar_centerpoint
+- name: Create lidar_centerpoint directory inside {{ data_dir }}
+  ansible.builtin.file:
+    path: "{{ data_dir }}/lidar_centerpoint"
+    mode: "755"
+    state: directory
+
+- name: Download lidar_centerpoint/pts_voxel_encoder_centerpoint.onnx
+  become: true
+  ansible.builtin.get_url:
+    url: https://awf.ml.dev.web.auto/perception/models/centerpoint/v2/pts_voxel_encoder_centerpoint.onnx
+    dest: "{{ data_dir }}/lidar_centerpoint/pts_voxel_encoder_centerpoint.onnx"
+    mode: "644"
+    checksum: sha256:dc1a876580d86ee7a341d543f8ade2ede7f43bd032dc5b44155b1f0175405764
+
+- name: Download lidar_centerpoint/pts_backbone_neck_head_centerpoint.onnx
+  become: true
+  ansible.builtin.get_url:
+    url: https://awf.ml.dev.web.auto/perception/models/centerpoint/v2/pts_backbone_neck_head_centerpoint.onnx
+    dest: "{{ data_dir }}/lidar_centerpoint/pts_backbone_neck_head_centerpoint.onnx"
+    mode: "644"
+    checksum: sha256:3fe7e128955646740c41a25be0c8f141d5a94594fe79d7405fe2a859e391542e
+
+- name: Download lidar_centerpoint/pts_voxel_encoder_centerpoint_tiny.onnx
+  become: true
+  ansible.builtin.get_url:
+    url: https://awf.ml.dev.web.auto/perception/models/centerpoint/v2/pts_voxel_encoder_centerpoint_tiny.onnx
+    dest: "{{ data_dir }}/lidar_centerpoint/pts_voxel_encoder_centerpoint_tiny.onnx"
+    mode: "644"
+    checksum: sha256:2c53465715c1fd2e9dc5727ef3fca74f4cdf0538f74286b0946e219d0ca5693b
+
+- name: Download lidar_centerpoint/pts_backbone_neck_head_centerpoint_tiny.onnx
+  become: true
+  ansible.builtin.get_url:
+    url: https://awf.ml.dev.web.auto/perception/models/centerpoint/v2/pts_backbone_neck_head_centerpoint_tiny.onnx
+    dest: "{{ data_dir }}/lidar_centerpoint/pts_backbone_neck_head_centerpoint_tiny.onnx"
+    mode: "644"
+    checksum: sha256:9bb0b634f3664bd098ce7d6a3d8a9fb7cc8d9b8252b27f302c71e43316bab551
+- name: Download lidar_centerpoint/centerpoint_ml_package.param.yaml
+  become: true
+  ansible.builtin.get_url:
+    url: https://awf.ml.dev.web.auto/perception/models/centerpoint/v2/centerpoint_ml_package.param.yaml
+    dest: "{{ data_dir }}/lidar_centerpoint/centerpoint_ml_package.param.yaml"
+    mode: "644"
+    checksum: sha256:54b88fa0c1bbd6d611d1ec55e483d05bed7a4c0e15877c05eb7d9cf240246ab8
+- name: Download lidar_centerpoint/centerpoint_ml_package.param.yaml
+  become: true
+  ansible.builtin.get_url:
+    url: https://awf.ml.dev.web.auto/perception/models/centerpoint/v2/centerpoint_tiny_ml_package.param.yaml
+    dest: "{{ data_dir }}/lidar_centerpoint/centerpoint_tiny_ml_package.param.yaml"
+    mode: "644"
+    checksum: sha256:6a40d2282b9c36cc547add7d016f315329c875b6f571dd5c612c6892fbaaabb5
+- name: Download lidar_centerpoint/centerpoint_sigma_ml_package.param.yaml
+  become: true
+  ansible.builtin.get_url:
+    url: https://awf.ml.dev.web.auto/perception/models/centerpoint/v2/centerpoint_sigma_ml_package.param.yaml
+    dest: "{{ data_dir }}/lidar_centerpoint/centerpoint_sigma_ml_package.param.yaml"
+    mode: "644"
+    checksum: sha256:9946b342a6f457b19fdfe9f02041dbd3cf0b9cefe052663e04e241ec2b6e9c76
+- name: Download lidar_centerpoint/detection_class_remapper.param.yaml
+  become: true
+  ansible.builtin.get_url:
+    url: https://awf.ml.dev.web.auto/perception/models/centerpoint/v2/detection_class_remapper.param.yaml
+    dest: "{{ data_dir }}/lidar_centerpoint/detection_class_remapper.param.yaml"
+    mode: "644"
+    checksum: sha256:c711f8875ece9b527dfe31ffc75f8c0de2e77945ef67860a959a4e04c36772d5
+- name: Download lidar_centerpoint/deploy_metadata.yaml
+  become: true
+  ansible.builtin.get_url:
+    url: https://awf.ml.dev.web.auto/perception/models/centerpoint/v2/deploy_metadata.yaml
+    dest: "{{ data_dir }}/lidar_centerpoint/deploy_metadata.yaml"
+    mode: "644"
+    checksum: sha256:152536f053c3750b60d349800e1b983b418029d6dadf087614a00c661942a178
