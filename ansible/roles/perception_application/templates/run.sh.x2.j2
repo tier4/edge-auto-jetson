@@ -5,7 +5,7 @@ source {{ autoware_env_dir }}/vehicle.env
 source {{ autoware_env_dir }}/jetson.env
 
 source /opt/ros/humble/install/setup.bash
-source {{ jetson_container_install_dir }}/{{ perception_application_directory_name }}/install/setup.bash
+source {{ perception_application_base_path }}/{{ perception_application_directory_name }}/install/setup.bash
 
 if [ "$VEHICLE_MODEL" == "j6_gen2" ]; then
     while [[ ! -e /var/run/mgbe1-ready ]]; do
