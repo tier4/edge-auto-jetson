@@ -15,7 +15,7 @@
     dest: "{{ perception_application_base_path }}/{{ perception_application_directory_name }}"
     version: "{{ perception_application_edge_auto_version }}"
   environment:
-      GITHUB_TOKEN: "{{ github_token }}"
+    GITHUB_TOKEN: "{{ github_token }}"
 
 - name: Create src directory
   ansible.builtin.file:
@@ -29,7 +29,7 @@
     chdir: "{{ perception_application_base_path }}/{{ perception_application_directory_name }}"
   changed_when: false
   environment:
-      GITHUB_TOKEN: "{{ github_token }}"
+    GITHUB_TOKEN: "{{ github_token }}"
 
 - name: Upgrade pyOpenSSL using pip
   ansible.builtin.pip:
@@ -48,7 +48,6 @@
   ansible.builtin.set_fact:
     perception_application_ros_source_path: "/opt/ros/humble/install/setup.bash"
   when: perception_application_native_built_ros|bool
-
 
 - name: Build Edge Auto Jetson package
   ansible.builtin.shell:
