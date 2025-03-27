@@ -52,24 +52,6 @@
       changed_when: driver_apt_mark_result.rc == 0
       failed_when: false
 
-- name: Copy device tree overlay file to /boot (overwrite if exists)
-  become: true
-  ansible.builtin.copy:
-    src: tier4-imx490-gmsl-device-tree-overlay-anvil-r36.dtbo
-    dest: /boot/tier4-imx490-gmsl-device-tree-overlay-anvil-r36.dtbo
-    mode: "0644"
-    owner: root
-    group: root
-
-- name: Copy tier4-imx490.conf to /etc/modprobe.d (overwrite if exists)
-  become: true
-  ansible.builtin.copy:
-    src: tier4-imx490.conf
-    dest: /etc/modprobe.d/tier4-imx490.conf
-    mode: "0644"
-    owner: root
-    group: root
-
 - name: Create camera driver installer script
   become: true
   ansible.builtin.template:
