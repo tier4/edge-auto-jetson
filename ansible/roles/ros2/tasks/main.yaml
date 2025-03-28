@@ -279,7 +279,7 @@
             chdir: "{{ ros_root_dir }}"
     - name: Colcon build
       ansible.builtin.command:
-        cmd: colcon build --merge-install --cmake-args -DCMAKE_BUILD_TYPE=Release
+        cmd: colcon build --merge-install --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5
         chdir: "{{ ros_root_dir }}"
       become: true
     - name: Remove build files
