@@ -6,3 +6,4 @@ perception_application_edge_auto_version: feat/v4.2/bsp36.4
 # perception_application_edge_auto_version: beta/v4.1.0
 perception_application_native_built_ros: true # true: native built, false: apt install
 perception_application_service_run_templates_file: run.sh.x2.j2 # run.sh.x2.j2
+video_num: 4
