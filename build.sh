@@ -24,6 +24,10 @@ if [ "$perception_type" = "addon" ]; then
 fi
 
 colcon build \
-    --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release \
-    -DPython3_EXECUTABLE="$(which python3)" -DCMAKE_CUDA_STANDARD=14 -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
-    --packages-up-to edge_auto_jetson_launch 
+    --symlink-install --cmake-force-configure \
+    --packages-up-to edge_auto_jetson_launch \
+    --cmake-args -DCMAKE_BUILD_TYPE=Release \
+    -DPython3_EXECUTABLE="$(which python3)" \
+    -DCMAKE_CUDA_STANDARD=14 \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+
