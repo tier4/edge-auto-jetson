@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Starting Perception Application..."
+echo "Importing Autoware environment variables..."
 source {{ autoware_env_dir }}/autoware.env && true
 source {{ autoware_env_dir }}/vehicle.env
 source {{ autoware_env_dir }}/jetson.env
@@ -8,15 +10,21 @@ source /opt/ros/humble/install/setup.bash
 source {{ perception_application_base_path }}/{{ perception_application_directory_name }}/install/setup.bash
 
 if [ "$VEHICLE_MODEL" == "j6_gen2" ]; then
+    echo "Waiting for MGBE1..."
     while [[ ! -e /var/run/mgbe1-ready ]]; do
         sleep 1
     done
+    echo "MGBE1 is ready!"
 fi
 
-ros2 launch edge_auto_jetson_launch edge_auto_jetson.launch.xml
-
 {% for i in range(video_num) %}
+echo "Waiting for camera device /dev/video{{ i }}..."
 while [[ ! -e /dev/video{{ i }} ]]; do
     sleep 1
 done
+echo "Camera device /dev/video{{ i }} is ready!"
 {%endfor%}
+
+echo "All devices checked, environment sourced. Launching application..."
+ros2 launch edge_auto_jetson_launch edge_auto_jetson.launch.xml
+

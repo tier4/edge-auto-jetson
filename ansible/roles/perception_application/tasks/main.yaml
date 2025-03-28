@@ -6,7 +6,7 @@
     create: true
     mode: 0644
     block: |
-      export JETSON_ID={{ jetson_id }}
+      export JETSON_ID={{ jetson_id | default(-1) }}
   become: "{{ autoware_env_dir_privileged }}"
 
 - name: Build Edge Auto Jetson
