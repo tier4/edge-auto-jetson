@@ -227,7 +227,7 @@
           - pytest-rerunfailures
           - pytest
           - scikit-build
-          - cmake
+          - cmake==3.31.6  # only updates when we tested with cmake 4
         extra_args: --upgrade --no-cache-dir
       become: true
     - name: Install EmPy with specific version
