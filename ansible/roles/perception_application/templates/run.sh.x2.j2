@@ -14,10 +14,15 @@ if [ "$VEHICLE_MODEL" == "j6_gen2" ]; then
 fi
 
 {% if perception_type == "tlr" %}
-ros2 launch jetson_or_launch object_recognition.launch.py build_engine_only:=true data_path:="/opt/autoware" input/image:="none" container:="none" camera_id:="0"
-ros2 launch jetson_tlr_launch traffic_light.launch.xml build_engine_only:=true container:="none"
+ros2 launch edge_auto_jetson_launch edge_auto_multi_launch_engine.launch.py \
+      build_engine_only:=true object_recognition_camera_ids:=[0] \
+      traffic_light_camera_ids:=[0] camera_driver_camera_ids:=[] live_sensor:=false \
+      container_name:="none" use_multithread:=true yolox_precision:=int8
 {% else %}
-ros2 launch jetson_or_launch object_recognition.launch.py build_engine_only:=true data_path:="/opt/autoware" input/image:="none" container:="none" camera_id:="0"
+ros2 launch edge_auto_jetson_launch edge_auto_multi_launch_engine.launch.py \
+      build_engine_only:=true object_recognition_camera_ids:=[0] \
+      traffic_light_camera_ids:=[] camera_driver_camera_ids:=[] live_sensor:=false \
+      container_name:="none" use_multithread:=true yolox_precision:=int8
 {% endif %}
 
 {% for i in range(video_num) %}
@@ -26,4 +31,4 @@ while [[ ! -e /dev/video{{ i }} ]]; do
 done
 {%endfor%}
 
-ros2 launch jetson_{{ perception_type }}_launch jetson_{{ perception_type }}.launch.xml
+ros2 launch edge_auto_jetson_launch edge_auto_jetson.launch.xml
