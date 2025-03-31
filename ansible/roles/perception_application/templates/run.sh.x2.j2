@@ -32,12 +32,12 @@ ros2 launch edge_auto_jetson_launch edge_auto_multi_launch_engine.launch.py \
       container_name:="none" use_multithread:=true yolox_precision:=int8
 {% endif %}
 
-{% for i in range(video_num) %}
+{% for i in range((video_num | default(3)) | int) %}
 echo "Waiting for camera device /dev/video{{ i }}..."
 while [[ ! -e /dev/video{{ i }} ]]; do
     sleep 1
 done
 echo "Camera device /dev/video{{ i }} is ready!"
-{%endfor%}
+{% endfor %}
 
 ros2 launch edge_auto_jetson_launch edge_auto_jetson.launch.xml
