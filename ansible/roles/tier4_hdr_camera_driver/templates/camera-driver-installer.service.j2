@@ -1,8 +1,7 @@
 [Unit]
 Description=Camera Driver Install Service
 After=network.target
-Before=autoware.service
-ConditionPathExists=/boot/tier4-imx490-gmsl-device-tree-overlay-anvil-r36.dtbo
+Before=perception-startup.service
 
 [Service]
 Type=oneshot
