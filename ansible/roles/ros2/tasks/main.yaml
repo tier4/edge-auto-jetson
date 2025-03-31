@@ -187,7 +187,7 @@
         name:
           - apt-utils
           - build-essential
-          - cmake==3.31.6
+          - cmake
           - git
           - libbullet-dev
           - libpython3-dev
