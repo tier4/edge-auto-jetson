@@ -187,7 +187,7 @@
         name:
           - apt-utils
           - build-essential
-          - cmake
+          - cmake==3.31.6
           - git
           - libbullet-dev
           - libpython3-dev
@@ -227,7 +227,7 @@
           - pytest-rerunfailures
           - pytest
           - scikit-build
-          - cmake
+          - cmake==3.31.6
         extra_args: --upgrade --no-cache-dir
       become: true
     - name: Install EmPy with specific version
