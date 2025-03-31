@@ -17,6 +17,21 @@ if [ "$VEHICLE_MODEL" == "j6_gen2" ]; then
     echo "MGBE1 is ready!"
 fi
 
+
+echo "All devices checked, environment sourced. Launching application..."
+
+{% if perception_type == "tlr" %}
+ros2 launch edge_auto_jetson_launch edge_auto_multi_launch_engine.launch.py \
+      build_engine_only:=true object_recognition_camera_ids:=[0] \
+      traffic_light_camera_ids:=[0] camera_driver_camera_ids:=[] live_sensor:=false \
+      container_name:="none" use_multithread:=true yolox_precision:=int8
+{% else %}
+ros2 launch edge_auto_jetson_launch edge_auto_multi_launch_engine.launch.py \
+      build_engine_only:=true object_recognition_camera_ids:=[0] \
+      traffic_light_camera_ids:=[] camera_driver_camera_ids:=[] live_sensor:=false \
+      container_name:="none" use_multithread:=true yolox_precision:=int8
+{% endif %}
+
 {% for i in range(video_num) %}
 echo "Waiting for camera device /dev/video{{ i }}..."
 while [[ ! -e /dev/video{{ i }} ]]; do
@@ -25,6 +40,4 @@ done
 echo "Camera device /dev/video{{ i }} is ready!"
 {%endfor%}
 
-echo "All devices checked, environment sourced. Launching application..."
 ros2 launch edge_auto_jetson_launch edge_auto_jetson.launch.xml
-
