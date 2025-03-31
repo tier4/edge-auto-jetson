@@ -408,3 +408,24 @@
     install_recommends: false
     update_cache: true
   become: true
+
+- name: Clean up temp directories and files
+  block:
+    - name: Remove OpenCV files and directories from /opt
+      ansible.builtin.shell:
+        cmd: rm -rf /opt/opencv*
+      become: true
+
+    - name: Remove PCL directory from perception application path
+      ansible.builtin.file:
+        path: "{{ perception_application_base_path }}/pcl"
+        state: absent
+      become: true
+      when: perception_application_base_path is defined
+
+    - name: Remove range-v3 directory from perception application path
+      ansible.builtin.file:
+        path: "{{ perception_application_base_path }}/range-v3"
+        state: absent
+      become: true
+      when: perception_application_base_path is defined
