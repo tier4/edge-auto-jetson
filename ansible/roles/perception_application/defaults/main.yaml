@@ -6,3 +6,5 @@ perception_application_edge_auto_version: beta/v0.48
 # perception_application_edge_auto_version: beta/v4.1.0
 perception_application_native_built_ros: true # true: native built, false: apt install
 perception_application_service_run_templates_file: run.sh.xx1_gen2.j2 # run.sh.x2.j2
+
+fool_proof_check: False # fool proof check flag: True or False -> use at Jinja2 template
