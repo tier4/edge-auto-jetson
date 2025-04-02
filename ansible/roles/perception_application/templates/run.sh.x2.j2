@@ -35,6 +35,9 @@ while [[ ! -e /dev/video{{ i }} ]]; do
     {% endif %}
     sleep 1
 done
+
+call_diag --status "Error" --hardware_name "$HOSTNAME"_camera --event_id "device not found" --message "/dev/video{{ i }} is not found" --impact "camera functionality unavailable"
+
 {%endfor%}
 
 ros2 launch edge_auto_jetson_launch edge_auto_jetson.launch.xml
