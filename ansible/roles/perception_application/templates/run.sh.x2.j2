@@ -9,7 +9,7 @@ source {{ perception_application_base_path }}/{{ perception_application_director
 
 if [ "$VEHICLE_MODEL" == "j6_gen2" ]; then
     while [[ ! -e /var/run/mgbe1-ready ]]; do
-        {% if  fool_proof_check==True %}
+        {% if  fool_proof_check==true %}
         call_diag --status "Error" --hardware_name "$HOSTNAME"_mgbe1-ready --event_id "Network Interface Error" --message "/var/run/mgbe1-ready is not found" --impact "Ethernet communication unavailable"
         {% endif %}
         sleep 1
@@ -30,7 +30,7 @@ ros2 launch edge_auto_jetson_launch edge_auto_multi_launch_engine.launch.py \
 
 {% for i in range(video_num) %}
 while [[ ! -e /dev/video{{ i }} ]]; do
-    {% if  fool_proof_check==True %}
+    {% if  fool_proof_check=="True" %}
     call_diag --status "Error" --hardware_name "$HOSTNAME"_camera --event_id "device not found" --message "/dev/video{{ i }} is not found" --impact "camera functionality unavailable"
     {% endif %}
     sleep 1
