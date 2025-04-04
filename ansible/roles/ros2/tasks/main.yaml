@@ -110,7 +110,7 @@
         state: directory
     - name: Run cmake
       ansible.builtin.command:
-        cmd: cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc ..
+        cmd: cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_surface_on_nurbs=OFF -DBUILD_surface=OFF .. # -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc ..
         chdir: "{{ pcl_directory }}/pcl/build"
       environment:
         PATH: /usr/local/cuda/bin:{{ ansible_env.PATH }}
