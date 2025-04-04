@@ -34,7 +34,7 @@ RUN sed -i "s/git@github\.com:/https:\/\/github\.com\//g" ./ansible-galaxy-requi
   && sed -i "s/https:\/\/github.com/https:\/\/x-access-token:$GITHUB_TOKEN@github.com/g" ./ansible-galaxy-requirements.yaml
 ## Set up development environment
 RUN --mount=type=ssh ansible-galaxy collection install -f -r "ansible-galaxy-requirements.yaml"
-RUN --mount=type=ssh ansible-playbook ansible/base_edge.yaml -e reload_system=no autoware_env_dir=/home/autoware \
+RUN --mount=type=ssh ansible-playbook ansible/base_edge.yaml -e reload_system=no -e autoware_env_dir=/home/autoware \
   && pip uninstall -y ansible ansible-core
 
 ## Clean up unnecessary files
