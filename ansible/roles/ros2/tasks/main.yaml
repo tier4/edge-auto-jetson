@@ -116,7 +116,7 @@
         PATH: /usr/local/cuda/bin:{{ ansible_env.PATH }}
     - name: Install PCL
       ansible.builtin.command:
-        cmd: make -j7 install
+        cmd: make -j3 install
         chdir: "{{ pcl_directory }}/pcl/build"
       become: true
 
@@ -152,7 +152,7 @@
         PATH: /usr/local/cuda/bin:{{ ansible_env.PATH }}
     - name: Install range-v3
       ansible.builtin.command:
-        cmd: make -j7 install
+        cmd: make -j3 install
         chdir: "{{ range_v3_directory }}/range-v3-0.11.0/build"
       become: true
 
