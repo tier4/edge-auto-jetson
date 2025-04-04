@@ -1,0 +1,6 @@
+- name: Setup xx1 anvil
+  hosts: localhost
+
+  roles:
+    - { role: cuda }
+    - { role: ros2 }

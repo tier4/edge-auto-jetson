@@ -1,0 +1,116 @@
+name: create-base-anvil-image
+
+on:
+  workflow_dispatch:
+    inputs:
+      beta-branch-or-tag-name:
+        description: The name of the beta branch or tag to release
+        type: string
+        required: true
+
+env:
+  ROS_DISTRO: humble
+  BASE_IMAGE: ghcr.io/tier4/ota-base-image/esg620_nvidia-jetpack:r35.4.1-v001-cti_orin-agx_forge_base-nvme0n1
+
+jobs:
+  create-base-image:
+    # runs-on: ubuntu-latest # Error: "No space left on device"
+    runs-on: ubuntu-22.04-arm
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Set env
+        run: |
+          echo "WORKSPACE_ROOT=$(pwd)" >> $GITHUB_ENV
+          echo "CREATE_DATE=$(date +'%Y%m%d_%H%M(%Z)')" >> $GITHUB_ENV
+
+      - name: Generate token
+        id: generate-token
+        uses: tibdex/github-app-token@v2
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.PRIVATE_KEY }}
+
+      - name: Set tag name
+        id: set-tag-name
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            REF_NAME="${{ github.event.inputs.beta-branch-or-tag-name }}"
+          else
+            REF_NAME="${{ github.ref_name }}"
+          fi
+
+          echo "ref-name=$REF_NAME" >> $GITHUB_OUTPUT
+          echo "tag-name=${REF_NAME#beta/}" >> $GITHUB_OUTPUT
+
+      - name: Check ROS 2 Package Versions
+        run: |
+          sudo apt update && sudo apt install curl gnupg lsb-release
+          sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(source /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+          sudo apt update
+          echo "ROS_DESKTOP_VER=$( apt-cache madison ros-${ROS_DISTRO}-desktop | cut -d \| -f 2 | cut -c 2- )" >> $GITHUB_ENV
+
+      - name: set description
+        id: set-description
+        run: |
+          echo "img-description=${{ env.CREATE_DATE }}, ros-${{ env.ROS_DISTRO }}-desktop:${{ env.ROS_DESKTOP_VER }}" >> $GITHUB_OUTPUT
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          ref: ${{ steps.set-tag-name.outputs.ref-name }}
+
+      - name: Set target name for beta branches
+        id: set-target-name
+        run: |
+          if [[ "${{ steps.set-tag-name.outputs.ref-name }}" =~ "beta/" ]]; then
+            echo "target-name=${{ steps.set-tag-name.outputs.ref-name }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          logout: false
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set git config for private repositories
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git config --local --unset-all http.https://github.com/.extraheader || true
+          git config --global url.https://x-access-token:${{ steps.generate-token.outputs.token }}@github.com/.insteadOf 'https://github.com/'
+          git config --global url.https://x-access-token:${{ steps.generate-token.outputs.token }}@github.com/.insteadOf 'git@github.com:'
+
+      - name: Create token file
+        run: |
+          touch github_token
+          echo "${{ steps.generate-token.outputs.token }}" >> github_token
+        shell: bash
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          file: docker/edge-auto/Dockerfile.bi
+          set: |
+            *.context=${{ env.WORKSPACE_ROOT }}
+            *.secrets=id=github_token,src=github_token
+          tags: |
+            ghcr.io/${{ github.repository }}/base-image:latest
+            ghcr.io/${{ github.repository }}/base-image:${{ steps.set-tag-name.outputs.tag-name }}
+          build-args: |
+            DESCRIPTION=${{ steps.set-description.outputs.img-description }}
+            GITHUB_TOKEN=${{ steps.generate-token.outputs.token }}
+            BASE_IMAGE=${{ env.BASE_IMAGE }}
+            ROS_DISTRO=${{ env.ROS_DISTRO }}
