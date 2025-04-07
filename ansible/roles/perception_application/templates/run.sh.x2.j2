@@ -37,7 +37,7 @@ while [[ ! -e /dev/video{{ i }} ]]; do
 done
 
 {% if fool_proof_check | bool %}
-call_diag --status "Error" --mrm_name_suffix "$HOSTNAME"_camera --event_id "device not found" --message "/dev/video{{ i }} is not found" --impact "camera functionality unavailable"
+call_diag --status "Ok" --mrm_name_suffix "$HOSTNAME"_camera --event_id "none" --message "none" --impact "none"
 {% endif %}
 
 {%endfor%}
