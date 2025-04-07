@@ -15,7 +15,7 @@ ping -c 2 $_ping_dst_ip > /dev/null 2>&1
 
 if [ $? -eq 0 ]; then
 	echo "$IFACE is ip reachable"
-	touch /var/run/mgbe1-ready
+	touch /var/run/{{ link_retry_handler_network_port }}-ready
 	# Do nothing
 else
 	echo "$IFACE isn't ip reachable"
