@@ -1,0 +1,48 @@
+# This is required for Continuous Integration for Autoware using the simulator
+# and remote update (Over The Air update) to real cars.
+# If you have any additional questions, please contact us at #tier4-dev channel.
+
+# cSpell: ignore persistents
+
+version: 2
+
+artifacts:
+  - name: anvil-base-image
+    build:
+      type: custom
+      runtime:
+        type: standard1/arm64/large
+      linux_parameters:
+        kernel_version: 5.10.120-tegra
+      phases:
+        - name: base-image-build
+          user: root
+          exec: ./docker/edge_base_image_build/run.sh
+          environment_variables:
+            PARALLEL_WORKERS: "32"
+            CCACHE_DIR: /tmp/build/cache/ccache
+          caches:
+            - name: apt-lists
+              mountpoint: /var/lib/apt/lists
+            - name: apt-archives
+              mountpoint: /var/cache/apt/archives
+            - name: ccache
+              mountpoint: /tmp/build/cache/ccache
+          build_result_reuse:
+            key_files:
+              - /opt/ros/*
+      base_container_image:
+        from: ghcr.io/tier4/ota-base-image/esg620_nvidia-jetpack:r35.4.1-v001-cti_orin-agx_forge_base-nvme0n1
+      output_container_image:
+        from: base-image-build
+        workdir: /home/autoware/
+        user: autoware
+
+
+release:
+  components:
+    - name: anvil-base-image
+      deployment:
+        type: container
+        artifact: anvil-base-image
+
