@@ -9,6 +9,47 @@
   ansible.builtin.set_fact:
     github_token: "{{ lookup('env', 'GITHUB_TOKEN') }}"
 
+- name: Install ROS2 dependencies
+  ansible.builtin.apt:
+    name:
+      - ros-humble-launch-xml
+      - ros-humble-launch-yaml
+      - ros-humble-launch-testing
+      - ros-humble-launch-testing-ament-cmake
+      - ros-humble-demo-nodes-cpp
+      - ros-humble-demo-nodes-py
+      - ros-humble-example-interfaces
+      - ros-humble-camera-calibration-parsers
+      - ros-humble-camera-info-manager
+      - ros-humble-cv-bridge
+      - ros-humble-v4l2-camera
+      - ros-humble-vision-opencv
+      - ros-humble-libstatistics-collector
+      - ros-humble-geographic-msgs
+      - ros-humble-vision-msgs
+      - ros-humble-image-geometry
+      - ros-humble-image-pipeline
+      - ros-humble-image-transport
+      - ros-humble-compressed-image-transport
+      - ros-humble-compressed-depth-image-transport
+      - ros-humble-pcl-msgs
+      - ros-humble-perception-pcl
+      - ros-humble-logging-demo
+      - ros-humble-udp-msgs
+      - ros-humble-angles
+      - ros-humble-diagnostics
+      - ros-humble-tf-transformations
+      - ros-humble-mrt-cmake-modules
+      - ros-humble-gtest-vendor
+      - ros-humble-grid-map
+      - ros-humble-filters
+      - ros-humble-nav2-msgs
+      - ros-humble-tf2-eigen
+      - ros-humble-ament-cmake-clang-format
+    state: present
+    update_cache: yes
+  become: true
+
 - name: Clone edge-auto-jetson repository
   ansible.builtin.git:
     repo: "{{ perception_application_edge_auto_repo }}"
@@ -49,54 +90,9 @@
     perception_application_ros_source_path: "/opt/ros/humble/install/setup.bash"
   when: perception_application_native_built_ros|bool
 
-- name: Update rosdep
-  ansible.builtin.shell:
-    cmd: rosdep update
-    executable: /bin/bash
-  changed_when: false
-
-- name: Install system dependencies for Autoware
-  ansible.builtin.apt:
-    name:
-      - libgoogle-glog-dev
-      - ros-humble-geographic-msgs
-      - python3-pip
-    state: present
-  become: true
-
-- name: Install Python dependencies
-  ansible.builtin.pip:
-    name: ros2_numpy
-    state: present
-    executable: pip3
-
-- name: Install ROS dependencies using rosdep with skip-keys
-  ansible.builtin.shell:
-    cmd: >
-      source {{ perception_application_ros_source_path }} && 
-      rosdep install -y --from-paths src --ignore-src --rosdistro humble 
-      --skip-keys="lidartag_msgs mussp awapi_awiv_adapter eagleye_rt llh_converter rtklib_msgs lidartag tier4_ad_api_adaptor autoware_adapi_version_msgs autoware_external_api_msgs"
-    chdir: "{{ perception_application_base_path }}/{{ perception_application_directory_name }}"
-    executable: /bin/bash
-  changed_when: false
-  register: rosdep_result
-  failed_when: false
-
-- name: Display rosdep result
-  ansible.builtin.debug:
-    var: rosdep_result.stdout_lines
-  when: rosdep_result.stdout_lines is defined
-
-- name: Build Edge Auto Jetson package with error handling
+- name: Build Edge Auto Jetson package
   ansible.builtin.shell:
     cmd: source {{ perception_application_ros_source_path }} && ./build.sh {{ perception_type }}
     chdir: "{{ perception_application_base_path }}/{{ perception_application_directory_name }}"
     executable: /bin/bash
   changed_when: false
-  register: build_result
-  failed_when: false
-
-- name: Display build result
-  ansible.builtin.debug:
-    var: build_result.stdout_lines
-  when: build_result.stdout_lines is defined
