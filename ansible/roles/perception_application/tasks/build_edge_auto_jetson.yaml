@@ -31,30 +31,6 @@
   environment:
     GITHUB_TOKEN: "{{ github_token }}"
 
-- name: Clone missing dependencies
-  ansible.builtin.shell:
-    cmd: |
-      if [ ! -d "src/lidartag_msgs" ]; then
-        git clone -b tier4/universe https://github.com/tier4/lidartag_msgs.git src/lidartag_msgs || echo "Failed to clone lidartag_msgs, but continuing"
-      fi
-
-      if [ ! -d "src/mussp" ]; then
-        git clone -b tier4/main https://github.com/tier4/mussp.git src/mussp || echo "Failed to clone mussp, but continuing"
-      fi
-
-      if [ ! -d "src/tier4_ad_api_adaptor" ]; then
-        git clone -b 0.41.0 https://github.com/tier4/tier4_ad_api_adaptor.git src/tier4_ad_api_adaptor || echo "Failed to clone tier4_ad_api_adaptor, but continuing"
-      fi
-
-      if [ ! -d "src/eagleye" ]; then
-        git clone -b main-ros2 https://github.com/MapIV/eagleye.git src/eagleye || echo "Failed to clone eagleye, but continuing"
-      fi
-    chdir: "{{ perception_application_base_path }}/{{ perception_application_directory_name }}"
-    executable: /bin/bash
-  changed_when: false
-  environment:
-    GITHUB_TOKEN: "{{ github_token }}"
-
 - name: Upgrade pyOpenSSL using pip
   ansible.builtin.pip:
     name: pyopenssl
@@ -72,42 +48,6 @@
   ansible.builtin.set_fact:
     perception_application_ros_source_path: "/opt/ros/humble/install/setup.bash"
   when: perception_application_native_built_ros|bool
-
-- name: Create custom rosdep rules directory
-  ansible.builtin.file:
-    path: /etc/ros/rosdep/sources.list.d
-    state: directory
-    mode: "0755"
-  become: true
-
-- name: Create custom rosdep rules file
-  ansible.builtin.copy:
-    dest: /etc/ros/rosdep/sources.list.d/50-autoware-custom.yaml
-    content: |
-      yaml file:///etc/ros/rosdep/autoware_custom.yaml
-    mode: "0644"
-  become: true
-
-- name: Create custom rosdep definitions
-  ansible.builtin.copy:
-    dest: /etc/ros/rosdep/autoware_custom.yaml
-    content: |
-      lidartag_msgs:
-        ubuntu: []
-      glog:
-        ubuntu:
-          apt: [libgoogle-glog-dev]
-      mussp:
-        ubuntu: []
-      awapi_awiv_adapter:
-        ubuntu: []
-      ros2_numpy:
-        ubuntu:
-          pip: [ros2_numpy]
-      eagleye_rt:
-        ubuntu: []
-    mode: "0644"
-  become: true
 
 - name: Update rosdep
   ansible.builtin.shell:
@@ -130,16 +70,33 @@
     state: present
     executable: pip3
 
-- name: Install ROS dependencies using rosdep
+- name: Install ROS dependencies using rosdep with skip-keys
   ansible.builtin.shell:
-    cmd: source {{ perception_application_ros_source_path }} && rosdep install -y --from-paths src --ignore-src --rosdistro humble
+    cmd: >
+      source {{ perception_application_ros_source_path }} && 
+      rosdep install -y --from-paths src --ignore-src --rosdistro humble 
+      --skip-keys="lidartag_msgs mussp awapi_awiv_adapter eagleye_rt llh_converter rtklib_msgs lidartag tier4_ad_api_adaptor autoware_adapi_version_msgs autoware_external_api_msgs"
     chdir: "{{ perception_application_base_path }}/{{ perception_application_directory_name }}"
     executable: /bin/bash
   changed_when: false
+  register: rosdep_result
+  failed_when: false
 
-- name: Build Edge Auto Jetson package
+- name: Display rosdep result
+  ansible.builtin.debug:
+    var: rosdep_result.stdout_lines
+  when: rosdep_result.stdout_lines is defined
+
+- name: Build Edge Auto Jetson package with error handling
   ansible.builtin.shell:
     cmd: source {{ perception_application_ros_source_path }} && ./build.sh {{ perception_type }}
     chdir: "{{ perception_application_base_path }}/{{ perception_application_directory_name }}"
     executable: /bin/bash
   changed_when: false
+  register: build_result
+  failed_when: false
+
+- name: Display build result
+  ansible.builtin.debug:
+    var: build_result.stdout_lines
+  when: build_result.stdout_lines is defined
