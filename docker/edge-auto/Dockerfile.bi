@@ -33,17 +33,13 @@ RUN mkdir -p ~/.ssh \
 RUN sed -i "s/git@github\.com:/https:\/\/github\.com\//g" ./ansible-galaxy-requirements.yaml \
   && sed -i "s/https:\/\/github.com/https:\/\/x-access-token:$GITHUB_TOKEN@github.com/g" ./ansible-galaxy-requirements.yaml
 ## Set up development environment
-RUN --mount=type=ssh ansible-galaxy collection install -f -r "ansible-galaxy-requirements.yaml"
 RUN --mount=type=ssh ansible-playbook ansible/base_edge.yaml -e reload_system=no -e autoware_env_dir=/home/autoware \
-  && pip uninstall -y ansible ansible-core
+  -e ros_distro=${ROS_DISTRO}
 
 ## Clean up unnecessary files
 # hadolint ignore=DL3059
 RUN rm -rf \
   "$HOME"/.cache \
-  /etc/apt/sources.list.d/cuda*.list \
-  /etc/apt/sources.list.d/docker.list \
-  /etc/apt/sources.list.d/nvidia-docker.list \
   ~/.ros/ \
   ~/autoware_data/ \
   ~/.ssh/known_hosts \

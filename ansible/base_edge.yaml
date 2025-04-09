@@ -1,4 +1,4 @@
-- name: Setup xx1 anvil
+- name: Setup anvil base image
   hosts: localhost
 
   roles:
