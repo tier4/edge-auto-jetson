@@ -1,23 +1,21 @@
-# sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 - name: Authorize ROS GPG key
   become: true
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/ros/rosdistro/master/ros.key
     dest: /usr/share/keyrings/ros-archive-keyring.gpg
-    mode: 644
+    mode: 0644
 
 - name: Save result of 'dpkg --print-architecture'
   ansible.builtin.command: dpkg --print-architecture
   register: ros2__deb_architecture
   changed_when: false
 
-- name: Save result of 'source /etc/os-release && echo $UBUNTU_CODENAME'
+- name: Save result of Ubuntu codename
   ansible.builtin.shell: bash -c 'source /etc/os-release && echo $UBUNTU_CODENAME'
   register: ros2__ubuntu_codename
   changed_when: false
 
-# echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(source /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
-- name: Add ROS 2 apt repository to source list
+- name: Add ROS 2 apt repository
   become: true
   ansible.builtin.apt_repository:
     repo: deb [arch={{ ros2__deb_architecture.stdout }} signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu {{ ros2__ubuntu_codename.stdout }} main
@@ -25,7 +23,7 @@
     state: present
     update_cache: true
 
-- name: Install dependencies for setting up apt sources
+- name: Install basic dependencies
   become: true
   ansible.builtin.apt:
     name:
@@ -34,8 +32,15 @@
       - lsb-release
       - apt-utils
       - build-essential
-      - cmake
       - git
+    state: present
+    update_cache: true
+
+- name: Install ROS2 development dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - cmake
       - libbullet-dev
       - libpython3-dev
       - python3-flake8
@@ -53,12 +58,30 @@
       - libgtest-dev
       - libcgal-dev
       - libfmt-dev
-    update_cache: true
+    state: present
 
-- name: Install pip packages
+- name: Install EmPy with specific version
+  become: true
+  ansible.builtin.pip:
+    name: empy==3.3.4
+    extra_args: --no-cache-dir
+
+- name: Install Python dependencies
+  become: true
   ansible.builtin.pip:
     name:
       - argcomplete
+      - pytest
+      - pytest-repeat
+      - pytest-rerunfailures
+      - scikit-build
+      - cmake==3.31.6
+    extra_args: --upgrade --no-cache-dir
+
+- name: Install Python code quality tools
+  become: true
+  ansible.builtin.pip:
+    name:
       - flake8-blind-except
       - flake8-builtins
       - flake8-class-newline
@@ -67,55 +90,39 @@
       - flake8-docstrings
       - flake8-import-order
       - flake8-quotes
-      - pytest-repeat
-      - pytest-rerunfailures
-      - pytest
-      - scikit-build
-      - cmake==3.31.6
     extra_args: --upgrade --no-cache-dir
-    become: true
-- name: Install EmPy with specific version
-  ansible.builtin.pip:
-    name:
-      - empy==3.3.4
-    extra_args: --no-cache-dir
-    become: true
 
-- name: Install ros-{{ rosdistro + '-' + installation_type }}
+- name: Install ROS2 {{ rosdistro }}
   become: true
   ansible.builtin.apt:
     name: ros-{{ rosdistro }}-{{ installation_type }}
-    state: latest
+    state: present
     update_cache: true
 
-- name: Install rosdep
+- name: Install ROS2 tools
   become: true
   ansible.builtin.apt:
     name:
       - python3-rosdep
-    state: latest
-    update_cache: true
-
-- name: Install colcon-common-extensions
-  become: true
-  ansible.builtin.apt:
-    name:
       - python3-colcon-common-extensions
-    state: latest
-    update_cache: true
-
-- name: Install rmw-cyclonedds-cpp
-  become: true
-  ansible.builtin.apt:
-    name:
       - ros-{{ rosdistro }}-rmw-cyclonedds-cpp
-    state: latest
-    update_cache: true
+    state: present
 
-- name: Add PATH to .bashrc
+- name: Add ROS2 setup to .bashrc
   ansible.builtin.lineinfile:
     dest: ~/.bashrc
     line: source /opt/ros/{{ rosdistro }}/setup.bash
     state: present
     create: true
     mode: 0644
+
+- name: Initialize rosdep
+  become: true
+  ansible.builtin.command: rosdep init
+  args:
+    creates: /etc/ros/rosdep/sources.list.d/20-default.list
+  ignore_errors: true
+
+- name: Update rosdep
+  ansible.builtin.command: rosdep update
+  changed_when: false
