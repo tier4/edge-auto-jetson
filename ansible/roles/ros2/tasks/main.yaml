@@ -105,6 +105,7 @@
     name:
       - python3-rosdep
       - python3-colcon-common-extensions
+      - librange-v3-dev
       - ros-{{ rosdistro }}-launch-xml
       - ros-{{ rosdistro }}-launch-yaml
       - ros-{{ rosdistro }}-launch-testing
