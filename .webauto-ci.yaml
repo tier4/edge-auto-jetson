@@ -38,11 +38,9 @@ artifacts:
         workdir: /home/autoware/
         user: autoware
 
-
 release:
   components:
     - name: anvil-base-image
       deployment:
         type: container
         artifact: anvil-base-image
-
