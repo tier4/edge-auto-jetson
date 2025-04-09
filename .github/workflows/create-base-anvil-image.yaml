@@ -42,7 +42,7 @@ jobs:
           fi
 
           echo "ref-name=$REF_NAME" >> $GITHUB_OUTPUT
-          echo "tag-name=${REF_NAME#beta/}" >> $GITHUB_OUTPUT
+          echo "tag-name=${REF_NAME#beta/anvil}" >> $GITHUB_OUTPUT
 
       - name: Check ROS 2 Package Versions
         run: |
