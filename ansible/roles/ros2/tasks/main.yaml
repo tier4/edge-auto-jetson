@@ -105,8 +105,43 @@
     name:
       - python3-rosdep
       - python3-colcon-common-extensions
+      - ros-{{ rosdistro }}-launch-xml
+      - ros-{{ rosdistro }}-launch-yaml
+      - ros-{{ rosdistro }}-launch-testing
+      - ros-{{ rosdistro }}-launch-testing-ament-cmake
+      - ros-{{ rosdistro }}-demo-nodes-cpp
+      - ros-{{ rosdistro }}-demo-nodes-py
+      - ros-{{ rosdistro }}-example-interfaces
+      - ros-{{ rosdistro }}-camera-calibration-parsers
+      - ros-{{ rosdistro }}-camera-info-manager
+      - ros-{{ rosdistro }}-cv-bridge
+      - ros-{{ rosdistro }}-v4l2-camera
+      - ros-{{ rosdistro }}-vision-opencv
+      - ros-{{ rosdistro }}-libstatistics-collector
+      - ros-{{ rosdistro }}-geographic-msgs
+      - ros-{{ rosdistro }}-vision-msgs
+      - ros-{{ rosdistro }}-image-geometry
+      - ros-{{ rosdistro }}-image-pipeline
+      - ros-{{ rosdistro }}-image-transport
+      - ros-{{ rosdistro }}-compressed-image-transport
+      - ros-{{ rosdistro }}-compressed-depth-image-transport
+      - ros-{{ rosdistro }}-pcl-msgs
+      - ros-{{ rosdistro }}-perception-pcl
+      - ros-{{ rosdistro }}-logging-demo
+      - ros-{{ rosdistro }}-udp-msgs
+      - ros-{{ rosdistro }}-angles
+      - ros-{{ rosdistro }}-diagnostics
+      - ros-{{ rosdistro }}-tf-transformations
+      - ros-{{ rosdistro }}-mrt-cmake-modules
+      - ros-{{ rosdistro }}-gtest-vendor
+      - ros-{{ rosdistro }}-grid-map
+      - ros-{{ rosdistro }}-filters
+      - ros-{{ rosdistro }}-nav2-msgs
+      - ros-{{ rosdistro }}-tf2-eigen
+      - ros-{{ rosdistro }}-ament-cmake-clang-format
       - ros-{{ rosdistro }}-rmw-cyclonedds-cpp
     state: present
+    update_cache: yes
 
 - name: Add ROS2 setup to .bashrc
   ansible.builtin.lineinfile:

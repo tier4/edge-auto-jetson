@@ -9,47 +9,6 @@
   ansible.builtin.set_fact:
     github_token: "{{ lookup('env', 'GITHUB_TOKEN') }}"
 
-- name: Install ROS2 dependencies
-  ansible.builtin.apt:
-    name:
-      - ros-humble-launch-xml
-      - ros-humble-launch-yaml
-      - ros-humble-launch-testing
-      - ros-humble-launch-testing-ament-cmake
-      - ros-humble-demo-nodes-cpp
-      - ros-humble-demo-nodes-py
-      - ros-humble-example-interfaces
-      - ros-humble-camera-calibration-parsers
-      - ros-humble-camera-info-manager
-      - ros-humble-cv-bridge
-      - ros-humble-v4l2-camera
-      - ros-humble-vision-opencv
-      - ros-humble-libstatistics-collector
-      - ros-humble-geographic-msgs
-      - ros-humble-vision-msgs
-      - ros-humble-image-geometry
-      - ros-humble-image-pipeline
-      - ros-humble-image-transport
-      - ros-humble-compressed-image-transport
-      - ros-humble-compressed-depth-image-transport
-      - ros-humble-pcl-msgs
-      - ros-humble-perception-pcl
-      - ros-humble-logging-demo
-      - ros-humble-udp-msgs
-      - ros-humble-angles
-      - ros-humble-diagnostics
-      - ros-humble-tf-transformations
-      - ros-humble-mrt-cmake-modules
-      - ros-humble-gtest-vendor
-      - ros-humble-grid-map
-      - ros-humble-filters
-      - ros-humble-nav2-msgs
-      - ros-humble-tf2-eigen
-      - ros-humble-ament-cmake-clang-format
-    state: present
-    update_cache: yes
-  become: true
-
 - name: Clone edge-auto-jetson repository
   ansible.builtin.git:
     repo: "{{ perception_application_edge_auto_repo }}"
