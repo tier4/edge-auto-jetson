@@ -50,7 +50,7 @@ jobs:
           # Extract just the version part (vX.X.X) from the reference name
           # This handles formats like:
           VERSION_PART=$(echo "$REF_NAME" | grep -o 'v[0-9]\+\(\.[0-9]\+\)*' || echo "$REF_NAME")
-          
+
           echo "ref-name=$REF_NAME" >> $GITHUB_OUTPUT
           echo "tag-name=$VERSION_PART" >> $GITHUB_OUTPUT
 
