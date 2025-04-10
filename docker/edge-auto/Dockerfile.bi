@@ -44,5 +44,4 @@ RUN rm -rf \
 
 ## Create entrypoint
 # hadolint ignore=DL3059
-RUN echo "source /opt/ros/${ROS_DISTRO}/install/setup.bash" > /etc/bash.bashrc
 CMD ["/bin/bash"]
