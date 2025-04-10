@@ -1,0 +1,6 @@
+- name: Setup anvil base image
+  hosts: localhost
+
+  roles:
+    - { role: cuda }
+    - { role: ros2 }
