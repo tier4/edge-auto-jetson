@@ -6,7 +6,6 @@ FROM $BASE_IMAGE as devel
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ARG ROS_DISTRO
-ARG GITHUB_TOKEN
 ARG DESCRIPTION
 
 LABEL org.opencontainers.image.description=$DESCRIPTION
@@ -29,9 +28,6 @@ RUN ls /autoware
 RUN mkdir -p ~/.ssh \
   && ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-## replace git@github with https://x-access-token
-RUN sed -i "s/git@github\.com:/https:\/\/github\.com\//g" ./ansible-galaxy-requirements.yaml \
-  && sed -i "s/https:\/\/github.com/https:\/\/x-access-token:$GITHUB_TOKEN@github.com/g" ./ansible-galaxy-requirements.yaml
 ## Set up development environment
 RUN --mount=type=ssh ansible-playbook ansible/base_edge.yaml -e reload_system=no -e autoware_env_dir=/home/autoware \
   -e ros_distro=${ROS_DISTRO}
