@@ -7,6 +7,9 @@ source {{ autoware_env_dir }}/jetson.env
 source /opt/ros/humble/install/setup.bash
 source {{ perception_application_base_path }}/{{ perception_application_directory_name }}/install/setup.bash
 
+mkdir -p {{ perception_application_ros_log_dir }}
+export ROS_LOG_DIR={{ perception_application_ros_log_dir }}
+
 {% if fool_proof_check | bool %}
 pass_call_diag=true
 {% endif %}
