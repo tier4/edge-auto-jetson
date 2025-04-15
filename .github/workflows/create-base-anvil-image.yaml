@@ -1,0 +1,110 @@
+# Workflow: create-base-anvil-image
+# Purpose: This workflow creates a base Docker image for the Anvil Orin.
+# It builds on top of a NVIDIA Jetpack base image and adds ROS Humble.
+# The resulting image is pushed to GitHub Container Registry (ghcr.io).
+
+name: create-base-anvil-image
+
+# Trigger configuration
+on:
+  # Manual trigger only, requires specifying a branch or tag name
+  # - beta/anvil/v0.x.0 -> v0.x.0
+  # - beta/v0.x -> v0.x
+  # - v0.x -> v0.x
+  workflow_dispatch:
+    inputs:
+      beta-branch-or-tag-name:
+        description: The name of the beta branch or tag to release
+        type: string
+        required: true
+
+# Global environment variables
+env:
+  # ROS distribution to install
+  ROS_DISTRO: humble
+  # Base Base Anvil Orin image to build upon (from TIER IV)
+  BASE_IMAGE: ghcr.io/tier4/ota-base-image/esg620_nvidia-jetpack:r36.4.0-V002-cti_orin-agx_forge_base-v1
+
+jobs:
+  create-base-image:
+    # Using ARM-based runner for compatibility with target architecture
+    runs-on: ubuntu-22.04-arm
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Set env
+        run: |
+          echo "WORKSPACE_ROOT=$(pwd)" >> $GITHUB_ENV
+          echo "CREATE_DATE=$(date +'%Y%m%d_%H%M(%Z)')" >> $GITHUB_ENV
+
+      - name: Set tag name
+        id: set-tag-name
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            REF_NAME="${{ github.event.inputs.beta-branch-or-tag-name }}"
+          else
+            REF_NAME="${{ github.ref_name }}"
+          fi
+
+          # Extract just the version part (vX.X.X) from the reference name
+          # This handles formats like:
+          VERSION_PART=$(echo "$REF_NAME" | grep -o 'v[0-9]\+\(\.[0-9]\+\)*' || echo "$REF_NAME")
+
+          echo "ref-name=$REF_NAME" >> $GITHUB_OUTPUT
+          echo "tag-name=$VERSION_PART" >> $GITHUB_OUTPUT
+
+      - name: Check ROS 2 Package Versions
+        run: |
+          sudo apt update && sudo apt install curl gnupg lsb-release
+          sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(source /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+          sudo apt update
+          echo "ROS_DESKTOP_VER=$( apt-cache madison ros-${ROS_DISTRO}-desktop | cut -d \| -f 2 | cut -c 2- )" >> $GITHUB_ENV
+
+      - name: set description
+        id: set-description
+        run: |
+          echo "img-description=${{ env.CREATE_DATE }}, ros-${{ env.ROS_DISTRO }}-desktop:${{ env.ROS_DESKTOP_VER }}" >> $GITHUB_OUTPUT
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          ref: ${{ steps.set-tag-name.outputs.ref-name }}
+
+      - name: Set target name for beta branches
+        id: set-target-name
+        run: |
+          if [[ "${{ steps.set-tag-name.outputs.ref-name }}" =~ "beta/" ]]; then
+            echo "target-name=${{ steps.set-tag-name.outputs.ref-name }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          logout: false
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          file: docker/edge-auto/Dockerfile.bi
+          set: |
+            *.context=${{ env.WORKSPACE_ROOT }}
+          tags: |
+            ghcr.io/${{ github.repository }}/base-image:latest
+            ghcr.io/${{ github.repository }}/base-image:${{ steps.set-tag-name.outputs.tag-name }}
+          build-args: |
+            DESCRIPTION=${{ steps.set-description.outputs.img-description }}
+            BASE_IMAGE=${{ env.BASE_IMAGE }}
+            ROS_DISTRO=${{ env.ROS_DISTRO }}

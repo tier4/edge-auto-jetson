@@ -1,3 +1,13 @@
+- name: Add settings to jetson.env
+  ansible.builtin.blockinfile:
+    path: "{{ autoware_env_dir }}/jetson.env"
+    state: present
+    create: true
+    mode: 0644
+    block: |
+      export JETSON_ID={{ jetson_id | default(-1) }}
+  become: "{{ autoware_env_dir_privileged }}"
+
 - name: Create directory
   ansible.builtin.file:
     path: /opt/autoware/perception-startup-service
