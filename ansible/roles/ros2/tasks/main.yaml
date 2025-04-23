@@ -92,10 +92,10 @@
       - flake8-quotes
     extra_args: --upgrade --no-cache-dir
 
-- name: Install ROS2 {{ rosdistro }}
+- name: Install ROS2 {{ ros_distro }}
   become: true
   ansible.builtin.apt:
-    name: ros-{{ rosdistro }}-{{ installation_type }}
+    name: ros-{{ ros_distro }}-{{ installation_type }}
     state: present
     update_cache: true
 
@@ -107,48 +107,48 @@
       - python3-colcon-common-extensions
       - librange-v3-dev
       - v4l-utils
-      - ros-{{ rosdistro }}-launch-xml
-      - ros-{{ rosdistro }}-launch-yaml
-      - ros-{{ rosdistro }}-launch-testing
-      - ros-{{ rosdistro }}-launch-testing-ament-cmake
-      - ros-{{ rosdistro }}-demo-nodes-cpp
-      - ros-{{ rosdistro }}-demo-nodes-py
-      - ros-{{ rosdistro }}-example-interfaces
-      - ros-{{ rosdistro }}-camera-calibration-parsers
-      - ros-{{ rosdistro }}-camera-info-manager
-      - ros-{{ rosdistro }}-cv-bridge
-      - ros-{{ rosdistro }}-v4l2-camera
-      - ros-{{ rosdistro }}-vision-opencv
-      - ros-{{ rosdistro }}-libstatistics-collector
-      - ros-{{ rosdistro }}-geographic-msgs
-      - ros-{{ rosdistro }}-vision-msgs
-      - ros-{{ rosdistro }}-image-geometry
-      - ros-{{ rosdistro }}-image-pipeline
-      - ros-{{ rosdistro }}-image-transport
-      - ros-{{ rosdistro }}-compressed-image-transport
-      - ros-{{ rosdistro }}-compressed-depth-image-transport
-      - ros-{{ rosdistro }}-pcl-msgs
-      - ros-{{ rosdistro }}-perception-pcl
-      - ros-{{ rosdistro }}-logging-demo
-      - ros-{{ rosdistro }}-udp-msgs
-      - ros-{{ rosdistro }}-angles
-      - ros-{{ rosdistro }}-diagnostics
-      - ros-{{ rosdistro }}-tf-transformations
-      - ros-{{ rosdistro }}-mrt-cmake-modules
-      - ros-{{ rosdistro }}-gtest-vendor
-      - ros-{{ rosdistro }}-grid-map
-      - ros-{{ rosdistro }}-filters
-      - ros-{{ rosdistro }}-nav2-msgs
-      - ros-{{ rosdistro }}-tf2-eigen
-      - ros-{{ rosdistro }}-ament-cmake-clang-format
-      - ros-{{ rosdistro }}-rmw-cyclonedds-cpp
+      - ros-{{ ros_distro }}-launch-xml
+      - ros-{{ ros_distro }}-launch-yaml
+      - ros-{{ ros_distro }}-launch-testing
+      - ros-{{ ros_distro }}-launch-testing-ament-cmake
+      - ros-{{ ros_distro }}-demo-nodes-cpp
+      - ros-{{ ros_distro }}-demo-nodes-py
+      - ros-{{ ros_distro }}-example-interfaces
+      - ros-{{ ros_distro }}-camera-calibration-parsers
+      - ros-{{ ros_distro }}-camera-info-manager
+      - ros-{{ ros_distro }}-cv-bridge
+      - ros-{{ ros_distro }}-v4l2-camera
+      - ros-{{ ros_distro }}-vision-opencv
+      - ros-{{ ros_distro }}-libstatistics-collector
+      - ros-{{ ros_distro }}-geographic-msgs
+      - ros-{{ ros_distro }}-vision-msgs
+      - ros-{{ ros_distro }}-image-geometry
+      - ros-{{ ros_distro }}-image-pipeline
+      - ros-{{ ros_distro }}-image-transport
+      - ros-{{ ros_distro }}-compressed-image-transport
+      - ros-{{ ros_distro }}-compressed-depth-image-transport
+      - ros-{{ ros_distro }}-pcl-msgs
+      - ros-{{ ros_distro }}-perception-pcl
+      - ros-{{ ros_distro }}-logging-demo
+      - ros-{{ ros_distro }}-udp-msgs
+      - ros-{{ ros_distro }}-angles
+      - ros-{{ ros_distro }}-diagnostics
+      - ros-{{ ros_distro }}-tf-transformations
+      - ros-{{ ros_distro }}-mrt-cmake-modules
+      - ros-{{ ros_distro }}-gtest-vendor
+      - ros-{{ ros_distro }}-grid-map
+      - ros-{{ ros_distro }}-filters
+      - ros-{{ ros_distro }}-nav2-msgs
+      - ros-{{ ros_distro }}-tf2-eigen
+      - ros-{{ ros_distro }}-ament-cmake-clang-format
+      - ros-{{ ros_distro }}-rmw-cyclonedds-cpp
     state: present
     update_cache: yes
 
 - name: Add ROS2 setup to .bashrc
   ansible.builtin.lineinfile:
     dest: ~/.bashrc
-    line: source /opt/ros/{{ rosdistro }}/setup.bash
+    line: source /opt/ros/{{ ros_distro }}/setup.bash
     state: present
     create: true
     mode: 0644

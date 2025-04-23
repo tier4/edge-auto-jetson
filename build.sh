@@ -8,7 +8,6 @@ if [ -z "$perception_type" ]; then
     exit 1
 fi
 
-
 if [ "$perception_type" = "addon" ]; then
     echo "Running rosdep update and install for addon..."
     rosdep update
