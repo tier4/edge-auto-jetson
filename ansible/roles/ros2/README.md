@@ -2,7 +2,7 @@
 
 This role installs [ROS 2](http://www.ros2.org/) following [this page](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html).
 
-Additional steps may be needed depending on the `rosdistro` you choose.
+Additional steps may be needed depending on the `ros_distro` you choose.
 
 <!-- TODO: Add these steps to the role if Humble requires. -->
 
@@ -18,7 +18,7 @@ $ apt-cache policy | grep universe
 
 | Name              | Required | Description                                      |
 | ----------------- | -------- | ------------------------------------------------ |
-| rosdistro         | true     | The ROS distro.                                  |
+| ros_distro         | true     | The ROS distro.                                  |
 | installation_type | false    | The installation type (`desktop` or `ros-base`). |
 
 ## Manual Installation
@@ -26,7 +26,7 @@ $ apt-cache policy | grep universe
 The `installation_type` variable can also be found in:
 [./defaults/main.yaml](./defaults/main.yaml)
 
-For Universe, the `rosdistro` variable can also be found in:
+For Universe, the `ros_distro` variable can also be found in:
 [../../playbooks/universe.yaml](../../playbooks/universe.yaml)
 
 ```bash
@@ -58,9 +58,9 @@ sudo apt update
 
 # Desktop Install
 installation_type=desktop
-sudo apt install ros-${rosdistro}-${installation_type}
+sudo apt install ros-${ros_distro}-${installation_type}
 
 # Environment setup
 # (Optional) You can source ros2 in the ~/.bashrc file.
-echo '' >> ~/.bashrc && echo "source /opt/ros/${rosdistro}/setup.bash" >> ~/.bashrc
+echo '' >> ~/.bashrc && echo "source /opt/ros/${ros_distro}/setup.bash" >> ~/.bashrc
 ```
