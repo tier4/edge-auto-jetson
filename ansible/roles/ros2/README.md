@@ -18,7 +18,7 @@ $ apt-cache policy | grep universe
 
 | Name              | Required | Description                                      |
 | ----------------- | -------- | ------------------------------------------------ |
-| ros_distro         | true     | The ROS distro.                                  |
+| ros_distro        | true     | The ROS distro.                                  |
 | installation_type | false    | The installation type (`desktop` or `ros-base`). |
 
 ## Manual Installation
