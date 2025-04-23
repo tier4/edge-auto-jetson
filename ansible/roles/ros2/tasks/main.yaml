@@ -1,7 +1,7 @@
 - name: Authorize ROS GPG key
   become: true
   ansible.builtin.get_url:
-    url: https://raw.githubusercontent.com/ros/ros_distro/master/ros.key
+    url: https://raw.githubusercontent.com/ros/rosdistro/master/ros.key
     dest: /usr/share/keyrings/ros-archive-keyring.gpg
     mode: 0644
 
