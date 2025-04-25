@@ -2,7 +2,6 @@
   become: true
   ansible.builtin.apt:
     name:
-      - "*nvidia-jetpack*"
       - "*opencv*"
     state: absent
     purge: true
