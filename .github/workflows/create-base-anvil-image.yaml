@@ -102,8 +102,8 @@ jobs:
           set: |
             *.context=${{ env.WORKSPACE_ROOT }}
           tags: |
-            ghcr.io/${{ github.repository }}/base-image:latest
-            ghcr.io/${{ github.repository }}/base-image:${{ steps.set-tag-name.outputs.tag-name }}
+            ghcr.io/${{ github.repository }}/rqx-580-base-image:latest
+            ghcr.io/${{ github.repository }}/rqx-580-base-image:${{ steps.set-tag-name.outputs.tag-name }}
           build-args: |
             DESCRIPTION=${{ steps.set-description.outputs.img-description }}
             BASE_IMAGE=${{ env.BASE_IMAGE }}

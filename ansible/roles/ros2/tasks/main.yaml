@@ -33,7 +33,7 @@
         ros2_build_script: "{{ jetson_script_dir }}/ros2_build.sh"
     - name: Download OpenCV deps script
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R35.3.1/scripts/opencv_install_deps.sh
+        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/refs/heads/L4T-R35.4.1/packages/opencv/opencv_builder/opencv_install_deps.sh
         dest: "{{ opencv_install_deps_script }}"
     - name: Make OpenCV deps script executable
       ansible.builtin.file:
@@ -41,7 +41,7 @@
         mode: u+x
     - name: Download OpenCV install script
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R35.3.1/scripts/opencv_install.sh
+        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/refs/heads/L4T-R35.4.1/packages/opencv/opencv_install.sh
         dest: "{{ opencv_install_script }}"
     - name: Make OpenCV install script executable
       ansible.builtin.file:
@@ -49,7 +49,7 @@
         mode: u+x
     - name: Download ROS2 Humble install script
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/L4T-R35.3.1/scripts/ros2_build.sh
+        url: https://raw.githubusercontent.com/dusty-nv/jetson-containers/refs/heads/L4T-R35.4.1/packages/ros/ros2_build.sh
         dest: "{{ ros2_build_script }}"
     - name: Make ROS2 Humble install script executable
       ansible.builtin.file:
