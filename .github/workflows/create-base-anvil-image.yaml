@@ -22,8 +22,8 @@ on:
 env:
   # ROS distribution to install
   ROS_DISTRO: humble
-  # Base Base Anvil Orin image to build upon (from TIER IV)
-  BASE_IMAGE: ghcr.io/tier4/ota-base-image/esg620_nvidia-jetpack:r35.4.1-v001-cti_orin-agx_forge_base-nvme0n1
+  # Base Base RQX Xavier image to build upon (from TIER IV)
+  BASE_IMAGE: ghcr.io/tier4/ota-base-image/rqx_58g_nvidia-jetpack:r35.4.1-rel.1v2.3-jetson-xavier-rqx580-v1
 
 jobs:
   create-base-image:
