@@ -1,9 +1,25 @@
 #!/bin/bash
 # NOTE: We cannot use $HOME in this script because perception-startup.service overrides $HOME as root
+source {{ autoware_env_dir }}/autoware.env && true
 
 while [[ ! -e /dev/video0 || ! -e /dev/video1  || ! -e /dev/video2  || ! -e /dev/video3 ]]; do
+    {% if fool_proof_check | bool %}
+    call_diag_polling --status "Error" \
+            --mrm_name_suffix camera \
+            --event_id "device not found" \
+            --message "/dev/video is not found" \
+            --impact "camera functionality unavailable"
+    {% endif %}
     sleep 1
 done
+
+{% if fool_proof_check | bool %}
+call_diag_polling --status "Ok" \
+        --mrm_name_suffix camera \
+        --event_id "none" \
+        --message "none" \
+        --impact "none"
+{% endif %}
 
 # wait for netplan applied
 flag=""
