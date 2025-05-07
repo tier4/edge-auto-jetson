@@ -1,66 +1,52 @@
-# ros2
+# ROS 2
 
-This role installs [ROS 2](http://www.ros2.org/) following [this page](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html).
+This role installs [ROS 2](http://www.ros2.org/) on Ubuntu systems following the [official installation guide](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html), with additional development dependencies and tools.
 
-Additional steps may be needed depending on the `ros_distro` you choose.
+## Overview
 
-<!-- TODO: Add these steps to the role if Humble requires. -->
-
-```bash
-$ sudo apt install software-properties-common
-$ sudo add-apt-repository universe
-$ apt-cache policy | grep universe
- 500 http://us.archive.ubuntu.com/ubuntu focal/universe amd64 Packages
-     release v=20.04,o=Ubuntu,a=focal,n=focal,l=Ubuntu,c=universe,b=amd64
-```
+This role performs a complete ROS 2 installation including:
+- Setting up ROS 2 repositories and GPG keys
+- Installing core ROS 2 packages based on the specified distribution
+- Installing development dependencies and tools
+- Configuring environment setup
+- Initializing and updating rosdep
 
 ## Inputs
 
-| Name              | Required | Description                                      |
-| ----------------- | -------- | ------------------------------------------------ |
-| ros_distro        | true     | The ROS distro.                                  |
-| installation_type | false    | The installation type (`desktop` or `ros-base`). |
+| Name              | Required | Description                                                 |
+| ----------------- | -------- | ----------------------------------------------------------- |
+| ros_distro        | true     | The ROS 2 distribution to install (e.g., humble, iron)      |
+| installation_type | false    | Installation type: `desktop` (full) or `ros-base` (minimal) |
 
-## Manual Installation
+## Default Configuration
 
-The `installation_type` variable can also be found in:
+The default `installation_type` can be found in:
 [./defaults/main.yaml](./defaults/main.yaml)
 
-For Universe, the `ros_distro` variable can also be found in:
-[../../playbooks/universe.yaml](../../playbooks/universe.yaml)
+## Features
 
-```bash
-wget -O /tmp/amd64.env https://raw.githubusercontent.com/autowarefoundation/autoware/main/amd64.env && source /tmp/amd64.env
+This role:
+- Authorizes the ROS GPG key
+- Configures the appropriate ROS 2 apt repository
+- Installs basic system dependencies
+- Installs comprehensive ROS 2 development dependencies
+- Installs Python dependencies with specific versions where required
+- Installs Python code quality tools
+- Installs the specified ROS 2 distribution
+- Installs additional ROS 2 packages and tools for development
+- Configures environment setup in .bashrc
+- Initializes and updates rosdep
 
-# Taken from: https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html
+## Additional Packages
 
-# You will need to add the ROS 2 apt repository to your system. First, make sure that the Ubuntu Universe repository is enabled by checking the output of this command.
-apt-cache policy | grep universe
+The role installs numerous additional ROS 2 packages beyond the base installation, including:
+- Launch tools (XML, YAML, testing)
+- Demo nodes
+- Computer vision packages
+- PCL (Point Cloud Library) integration
+- Diagnostic tools
+- Navigation packages
+- Testing frameworks
+- And many more development utilities
 
-# The output of the above command should contain following:
-
-# 500 http://us.archive.ubuntu.com/ubuntu focal/universe amd64 Packages
-#     release v=20.04,o=Ubuntu,a=focal,n=focal,l=Ubuntu,c=universe,b=amd64
-
-# If you don’t see an output line like the one above, then enable the Universe repository with these instructions.
-sudo apt install software-properties-common
-sudo add-apt-repository universe
-
-# Now add the ROS 2 apt repository to your system. First authorize our GPG key with apt.
-sudo apt update && sudo apt install curl gnupg lsb-release
-sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
-
-# Then add the repository to your sources list.
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(source /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
-
-# Update your apt repository caches after setting up the repositories.
-sudo apt update
-
-# Desktop Install
-installation_type=desktop
-sudo apt install ros-${ros_distro}-${installation_type}
-
-# Environment setup
-# (Optional) You can source ros2 in the ~/.bashrc file.
-echo '' >> ~/.bashrc && echo "source /opt/ros/${ros_distro}/setup.bash" >> ~/.bashrc
-```
+This comprehensive setup provides everything needed for ROS 2 development, including tools for visualization, simulation, and testing.
