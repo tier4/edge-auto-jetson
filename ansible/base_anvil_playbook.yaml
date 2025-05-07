@@ -2,5 +2,4 @@
   hosts: localhost
 
   roles:
-    - { role: autoware.edge_auto_jetson.cuda }
     - { role: autoware.edge_auto_jetson.ros2 }
