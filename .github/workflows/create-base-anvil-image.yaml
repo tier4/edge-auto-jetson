@@ -17,6 +17,10 @@ on:
         description: The name of the beta branch or tag to release
         type: string
         required: true
+      tag-suffix:
+        description: Optional suffix to add to the image tag (leave empty to use/overwrite existing tag)
+        type: string
+        required: false
 
 # Global environment variables
 env:
@@ -37,7 +41,6 @@ jobs:
         run: |
           echo "WORKSPACE_ROOT=$(pwd)" >> $GITHUB_ENV
           echo "CREATE_DATE=$(date +'%Y%m%d_%H%M(%Z)')" >> $GITHUB_ENV
-
       - name: Set tag name
         id: set-tag-name
         run: |
@@ -46,13 +49,22 @@ jobs:
           else
             REF_NAME="${{ github.ref_name }}"
           fi
-
           # Extract just the version part (vX.X.X) from the reference name
           # This handles formats like:
           VERSION_PART=$(echo "$REF_NAME" | grep -o 'v[0-9]\+\(\.[0-9]\+\)*' || echo "$REF_NAME")
 
+          # Process tag suffix if provided
+          TAG_SUFFIX="${{ github.event.inputs.tag-suffix }}"
+          if [ -n "$TAG_SUFFIX" ]; then
+            VERSION_WITH_SUFFIX="${VERSION_PART}-${TAG_SUFFIX}"
+          else
+            VERSION_WITH_SUFFIX="${VERSION_PART}"
+          fi
+
           echo "ref-name=$REF_NAME" >> $GITHUB_OUTPUT
           echo "tag-name=$VERSION_PART" >> $GITHUB_OUTPUT
+          echo "tag-name-with-suffix=$VERSION_WITH_SUFFIX" >> $GITHUB_OUTPUT
+          echo "has-suffix=$([[ -n "$TAG_SUFFIX" ]] && echo "true" || echo "false")" >> $GITHUB_OUTPUT
 
       - name: Check ROS 2 Package Versions
         run: |
@@ -61,12 +73,10 @@ jobs:
           echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(source /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
           sudo apt update
           echo "ROS_DESKTOP_VER=$( apt-cache madison ros-${ROS_DISTRO}-desktop | cut -d \| -f 2 | cut -c 2- )" >> $GITHUB_ENV
-
       - name: set description
         id: set-description
         run: |
           echo "img-description=${{ env.CREATE_DATE }}, ros-${{ env.ROS_DISTRO }}-desktop:${{ env.ROS_DESKTOP_VER }}" >> $GITHUB_OUTPUT
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -79,7 +89,6 @@ jobs:
           if [[ "${{ steps.set-tag-name.outputs.ref-name }}" =~ "beta/" ]]; then
             echo "target-name=${{ steps.set-tag-name.outputs.ref-name }}" >> $GITHUB_OUTPUT
           fi
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
@@ -94,8 +103,24 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push
+      - name: Build and push (with suffix)
         uses: docker/build-push-action@v5
+        if: steps.set-tag-name.outputs.has-suffix == 'true'
+        with:
+          push: true
+          file: docker/edge-auto/Dockerfile.bi
+          set: |
+            *.context=${{ env.WORKSPACE_ROOT }}
+          tags: |
+            ghcr.io/${{ github.repository }}/base-image:${{ steps.set-tag-name.outputs.tag-name-with-suffix }}
+          build-args: |
+            DESCRIPTION=${{ steps.set-description.outputs.img-description }}
+            BASE_IMAGE=${{ env.BASE_IMAGE }}
+            ROS_DISTRO=${{ env.ROS_DISTRO }}
+
+      - name: Build and push (standard tags)
+        uses: docker/build-push-action@v5
+        if: steps.set-tag-name.outputs.has-suffix == 'false'
         with:
           push: true
           file: docker/edge-auto/Dockerfile.bi
