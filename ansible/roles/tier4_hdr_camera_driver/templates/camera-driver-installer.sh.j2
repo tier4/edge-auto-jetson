@@ -16,6 +16,8 @@ LABEL t4_primary_c2x8
 EOF
 fi
 
+sed -i "s|root=/dev/mmcblk0p1|root=$(findmnt / -o SOURCE -n)|" "/boot/extlinux/extlinux.conf"
+
 sed -i 's/^DEFAULT primary/DEFAULT t4_primary_c2x8/' /boot/extlinux/extlinux.conf
 
 sed -i 's/options tier4_imx490 trigger_mode=0 enable_auto_exposure=1 enable_distortion_correction=1/options tier4_imx490 trigger_mode=1 fsync_mfp=7 enable_auto_exposure=1 enable_distortion_correction=0 shutter_time_min=11000 shutter_time_max=11000/' /etc/modprobe.d/tier4-imx490.conf
