@@ -3,4 +3,3 @@
 
   roles:
     - { role: ros2 }
-    - { role: cuda }
