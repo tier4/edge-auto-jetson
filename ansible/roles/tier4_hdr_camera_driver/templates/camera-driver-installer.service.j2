@@ -1,7 +1,9 @@
 [Unit]
 Description=Camera Driver Install Service
-After=network.target
-Before=perception-startup.service
+After=network.target nv-l4t-bootloader-config.service
+Before=otaclient.service graphical.target gdm.service lightdm.service sddm.service perception-startup.service
+RefuseManualStart=true
+RefuseManualStop=true
 
 [Service]
 Type=oneshot
