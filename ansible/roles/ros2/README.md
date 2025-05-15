@@ -5,6 +5,7 @@ This role installs [ROS 2](http://www.ros2.org/) on Ubuntu systems following the
 ## Overview
 
 This role performs a complete ROS 2 installation including:
+
 - Setting up ROS 2 repositories and GPG keys
 - Installing core ROS 2 packages based on the specified distribution
 - Installing development dependencies and tools
@@ -26,6 +27,7 @@ The default `installation_type` can be found in:
 ## Features
 
 This role:
+
 - Authorizes the ROS GPG key
 - Configures the appropriate ROS 2 apt repository
 - Installs basic system dependencies
@@ -40,6 +42,7 @@ This role:
 ## Additional Packages
 
 The role installs numerous additional ROS 2 packages beyond the base installation, including:
+
 - Launch tools (XML, YAML, testing)
 - Demo nodes
 - Computer vision packages

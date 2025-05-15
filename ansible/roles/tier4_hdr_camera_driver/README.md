@@ -35,6 +35,7 @@ This role performs the following steps:
 ## Boot-time Installation
 
 The driver installation is completed at boot time because:
+
 - Kernel module compilation needs to match the running kernel
 - This approach ensures the driver is properly rebuilt after kernel updates
 - It prevents installation failures during the Ansible deployment phase
@@ -60,16 +61,19 @@ Include this role in your playbook:
 If the camera driver fails to load after installation:
 
 1. Check the systemd service status:
+
    ```
    sudo systemctl status camera-driver-installer
    ```
 
 2. Review the installation logs:
+
    ```
    sudo journalctl -u camera-driver-installer
    ```
 
 3. Verify the driver is properly installed:
+
    ```
    dpkg -l | grep tier4-camera-gmsl
    ```

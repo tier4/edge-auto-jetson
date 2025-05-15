@@ -92,6 +92,37 @@
       - flake8-quotes
     extra_args: --upgrade --no-cache-dir
 
+- name: Check if NVIDIA L4T source file exists
+  ansible.builtin.stat:
+    path: /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
+  register: nvidia_l4t_source
+
+- name: Backup NVIDIA L4T apt source file
+  become: true
+  ansible.builtin.command: mv /etc/apt/sources.list.d/nvidia-l4t-apt-source.list /etc/apt/sources.list.d/nvidia-l4t-apt-source.list.bak
+  when: nvidia_l4t_source.stat.exists
+  register: nvidia_source_backup
+
+- name: Update apt cache after backup
+  become: true
+  ansible.builtin.apt:
+    update_cache: yes
+  when: nvidia_source_backup.changed
+
+- name: Remove all OpenCV packages
+  become: true
+  ansible.builtin.apt:
+    name: "*opencv*"
+    state: absent
+    purge: yes
+  register: opencv_removed
+
+- name: Update apt cache after OpenCV removal
+  become: true
+  ansible.builtin.apt:
+    update_cache: yes
+  when: opencv_removed.changed
+
 - name: Install ROS2 {{ ros_distro }}
   become: true
   ansible.builtin.apt:
@@ -163,3 +194,17 @@
 - name: Update rosdep
   ansible.builtin.command: rosdep update
   changed_when: false
+
+- name: Restore NVIDIA L4T apt source file
+  become: true
+  ansible.builtin.command: mv /etc/apt/sources.list.d/nvidia-l4t-apt-source.list.bak /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
+  args:
+    removes: /etc/apt/sources.list.d/nvidia-l4t-apt-source.list.bak
+  when: nvidia_source_backup.changed
+  register: nvidia_source_restore
+
+- name: Update apt cache after restoring NVIDIA sources
+  become: true
+  ansible.builtin.apt:
+    update_cache: yes
+  when: nvidia_source_restore.changed
