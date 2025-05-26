@@ -1,7 +1,7 @@
 # tensorrt_yolox
-- name: Create tensorrt_yolox directory inside {{ data_dir }}
+- name: Create tensorrt_yolox directory inside {{ artifacts_script_download_dir }}
   ansible.builtin.file:
-    path: "{{ data_dir }}/tensorrt_yolox"
+    path: "{{ artifacts_script_download_dir }}/tensorrt_yolox"
     mode: "755"
     state: directory
 
@@ -9,7 +9,7 @@
   become: true
   ansible.builtin.get_url:
     url: https://awf.ml.dev.web.auto/perception/models/yolox-tiny.onnx
-    dest: "{{ data_dir }}/tensorrt_yolox/yolox-tiny.onnx"
+    dest: "{{ artifacts_script_download_dir }}/tensorrt_yolox/yolox-tiny.onnx"
     mode: "644"
     checksum: sha256:471a665f4243e654dff62578394e508db22ee29fe65d9e389dfc3b0f2dee1255
 
@@ -17,7 +17,7 @@
   become: true
   ansible.builtin.get_url:
     url: https://awf.ml.dev.web.auto/perception/models/yolox-sPlus-opt.onnx
-    dest: "{{ data_dir }}/tensorrt_yolox/yolox-sPlus-opt.onnx"
+    dest: "{{ artifacts_script_download_dir }}/tensorrt_yolox/yolox-sPlus-opt.onnx"
     mode: "644"
     checksum: sha256:36b0832177b01e6b278e00c7369f1de71e616c36261cbae50f0753d41289da01
 
@@ -25,7 +25,7 @@
   become: true
   ansible.builtin.get_url:
     url: https://awf.ml.dev.web.auto/perception/models/yolox-sPlus-opt.EntropyV2-calibration.table
-    dest: "{{ data_dir }}/tensorrt_yolox/yolox-sPlus-opt.EntropyV2-calibration.table"
+    dest: "{{ artifacts_script_download_dir }}/tensorrt_yolox/yolox-sPlus-opt.EntropyV2-calibration.table"
     mode: "644"
     checksum: sha256:b9e9d7da33342262ccaea4469b4d02b8abb32b6d7bf737f9e0883fece1b8f580
 
@@ -33,7 +33,7 @@
   become: true
   ansible.builtin.get_url:
     url: https://awf.ml.dev.web.auto/perception/models/object_detection_yolox_s/v1/yolox-sPlus-T4-960x960-pseudo-finetune.onnx
-    dest: "{{ data_dir }}/tensorrt_yolox/yolox-sPlus-T4-960x960-pseudo-finetune.onnx"
+    dest: "{{ artifacts_script_download_dir }}/tensorrt_yolox/yolox-sPlus-T4-960x960-pseudo-finetune.onnx"
     mode: "644"
     checksum: sha256:f5054e8a890c3be86dc1b4b89a5a36fb2279d4f6110b0159e793be062641bf65
 
@@ -41,7 +41,7 @@
   become: true
   ansible.builtin.get_url:
     url: https://awf.ml.dev.web.auto/perception/models/object_detection_yolox_s/v1/yolox-sPlus-T4-960x960-pseudo-finetune.EntropyV2-calibration.table
-    dest: "{{ data_dir }}/tensorrt_yolox/yolox-sPlus-T4-960x960-pseudo-finetune.EntropyV2-calibration.table"
+    dest: "{{ artifacts_script_download_dir }}/tensorrt_yolox/yolox-sPlus-T4-960x960-pseudo-finetune.EntropyV2-calibration.table"
     mode: "644"
     checksum: sha256:cc378d327db5616b0b3a4d077bf37100c25a50ecd22d2b542f54098da100f34c
 
@@ -49,7 +49,7 @@
   become: true
   ansible.builtin.get_url:
     url: https://awf.ml.dev.web.auto/perception/models/label.txt
-    dest: "{{ data_dir }}/tensorrt_yolox/label.txt"
+    dest: "{{ artifacts_script_download_dir }}/tensorrt_yolox/label.txt"
     mode: "644"
     checksum: sha256:3540a365bfd6d8afb1b5d8df4ec47f82cb984760d3270c9b41dbbb3422d09a0c
 
@@ -57,7 +57,7 @@
   become: true
   ansible.builtin.get_url:
     url: https://awf.ml.dev.web.auto/perception/models/object_detection_semseg_yolox_s/v1/yolox-sPlus-opt-pseudoV2-T4-960x960-T4-seg16cls.onnx
-    dest: "{{ data_dir }}/tensorrt_yolox/yolox-sPlus-opt-pseudoV2-T4-960x960-T4-seg16cls.onnx"
+    dest: "{{ artifacts_script_download_dir }}/tensorrt_yolox/yolox-sPlus-opt-pseudoV2-T4-960x960-T4-seg16cls.onnx"
     mode: "644"
     checksum: sha256:73b3812432cedf65cebf02ca4cb630542fc3b1671c4c0fbf7cee50fa38e416a8
 
@@ -65,7 +65,7 @@
   become: true
   ansible.builtin.get_url:
     url: https://awf.ml.dev.web.auto/perception/models/object_detection_semseg_yolox_s/v1/yolox-sPlus-opt-pseudoV2-T4-960x960-T4-seg16cls.EntropyV2-calibration.table
-    dest: "{{ data_dir }}/tensorrt_yolox/yolox-sPlus-opt-pseudoV2-T4-960x960-T4-seg16cls.EntropyV2-calibration.table"
+    dest: "{{ artifacts_script_download_dir }}/tensorrt_yolox/yolox-sPlus-opt-pseudoV2-T4-960x960-T4-seg16cls.EntropyV2-calibration.table"
     mode: "644"
     checksum: sha256:28cd6524d4bcdb2809592a225d28330433e58dc02c92169ea555b44c1a51a584
 
@@ -73,14 +73,14 @@
   become: true
   ansible.builtin.get_url:
     url: https://awf.ml.dev.web.auto/perception/models/object_detection_semseg_yolox_s/v1/semseg_color_map.csv
-    dest: "{{ data_dir }}/tensorrt_yolox/semseg_color_map.csv"
+    dest: "{{ artifacts_script_download_dir }}/tensorrt_yolox/semseg_color_map.csv"
     mode: "644"
     checksum: sha256:3d93ca05f31b63424d7d7246a01a2365953705a0ed3323ba5b6fddd744a4bfea
 
 # lidar_centerpoint
-- name: Create lidar_centerpoint directory inside {{ data_dir }}
+- name: Create lidar_centerpoint directory inside {{ artifacts_script_download_dir }}
   ansible.builtin.file:
-    path: "{{ data_dir }}/lidar_centerpoint"
+    path: "{{ artifacts_script_download_dir }}/lidar_centerpoint"
     mode: "755"
     state: directory
 
@@ -88,7 +88,7 @@
   become: true
   ansible.builtin.get_url:
     url: https://awf.ml.dev.web.auto/perception/models/centerpoint/v2/pts_voxel_encoder_centerpoint.onnx
-    dest: "{{ data_dir }}/lidar_centerpoint/pts_voxel_encoder_centerpoint.onnx"
+    dest: "{{ artifacts_script_download_dir }}/lidar_centerpoint/pts_voxel_encoder_centerpoint.onnx"
     mode: "644"
     checksum: sha256:dc1a876580d86ee7a341d543f8ade2ede7f43bd032dc5b44155b1f0175405764
 
@@ -96,7 +96,7 @@
   become: true
   ansible.builtin.get_url:
     url: https://awf.ml.dev.web.auto/perception/models/centerpoint/v2/pts_backbone_neck_head_centerpoint.onnx
-    dest: "{{ data_dir }}/lidar_centerpoint/pts_backbone_neck_head_centerpoint.onnx"
+    dest: "{{ artifacts_script_download_dir }}/lidar_centerpoint/pts_backbone_neck_head_centerpoint.onnx"
     mode: "644"
     checksum: sha256:3fe7e128955646740c41a25be0c8f141d5a94594fe79d7405fe2a859e391542e
 
@@ -104,7 +104,7 @@
   become: true
   ansible.builtin.get_url:
     url: https://awf.ml.dev.web.auto/perception/models/centerpoint/v2/pts_voxel_encoder_centerpoint_tiny.onnx
-    dest: "{{ data_dir }}/lidar_centerpoint/pts_voxel_encoder_centerpoint_tiny.onnx"
+    dest: "{{ artifacts_script_download_dir }}/lidar_centerpoint/pts_voxel_encoder_centerpoint_tiny.onnx"
     mode: "644"
     checksum: sha256:2c53465715c1fd2e9dc5727ef3fca74f4cdf0538f74286b0946e219d0ca5693b
 
@@ -112,41 +112,41 @@
   become: true
   ansible.builtin.get_url:
     url: https://awf.ml.dev.web.auto/perception/models/centerpoint/v2/pts_backbone_neck_head_centerpoint_tiny.onnx
-    dest: "{{ data_dir }}/lidar_centerpoint/pts_backbone_neck_head_centerpoint_tiny.onnx"
+    dest: "{{ artifacts_script_download_dir }}/lidar_centerpoint/pts_backbone_neck_head_centerpoint_tiny.onnx"
     mode: "644"
     checksum: sha256:9bb0b634f3664bd098ce7d6a3d8a9fb7cc8d9b8252b27f302c71e43316bab551
 - name: Download lidar_centerpoint/centerpoint_ml_package.param.yaml
   become: true
   ansible.builtin.get_url:
     url: https://awf.ml.dev.web.auto/perception/models/centerpoint/v2/centerpoint_ml_package.param.yaml
-    dest: "{{ data_dir }}/lidar_centerpoint/centerpoint_ml_package.param.yaml"
+    dest: "{{ artifacts_script_download_dir }}/lidar_centerpoint/centerpoint_ml_package.param.yaml"
     mode: "644"
     checksum: sha256:54b88fa0c1bbd6d611d1ec55e483d05bed7a4c0e15877c05eb7d9cf240246ab8
 - name: Download lidar_centerpoint/centerpoint_ml_package.param.yaml
   become: true
   ansible.builtin.get_url:
     url: https://awf.ml.dev.web.auto/perception/models/centerpoint/v2/centerpoint_tiny_ml_package.param.yaml
-    dest: "{{ data_dir }}/lidar_centerpoint/centerpoint_tiny_ml_package.param.yaml"
+    dest: "{{ artifacts_script_download_dir }}/lidar_centerpoint/centerpoint_tiny_ml_package.param.yaml"
     mode: "644"
     checksum: sha256:6a40d2282b9c36cc547add7d016f315329c875b6f571dd5c612c6892fbaaabb5
 - name: Download lidar_centerpoint/centerpoint_sigma_ml_package.param.yaml
   become: true
   ansible.builtin.get_url:
     url: https://awf.ml.dev.web.auto/perception/models/centerpoint/v2/centerpoint_sigma_ml_package.param.yaml
-    dest: "{{ data_dir }}/lidar_centerpoint/centerpoint_sigma_ml_package.param.yaml"
+    dest: "{{ artifacts_script_download_dir }}/lidar_centerpoint/centerpoint_sigma_ml_package.param.yaml"
     mode: "644"
     checksum: sha256:9946b342a6f457b19fdfe9f02041dbd3cf0b9cefe052663e04e241ec2b6e9c76
 - name: Download lidar_centerpoint/detection_class_remapper.param.yaml
   become: true
   ansible.builtin.get_url:
     url: https://awf.ml.dev.web.auto/perception/models/centerpoint/v2/detection_class_remapper.param.yaml
-    dest: "{{ data_dir }}/lidar_centerpoint/detection_class_remapper.param.yaml"
+    dest: "{{ artifacts_script_download_dir }}/lidar_centerpoint/detection_class_remapper.param.yaml"
     mode: "644"
     checksum: sha256:c711f8875ece9b527dfe31ffc75f8c0de2e77945ef67860a959a4e04c36772d5
 - name: Download lidar_centerpoint/deploy_metadata.yaml
   become: true
   ansible.builtin.get_url:
     url: https://awf.ml.dev.web.auto/perception/models/centerpoint/v2/deploy_metadata.yaml
-    dest: "{{ data_dir }}/lidar_centerpoint/deploy_metadata.yaml"
+    dest: "{{ artifacts_script_download_dir }}/lidar_centerpoint/deploy_metadata.yaml"
     mode: "644"
     checksum: sha256:152536f053c3750b60d349800e1b983b418029d6dadf087614a00c661942a178
