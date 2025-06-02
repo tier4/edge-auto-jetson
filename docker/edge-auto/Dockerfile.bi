@@ -8,7 +8,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG ROS_DISTRO
 ARG DESCRIPTION
 
-LABEL org.opencontainers.image.description "Hello,WORLD"
+LABEL org.opencontainers.image.description="${DESCRIPTION}"
 
 ## Install apt packages
 # hadolint ignore=DL3008

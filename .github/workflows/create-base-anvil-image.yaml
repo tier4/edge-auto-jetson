@@ -109,14 +109,15 @@ jobs:
         with:
           push: true
           file: docker/edge-auto/Dockerfile.bi
-          set: |
-            *.context=${{ env.WORKSPACE_ROOT }}
+          context: ${{ env.WORKSPACE_ROOT }}
           tags: |
             ghcr.io/${{ github.repository }}/base-image:${{ steps.set-tag-name.outputs.tag-name-with-suffix }}
           build-args: |
             DESCRIPTION=${{ steps.set-description.outputs.img-description }}
             BASE_IMAGE=${{ env.BASE_IMAGE }}
             ROS_DISTRO=${{ env.ROS_DISTRO }}
+          labels: |
+            org.opencontainers.image.description=${{ steps.set-description.outputs.img-description }}
 
       - name: Build and push (standard tags)
         uses: docker/build-push-action@v5
@@ -124,8 +125,7 @@ jobs:
         with:
           push: true
           file: docker/edge-auto/Dockerfile.bi
-          set: |
-            *.context=${{ env.WORKSPACE_ROOT }}
+          context: ${{ env.WORKSPACE_ROOT }}
           tags: |
             ghcr.io/${{ github.repository }}/base-image:latest
             ghcr.io/${{ github.repository }}/base-image:${{ steps.set-tag-name.outputs.tag-name }}
@@ -133,3 +133,5 @@ jobs:
             DESCRIPTION=${{ steps.set-description.outputs.img-description }}
             BASE_IMAGE=${{ env.BASE_IMAGE }}
             ROS_DISTRO=${{ env.ROS_DISTRO }}
+          labels: |
+            org.opencontainers.image.description=${{ steps.set-description.outputs.img-description }}
