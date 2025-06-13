@@ -294,7 +294,7 @@
             state: absent
         - name: Remove log directory
           ansible.builtin.file:
-            path: "{{ ros_root_dir }}/logs"
+            path: "{{ ros_root_dir }}/log"
             state: absent
         - name: Remove build directory
           ansible.builtin.file:
