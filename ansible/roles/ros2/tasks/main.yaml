@@ -328,7 +328,11 @@
 
 - name: Install extra edge-auto-jetson dependency
   ansible.builtin.apt:
-    name: libtheora-dev
+    name:
+       - libtheora-dev
+       - libgpiod-dev
+       - gpiod
+       - nlohmann-json3-dev
     install_recommends: false
     update_cache: true
   become: true
