@@ -2,7 +2,7 @@
 set -e
 
 apt-mark unhold tier4-camera-gmsl
-/var/lib/dpkg/info/tier4-camera-gmsl.postinst configure
+dpkg --configure tier4-camera-gmsl
 
 if ! grep -q "LABEL t4_primary_c2x8" /boot/extlinux/extlinux.conf; then
   cat >> /boot/extlinux/extlinux.conf << 'EOF'
