@@ -138,6 +138,7 @@
       - python3-colcon-common-extensions
       - librange-v3-dev
       - v4l-utils
+      - nlohmann-json3-dev
       - ros-{{ ros_distro }}-launch-xml
       - ros-{{ ros_distro }}-launch-yaml
       - ros-{{ ros_distro }}-launch-testing
