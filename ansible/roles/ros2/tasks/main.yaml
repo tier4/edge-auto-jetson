@@ -138,9 +138,6 @@
       - python3-colcon-common-extensions
       - librange-v3-dev
       - v4l-utils
-      - libtheora-dev
-      - libgpiod-dev
-      - gpiod
       - nlohmann-json3-dev
       - ros-{{ ros_distro }}-launch-xml
       - ros-{{ ros_distro }}-launch-yaml
