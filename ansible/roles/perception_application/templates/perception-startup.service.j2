@@ -1,6 +1,6 @@
 [Unit]
 Description=perception launch
-After=network-online.target
+After=network-online.target c2_fw_autoupdate.service
 Requires=network-online.target
 
 # cspell: ignore pkill
