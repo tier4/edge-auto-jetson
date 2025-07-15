@@ -11,3 +11,38 @@
     dest: /etc/systemd/system/user@.service.d/user-resources.conf
     mode: 0755
   become: true
+
+- name: Install dependent package to set SYS_CAP
+  ansible.builtin.apt:
+    name: libcap2-bin
+    update_cache: true
+  become: true
+
+- name: Find the actual executable path
+  ansible.builtin.find:
+    paths: "{{ cgroup.executable_find_path }}"
+    patterns: "{{ cgroup.executable_name }}"
+    file_type: any
+    recurse: true
+  register: executable_find_output_raw
+
+- name: Determine the actual path of the executable to adapt to the case of symlink-install
+  ansible.builtin.command:
+    cmd: "readlink -f {{ item.path }}"
+  with_items: "{{ executable_find_output_raw.files }}"
+  register: executable_find_output
+
+- name: Set cap_sys_nice+ep
+  community.general.capabilities:
+    path: "{{ item.stdout }}"
+    capability: cap_sys_nice+ep
+    state: present
+  with_items: "{{ executable_find_output.results }}" # assume this conteins only one element
+  become: true
+
+- name: Copy config to /etc/ld.so.conf.d so that ld can find libraries
+  ansible.builtin.template:
+    src: cgroup_executable.conf.jinja2
+    dest: "/etc/ld.so.conf.d/{{ cgroup.executable_name }}.conf"
+    mode: 0644
+  become: true
