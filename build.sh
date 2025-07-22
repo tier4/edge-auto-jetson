@@ -15,7 +15,7 @@ if [ "$perception_type" = "addon" ]; then
 fi
 
 colcon build \
-    --symlink-install --cmake-force-configure \
+    --merge-install --cmake-force-configure \
     --packages-up-to edge_auto_jetson_launch \
     --cmake-args -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-w" -DCMAKE_CUDA_STANDARD=14 -DCMAKE_CUDA_ARCHITECTURES=87 -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc -DBUILD_TESTING=OFF \
     -DPython3_EXECUTABLE="$(which python3)" \
