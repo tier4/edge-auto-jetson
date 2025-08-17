@@ -1,0 +1,6 @@
+#jinja2: trim_blocks: False
+/opt/ros/humble/lib
+/opt/ros/humble/lib/aarch64-linux-gnu
+{%- for item in  executable_find_output.results %}
+{{ item.stdout | dirname }}
+{%- endfor %}
