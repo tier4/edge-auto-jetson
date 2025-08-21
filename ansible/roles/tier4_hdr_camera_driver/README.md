@@ -14,10 +14,12 @@ The TIER4 HDR Camera Driver provides support for GMSL (Gigabit Multimedia Serial
 
 ## Role Variables
 
-| Name                       | Required | Description                                                 |
-| -------------------------- | -------- | ----------------------------------------------------------- |
-| camera_driver_repo         | yes      | URL to the GitHub API endpoint for the release assets       |
-| camera_driver_download_dir | yes      | Local directory where the driver package will be downloaded |
+| Name                       | Required | Description                                                                                                                  |
+| -------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| camera_driver_repo         | yes      | URL to the GitHub API endpoint for the release assets                                                                        |
+| camera_driver_download_dir | yes      | Local directory where the driver package will be downloaded                                                                  |
+| exposure_time              | no       | Exposure length in microseconds to be set in the driver configuration file (default: `11000`)                                |
+| distortion_correction      | no       | Enable/disable the distortion correction function supported by the camera hardware (`1`: Enable, `0`: Disable. default: `0`) |
 
 ## Installation Process
 
