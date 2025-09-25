@@ -49,10 +49,6 @@ repositories:
     type: git
     url: https://github.com/ros-perception/image_transport_plugins.git
     version: foxy-devel
-  autoware/autoware_adapi_msgs:
-    type: git
-    url: https://github.com/autowarefoundation/autoware_adapi_msgs.git
-    version: 87fc41f07bc7054978ebedbfd30d5f88d18eddce
   # build dependencies
   cudnn_cmake_module:
     type: git
