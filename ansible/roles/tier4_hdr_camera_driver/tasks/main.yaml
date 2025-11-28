@@ -10,25 +10,12 @@
     driver_deb_name: "{{ item.name }}"
   when: item.name | regex_search('tier4-camera-gmsl_(.+)_arm64.deb')
 
-- name: Parse download URL for SDK
-  loop: "{{ github_api_return_info.json.assets }}"
-  ansible.builtin.set_fact:
-    sdk_deb_download_url: "{{ item.browser_download_url }}"
-    sdk_deb_name: "{{ item.name }}"
-  when: item.name | regex_search('t4cam_sdk-(.+)-rqx58g.deb')
-
 - name: Download driver deb file from public repo
   ansible.builtin.uri:
     url: "{{ driver_deb_download_url }}"
     dest: "{{ camera_driver_download_dir }}/{{ driver_deb_name }}"
-    mode: 0644
-
-- name: Download SDK deb file from public repo
-  ansible.builtin.uri:
-    url: "{{ sdk_deb_download_url }}"
-    dest: "{{ camera_driver_download_dir }}/{{ sdk_deb_name }}"
-    mode: 0644
-  when: sdk_deb_download_url is defined
+    mode: 064
+    status_code: [200, 304]
 
 - name: Install apt packages
   become: true
@@ -42,84 +29,63 @@
       - dkms
     update_cache: true
 
-- name: Setup camera driver and SDK
+- name: Unpack camera driver deb without triggering postinst
+  block:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: yes
+      become: true
+
+    - name: Unpack deb
+      ansible.builtin.command: |
+        dpkg --unpack "{{ camera_driver_download_dir }}/{{ driver_deb_name }}"
+      register: driver_deb_unpack_result
+      become: true
+      changed_when: driver_deb_unpack_result.rc == 0
+      failed_when: false
+
+    - name: Hold the deb configuration
+      ansible.builtin.command: |
+        apt-mark hold tier4-camera-gmsl
+      register: driver_apt_mark_result
+      become: true
+      changed_when: driver_apt_mark_result.rc == 0
+      failed_when: false
+
+- name: Create camera driver installer script
+  become: true
+  ansible.builtin.template:
+    src: camera-driver-installer.sh.j2
+    dest: /usr/local/bin/camera-driver-installer.sh
+    mode: "0755"
+    owner: root
+    group: root
+
+- name: Create systemd service file
+  become: true
+  ansible.builtin.template:
+    src: camera-driver-installer.service.j2
+    dest: /etc/systemd/system/camera-driver-installer.service
+    mode: "0644"
+    owner: root
+    group: root
+
+- name: Enable camera driver installer service
   become: true
   block:
-    - name: Install driver from deb file
-      ansible.builtin.apt:
-        deb: "{{ camera_driver_download_dir }}/{{ driver_deb_name }}"
-        state: present
-    - name: Post process
-      ansible.builtin.shell:
-        cmd: |
-          /opt/nvidia/jetson-io/config-by-hardware.py -n 2="TIERIV ISX021 GMSL2 Camera Device Tree Overlay"
-        # noqa no-changed-when
-        # TODO: check dtb file
-    - name: Install SDK from deb file
-      ansible.builtin.apt:
-        deb: "{{ camera_driver_download_dir }}/{{ sdk_deb_name }}"
-        state: present
-      when: sdk_deb_download_url is defined
+    - name: Create systemd service directory if it doesn't exist
+      ansible.builtin.file:
+        path: /etc/systemd/system/multi-user.target.wants
+        state: directory
+        mode: "0755"
+        owner: root
+        group: root
 
-- name: Setup C1 configuration
-  block:
-    - name: "{{ block_name }} : Change trigger mode to Fsync mode"
-      include_tasks: mod_or_add.yaml
-      vars:
-        target_item: trigger_mode
-        target_val: "1"
-    # Set the same value to min/mid/max exposure time
-    # so that exposure time can be estimated under any brightness condition
-    - name: "{{ block_name }} : Fix exposure time"
-      block:
-        - name: "{{ block_name }} : Set min exposure"
-          include_tasks: mod_or_add.yaml
-          vars:
-            target_item: shutter_time_min
-            target_val: "{{ exposure_time }}"
-        - name: "{{ block_name }} : Set mid exposure"
-          include_tasks: mod_or_add.yaml
-          vars:
-            target_item: shutter_time_mid
-            target_val: "{{ exposure_time }}"
-        - name: "{{ block_name }} : Set max exposure"
-          include_tasks: mod_or_add.yaml
-          vars:
-            target_item: shutter_time_max
-            target_val: "{{ exposure_time }}"
-  vars:
-    target_file: /etc/modprobe.d/tier4-isx021.conf
-    config_prefix: options tier4_isx021
-    block_name: ISX021 configuration
-
-- name: Setup C2 configuration
-  block:
-    - name: "{{ block_name }} : Change trigger mode to Fsync mode"
-      include_tasks: mod_or_add.yaml
-      vars:
-        target_item: trigger_mode
-        target_val: "1"
-
-    # Set the same value to min/mid/max exposure time
-    # so that exposure time can be estimated under any brightness condition
-    - name: "{{ block_name }} : Fix exposure time"
-      block:
-        - name: "{{ block_name }} : Set min exposure"
-          include_tasks: mod_or_add.yaml
-          vars:
-            target_item: shutter_time_min
-            target_val: "{{ exposure_time }}"
-        - name: "{{ block_name }} : Set mid exposure"
-          include_tasks: mod_or_add.yaml
-          vars:
-            target_item: shutter_time_mid
-            target_val: "{{ exposure_time }}"
-        - name: "{{ block_name }} : Set max exposure"
-          include_tasks: mod_or_add.yaml
-          vars:
-            target_item: shutter_time_max
-            target_val: "{{ exposure_time }}"
-  vars:
-    target_file: /etc/modprobe.d/tier4-imx490.conf
-    config_prefix: options tier4_imx490
-    block_name: IMX490 configuration
+    - name: Create systemd enable symlink manually
+      ansible.builtin.file:
+        src: /etc/systemd/system/camera-driver-installer.service
+        dest: /etc/systemd/system/multi-user.target.wants/camera-driver-installer.service
+        state: link
+        force: yes
+        owner: root
+        group: root
