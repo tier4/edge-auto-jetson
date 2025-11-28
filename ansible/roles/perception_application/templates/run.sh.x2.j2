@@ -1,0 +1,43 @@
+#!/bin/bash
+
+echo "Starting Perception Application..."
+echo "Importing Autoware environment variables..."
+source {{ autoware_env_dir }}/autoware.env && true
+source {{ autoware_env_dir }}/vehicle.env
+source {{ autoware_env_dir }}/jetson.env
+
+source /opt/ros/humble/setup.bash
+source {{ perception_application_base_path }}/{{ perception_application_directory_name }}/install/setup.bash
+
+if [ "$VEHICLE_MODEL" == "j6_gen2" ]; then
+    echo "Waiting for MGBE1..."
+    while [[ ! -e /var/run/mgbe1-ready ]]; do
+        sleep 1
+    done
+    echo "MGBE1 is ready!"
+fi
+
+
+echo "All devices checked, environment sourced. Launching application..."
+
+{% if perception_type == "tlr" %}
+ros2 launch edge_auto_jetson_launch edge_auto_multi_launch_engine.launch.py \
+      build_engine_only:=true object_recognition_camera_ids:=[0] \
+      traffic_light_camera_ids:=[0] camera_driver_camera_ids:=[] live_sensor:=false \
+      container_name:="none" use_multithread:=true yolox_precision:=int8
+{% else %}
+ros2 launch edge_auto_jetson_launch edge_auto_multi_launch_engine.launch.py \
+      build_engine_only:=true object_recognition_camera_ids:=[0] \
+      traffic_light_camera_ids:=[] camera_driver_camera_ids:=[] live_sensor:=false \
+      container_name:="none" use_multithread:=true yolox_precision:=int8
+{% endif %}
+
+{% for i in range(video_num) %}
+echo "Waiting for camera device /dev/video{{ i }}..."
+while [[ ! -e /dev/video{{ i }} ]]; do
+    sleep 1
+done
+echo "Camera device /dev/video{{ i }} is ready!"
+{%endfor%}
+
+ros2 launch edge_auto_jetson_launch edge_auto_jetson.launch.xml
