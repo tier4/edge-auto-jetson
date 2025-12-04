@@ -1,0 +1,29 @@
+#!/bin/bash
+set -e
+
+apt-mark unhold tier4-camera-gmsl
+dpkg --configure tier4-camera-gmsl
+
+if ! grep -q "LABEL t4_primary_c2x8" /boot/extlinux/extlinux.conf; then
+  cat >> /boot/extlinux/extlinux.conf << 'EOF'
+LABEL t4_primary_c2x8
+      MENU LABEL Custom Header Config: <CSI TIERIV GMSL2 Camera Device Tree Overlay: C2x8>
+      LINUX /boot/Image
+      INITRD /boot/initrd
+      FDT /boot/dtb/kernel_tegra234-orin-agx-cti-AGX201.dtb
+      OVERLAYS /boot/tier4-imx490-gmsl-device-tree-overlay-anvil-r36.dtbo
+      APPEND ${cbootargs} root=/dev/mmcblk0p1 rw rootwait rootfstype=ext4 mminit_loglevel=4 console=ttyTCU0,115200 console=ttyAMA0,115200 firmware_class.path=/etc/firmware fbcon=map:0 nospectre_bhb video=efifb:off console=tty0
+EOF
+fi
+
+sed -i "s|root=/dev/mmcblk0p1|root=$(findmnt / -o SOURCE -n)|" "/boot/extlinux/extlinux.conf"
+
+sed -i 's/^DEFAULT primary/DEFAULT t4_primary_c2x8/' /boot/extlinux/extlinux.conf
+
+sed -i 's/options tier4_imx490 trigger_mode=0 enable_auto_exposure=1 enable_distortion_correction=1/options tier4_imx490 trigger_mode=1 fsync_mfp=7 enable_auto_exposure=1 enable_distortion_correction={{ distortion_correction }} shutter_time_min={{ exposure_time }} shutter_time_max={{ exposure_time }}/' /etc/modprobe.d/tier4-imx490.conf
+
+systemctl disable camera-driver-installer.service
+
+sync
+
+reboot

@@ -1,32 +1,21 @@
-- name: Install dependencies for setting up apt sources
-  become: true
-  ansible.builtin.apt:
-    name:
-      - curl
-      - gnupg
-      - lsb-release
-    update_cache: true
-
-# sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 - name: Authorize ROS GPG key
   become: true
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/ros/rosdistro/master/ros.key
     dest: /usr/share/keyrings/ros-archive-keyring.gpg
-    mode: 644
+    mode: 0644
 
 - name: Save result of 'dpkg --print-architecture'
   ansible.builtin.command: dpkg --print-architecture
   register: ros2__deb_architecture
   changed_when: false
 
-- name: Save result of 'source /etc/os-release && echo $UBUNTU_CODENAME'
+- name: Save result of Ubuntu codename
   ansible.builtin.shell: bash -c 'source /etc/os-release && echo $UBUNTU_CODENAME'
   register: ros2__ubuntu_codename
   changed_when: false
 
-# echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(source /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
-- name: Add ROS 2 apt repository to source list
+- name: Add ROS 2 apt repository
   become: true
   ansible.builtin.apt_repository:
     repo: deb [arch={{ ros2__deb_architecture.stdout }} signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu {{ ros2__ubuntu_codename.stdout }} main
@@ -34,41 +23,189 @@
     state: present
     update_cache: true
 
-- name: Install ros-{{ rosdistro + '-' + installation_type }}
+- name: Install basic dependencies
   become: true
   ansible.builtin.apt:
-    name: ros-{{ rosdistro }}-{{ installation_type }}
-    state: latest
+    name:
+      - curl
+      - gnupg
+      - lsb-release
+      - apt-utils
+      - build-essential
+      - git
+    state: present
     update_cache: true
 
-- name: Install rosdep
+- name: Install ROS2 development dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - cmake
+      - libbullet-dev
+      - libpython3-dev
+      - python3-flake8
+      - python3-pip
+      - python3-numpy
+      - python3-pytest-cov
+      - python3-setuptools
+      - python3-vcstool
+      - python3-rosinstall-generator
+      - libasio-dev
+      - libtinyxml2-dev
+      - libcunit1-dev
+      - libpugixml-dev
+      - libgeographic-dev
+      - libgtest-dev
+      - libcgal-dev
+      - libfmt-dev
+    state: present
+
+- name: Install EmPy with specific version
+  become: true
+  ansible.builtin.pip:
+    name: empy==3.3.4
+    extra_args: --no-cache-dir
+
+- name: Install Python dependencies
+  become: true
+  ansible.builtin.pip:
+    name:
+      - argcomplete
+      - pytest
+      - pytest-repeat
+      - pytest-rerunfailures
+      - scikit-build
+      - cmake==3.31.6
+    extra_args: --upgrade --no-cache-dir
+
+- name: Install Python code quality tools
+  become: true
+  ansible.builtin.pip:
+    name:
+      - flake8-blind-except
+      - flake8-builtins
+      - flake8-class-newline
+      - flake8-comprehensions
+      - flake8-deprecated
+      - flake8-docstrings
+      - flake8-import-order
+      - flake8-quotes
+    extra_args: --upgrade --no-cache-dir
+
+- name: Check if NVIDIA L4T source file exists
+  ansible.builtin.stat:
+    path: /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
+  register: nvidia_l4t_source
+
+- name: Backup NVIDIA L4T apt source file
+  become: true
+  ansible.builtin.command: mv /etc/apt/sources.list.d/nvidia-l4t-apt-source.list /etc/apt/sources.list.d/nvidia-l4t-apt-source.list.bak
+  when: nvidia_l4t_source.stat.exists
+  register: nvidia_source_backup
+
+- name: Update apt cache after backup
+  become: true
+  ansible.builtin.apt:
+    update_cache: yes
+  when: nvidia_source_backup.changed
+
+- name: Remove all OpenCV packages
+  become: true
+  ansible.builtin.apt:
+    name: "*opencv*"
+    state: absent
+    purge: yes
+  register: opencv_removed
+
+- name: Update apt cache after OpenCV removal
+  become: true
+  ansible.builtin.apt:
+    update_cache: yes
+  when: opencv_removed.changed
+
+- name: Install ROS2 {{ ros_distro }}
+  become: true
+  ansible.builtin.apt:
+    name: ros-{{ ros_distro }}-{{ installation_type }}
+    state: present
+    update_cache: true
+
+- name: Install ROS2 tools
   become: true
   ansible.builtin.apt:
     name:
       - python3-rosdep
-    state: latest
-    update_cache: true
-
-- name: Install colcon-common-extensions
-  become: true
-  ansible.builtin.apt:
-    name:
       - python3-colcon-common-extensions
-    state: latest
-    update_cache: true
+      - librange-v3-dev
+      - v4l-utils
+      - nlohmann-json3-dev
+      - ros-{{ ros_distro }}-launch-xml
+      - ros-{{ ros_distro }}-launch-yaml
+      - ros-{{ ros_distro }}-launch-testing
+      - ros-{{ ros_distro }}-launch-testing-ament-cmake
+      - ros-{{ ros_distro }}-demo-nodes-cpp
+      - ros-{{ ros_distro }}-demo-nodes-py
+      - ros-{{ ros_distro }}-example-interfaces
+      - ros-{{ ros_distro }}-camera-calibration-parsers
+      - ros-{{ ros_distro }}-camera-info-manager
+      - ros-{{ ros_distro }}-cv-bridge
+      - ros-{{ ros_distro }}-v4l2-camera
+      - ros-{{ ros_distro }}-vision-opencv
+      - ros-{{ ros_distro }}-libstatistics-collector
+      - ros-{{ ros_distro }}-geographic-msgs
+      - ros-{{ ros_distro }}-vision-msgs
+      - ros-{{ ros_distro }}-image-geometry
+      - ros-{{ ros_distro }}-image-pipeline
+      - ros-{{ ros_distro }}-image-transport
+      - ros-{{ ros_distro }}-compressed-image-transport
+      - ros-{{ ros_distro }}-compressed-depth-image-transport
+      - ros-{{ ros_distro }}-pcl-msgs
+      - ros-{{ ros_distro }}-perception-pcl
+      - ros-{{ ros_distro }}-logging-demo
+      - ros-{{ ros_distro }}-udp-msgs
+      - ros-{{ ros_distro }}-angles
+      - ros-{{ ros_distro }}-diagnostics
+      - ros-{{ ros_distro }}-tf-transformations
+      - ros-{{ ros_distro }}-mrt-cmake-modules
+      - ros-{{ ros_distro }}-gtest-vendor
+      - ros-{{ ros_distro }}-grid-map
+      - ros-{{ ros_distro }}-filters
+      - ros-{{ ros_distro }}-nav2-msgs
+      - ros-{{ ros_distro }}-tf2-eigen
+      - ros-{{ ros_distro }}-ament-cmake-clang-format
+      - ros-{{ ros_distro }}-rmw-cyclonedds-cpp
+    state: present
+    update_cache: yes
 
-- name: Install rmw-cyclonedds-cpp
-  become: true
-  ansible.builtin.apt:
-    name:
-      - ros-{{ rosdistro }}-rmw-cyclonedds-cpp
-    state: latest
-    update_cache: true
-
-- name: Add PATH to .bashrc
+- name: Add ROS2 setup to .bashrc
   ansible.builtin.lineinfile:
     dest: ~/.bashrc
-    line: source /opt/ros/{{ rosdistro }}/setup.bash
+    line: source /opt/ros/{{ ros_distro }}/setup.bash
     state: present
     create: true
     mode: 0644
+
+- name: Initialize rosdep
+  become: true
+  ansible.builtin.command: rosdep init
+  args:
+    creates: /etc/ros/rosdep/sources.list.d/20-default.list
+  ignore_errors: true
+
+- name: Update rosdep
+  ansible.builtin.command: rosdep update
+  changed_when: false
+
+- name: Restore NVIDIA L4T apt source file
+  become: true
+  ansible.builtin.command: mv /etc/apt/sources.list.d/nvidia-l4t-apt-source.list.bak /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
+  args:
+    removes: /etc/apt/sources.list.d/nvidia-l4t-apt-source.list.bak
+  when: nvidia_source_backup.changed
+  register: nvidia_source_restore
+
+- name: Update apt cache after restoring NVIDIA sources
+  become: true
+  ansible.builtin.apt:
+    update_cache: yes
+  when: nvidia_source_restore.changed

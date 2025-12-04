@@ -1,0 +1,14 @@
+[Unit]
+Description=Camera Driver Install Service
+After=nv-l4t-bootloader-config.service
+Before=otaclient.service graphical.target gdm.service lightdm.service sddm.service perception-startup.service
+RefuseManualStart=true
+RefuseManualStop=true
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/camera-driver-installer.sh
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target

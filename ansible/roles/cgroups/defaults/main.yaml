@@ -1,0 +1,3 @@
+cgroup:
+  executable_find_path: "{{ perception_application_base_path }}/{{ perception_application_directory_name }}/install"
+  executable_name: sensor_trigger_exe

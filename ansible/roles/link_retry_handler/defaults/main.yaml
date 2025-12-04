@@ -1,0 +1,2 @@
+link_retry_handler_ping_dst_ip: 192.168.30.11
+link_retry_handler_network_port: mgbe1

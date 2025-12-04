@@ -1,0 +1,17 @@
+# cspell:ignore libgpiod
+- name: Install gpio library
+  ansible.builtin.apt:
+    name:
+      - libgpiod-dev
+    update_cache: true
+  become: true
+
+- name: Add user to gpio group
+  ansible.builtin.command:
+    cmd: gpasswd -a {{ sensor_trigger_for_anvil_user_name }} gpio
+  become: true
+
+- name: Add user to i2c group
+  ansible.builtin.command:
+    cmd: gpasswd -a {{ sensor_trigger_for_anvil_user_name }} i2c
+  become: true

@@ -19,7 +19,7 @@ repositories:
   ros2_v4l2_camera:
     type: git
     url: https://github.com/tier4/ros2_v4l2_camera.git
-    version: 37b5fd0b7f7df173e77ed0dd48242223fad9c0cb
+    version: feature/for_l4t36
   autoware.universe:
     type: git
     url: https://github.com/autowarefoundation/autoware.universe.git

@@ -1,0 +1,7 @@
+- name: Add a routable file
+  ansible.builtin.template:
+    src: 50-routable-hooks.j2
+    dest: /etc/networkd-dispatcher/routable.d/50-routable-hooks
+    owner: root
+    mode: 0755
+  become: true
