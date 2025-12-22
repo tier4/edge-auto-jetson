@@ -171,6 +171,7 @@
       - ros-{{ ros_distro }}-grid-map
       - ros-{{ ros_distro }}-filters
       - ros-{{ ros_distro }}-nav2-msgs
+      - ros-{{ ros_distro }}-tf2-ros
       - ros-{{ ros_distro }}-tf2-eigen
       - ros-{{ ros_distro }}-ament-cmake-clang-format
       - ros-{{ ros_distro }}-rmw-cyclonedds-cpp
