@@ -33,6 +33,8 @@
       - apt-utils
       - build-essential
       - git
+      - rustc
+      - cargo
     state: present
     update_cache: true
 
