@@ -1,0 +1,164 @@
+# ROS 2 source build for Ubuntu 22.04 (e.g. Jetson). Based on:
+# https://docs.ros.org/en/jazzy/Installation/Alternatives/Ubuntu-Development-Setup.html
+
+- name: Set absolute path for source workspace
+  ansible.builtin.set_fact:
+    source_workspace_abs: "{{ source_workspace | expanduser }}"
+
+# --- Set locale (UTF-8) ---
+- name: Install locales for source build
+  become: true
+  ansible.builtin.apt:
+    name: locales
+    update_cache: true
+
+- name: Confirm locale
+  block:
+    - name: Generate locale files
+      ansible.builtin.command:
+        cmd: locale-gen en_US en_US.UTF-8
+    - name: Update locale settings
+      ansible.builtin.command:
+        cmd: update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+  become: true
+
+# --- Enable required repositories ---
+- name: Install software-properties-common for universe repo
+  become: true
+  ansible.builtin.apt:
+    name: software-properties-common
+    update_cache: true
+
+- name: Enable Ubuntu Universe repository
+  become: true
+  ansible.builtin.command: add-apt-repository -y universe
+  changed_when: true
+
+# --- ros-apt-source (ROS 2 apt keys and source list) ---
+- name: Get latest ros-apt-source version from GitHub
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest
+    return_content: true
+  register: ros_apt_source_release
+  changed_when: false
+
+- name: Set ros-apt-source version fact
+  ansible.builtin.set_fact:
+    ros_apt_source_version: "{{ ros_apt_source_release.json.tag_name | default('') }}"
+
+- name: Get Ubuntu codename for ros-apt-source package
+  ansible.builtin.shell: . /etc/os-release && echo ${UBUNTU_CODENAME:-${VERSION_CODENAME}}
+  register: ubuntu_codename
+  changed_when: false
+
+- name: Download ros2-apt-source .deb package
+  ansible.builtin.get_url:
+    url: "https://github.com/ros-infrastructure/ros-apt-source/releases/download/{{ ros_apt_source_version }}/ros2-apt-source_{{ ros_apt_source_version }}_{{ ubuntu_codename.stdout }}_all.deb"
+    dest: /tmp/ros2-apt-source.deb
+    force: true
+
+- name: Install ros2-apt-source package
+  become: true
+  ansible.builtin.dpkg:
+    path: /tmp/ros2-apt-source.deb
+    state: present
+
+# --- Install development tools ---
+- name: Install ROS 2 development tools and Python dev packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - python3-flake8-blind-except
+      - python3-flake8-class-newline
+      - python3-flake8-deprecated
+      - python3-mypy
+      - python3-pip
+      - python3-pytest
+      - python3-pytest-cov
+      - python3-pytest-mock
+      - python3-pytest-repeat
+      - python3-pytest-rerunfailures
+      - python3-pytest-runner
+      - python3-pytest-timeout
+      - ros-dev-tools
+    update_cache: true
+    state: present
+
+- name: Upgrade system packages before rosdep install
+  become: true
+  ansible.builtin.apt:
+    upgrade: safe
+    update_cache: true
+
+# --- Get ROS 2 code ---
+- name: Create ROS 2 source workspace directory
+  ansible.builtin.file:
+    path: "{{ source_workspace_abs }}/src"
+    state: directory
+    mode: "0755"
+
+- name: Import ROS 2 repos with vcs
+  ansible.builtin.shell:
+    cmd: vcs import --input https://raw.githubusercontent.com/ros2/ros2/{{ rosdistro }}/ros2.repos src
+    chdir: "{{ source_workspace_abs }}"
+  environment:
+    LANG: en_US.UTF-8
+
+# --- rosdep init (once) and update ---
+- name: Check if rosdep has been initialized
+  ansible.builtin.stat:
+    path: /etc/ros/rosdep/sources.list.d/20-default.list
+  register: rosdep_default_list
+
+- name: Initialize rosdep
+  become: true
+  ansible.builtin.command: rosdep init
+  when: not rosdep_default_list.stat.exists
+
+- name: Update rosdep
+  ansible.builtin.command: rosdep update
+  changed_when: true
+
+# --- Install dependencies with rosdep ---
+- name: Install workspace dependencies with rosdep
+  become: true
+  ansible.builtin.shell: >
+    rosdep install --from-paths src --ignore-src -y
+    --skip-keys "fastcdr rti-connext-dds-6.0.1 urdfdom_headers"
+  args:
+    chdir: "{{ source_workspace_abs }}"
+  environment:
+    LANG: en_US.UTF-8
+
+# --- Build with colcon ---
+- name: Build ROS 2 workspace with colcon
+  ansible.builtin.shell:
+    cmd: colcon build --symlink-install
+    chdir: "{{ source_workspace_abs }}"
+  environment:
+    LANG: en_US.UTF-8
+  register: colcon_build
+  changed_when: colcon_build.rc == 0
+
+# --- Install to /opt/ros/<distro> (same path as deb install) ---
+- name: Create /opt/ros/{{ rosdistro }} directory
+  ansible.builtin.file:
+    path: "/opt/ros/{{ rosdistro }}"
+    state: directory
+    mode: "0755"
+  become: true
+
+- name: Copy install to /opt/ros (dereference symlinks for standalone install)
+  ansible.builtin.shell:
+    cmd: "cp -rL {{ source_workspace_abs }}/install/* /opt/ros/{{ rosdistro }}/"
+  become: true
+  changed_when: true
+
+# --- Setup environment in .bashrc (same as ros2 deb role) ---
+- name: Add /opt/ros/{{ rosdistro }}/setup.bash to .bashrc
+  ansible.builtin.lineinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    line: "source /opt/ros/{{ rosdistro }}/setup.bash"
+    state: present
+    create: true
+    mode: "0644"

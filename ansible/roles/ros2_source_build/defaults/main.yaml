@@ -1,0 +1,5 @@
+# ROS distro to build from source (e.g. jazzy for Ubuntu 22.04).
+rosdistro: jazzy
+
+# Workspace directory (e.g. ~/ros2_jazzy).
+source_workspace: "~/ros2_{{ rosdistro }}"
