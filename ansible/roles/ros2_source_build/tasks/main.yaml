@@ -53,7 +53,7 @@
 
 - name: Download ros2-apt-source .deb package
   ansible.builtin.get_url:
-    url: "https://github.com/ros-infrastructure/ros-apt-source/releases/download/{{ ros_apt_source_version }}/ros2-apt-source_{{ ros_apt_source_version }}_{{ ubuntu_codename.stdout }}_all.deb"
+    url: "https://github.com/ros-infrastructure/ros-apt-source/releases/download/{{ ros_apt_source_version }}/ros2-apt-source_{{ ros_apt_source_version }}.{{ ubuntu_codename.stdout }}_all.deb"
     dest: /tmp/ros2-apt-source.deb
     force: true
 
@@ -116,6 +116,7 @@
   when: not rosdep_default_list.stat.exists
 
 - name: Update rosdep
+  become: true
   ansible.builtin.command: rosdep update
   changed_when: true
 
