@@ -59,8 +59,8 @@
 
 - name: Install ros2-apt-source package
   become: true
-  ansible.builtin.dpkg:
-    path: /tmp/ros2-apt-source.deb
+  ansible.builtin.apt:
+    deb: /tmp/ros2-apt-source.deb
     state: present
 
 # --- Install development tools ---
