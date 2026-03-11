@@ -1,6 +1,6 @@
 # ros2_source_build
 
-This role builds [ROS 2](https://www.ros.org/) from source, following the [Jazzy Ubuntu Development Setup](https://docs.ros.org/en/jazzy/Installation/Alternatives/Ubuntu-Development-Setup.html). Intended for Ubuntu 22.04 (e.g. Jetson) where a binary distribution may not be available or you need a source install.
+This role builds [ROS 2](https://www.ros.org/) from source, following the [Jazzy Ubuntu Development Setup](https://docs.ros.org/en/jazzy/Installation/Alternatives/Ubuntu-Development-Setup.html).
 
 It will:
 
@@ -31,13 +31,6 @@ roles:
     vars:
       rosdistro: jazzy
       # source_workspace: "~/ros2_jazzy"  # optional
-```
-
-For a Jetson playbook that uses Jazzy from source instead of the `ros2` (deb) role:
-
-```yaml
-roles:
-  - role: ros2_source_build
 ```
 
 Default `rosdistro` is `jazzy`; the workspace is built at `~/ros2_jazzy` and the result is installed to `/opt/ros/jazzy/` so that `source /opt/ros/jazzy/setup.bash` works like the deb install.
