@@ -8,10 +8,10 @@ It will:
 - Enable Universe and ROS 2 apt sources (ros-apt-source)
 - Install development tools (ros-dev-tools, vcstool, colcon, pytest, etc.)
 - Clone the ROS 2 repos via `vcs import` and run `rosdep install`
-- Clone repos with `vcs import` into **`/opt/ros/{{ rosdistro }}/src`**, run rosdep and **`colcon build`** with `--install-base /opt/ros/{{ rosdistro }}` (src, build, install all under `/opt/ros/<distro>/`)
-- Add `source /opt/ros/{{ rosdistro }}/setup.bash` to `~/.bashrc`
+- Clone repos with `vcs import` into **`/opt/ros/{{ rosdistro }}/src`**, run rosdep and **`colcon build`** (no `--install-base`; install goes to `.../install/`)
+- Add `source /opt/ros/{{ rosdistro }}/install/setup.bash` to `~/.bashrc`
 
-You can use `source /opt/ros/<distro>/setup.bash` (e.g. `/opt/ros/jazzy/setup.bash`) as with the standard deb-based install.
+Use `source /opt/ros/<distro>/install/setup.bash` (path differs from deb install, which uses `.../setup.bash`).
 
 **Cyclone DDS (rmw_cyclonedds_cpp)** is already included in the official [ros2.repos](https://raw.githubusercontent.com/ros2/ros2/jazzy/ros2.repos) (`eclipse-cyclonedds/cyclonedds` and `ros2/rmw_cyclonedds`).
 
@@ -21,7 +21,7 @@ You can use `source /opt/ros/<distro>/setup.bash` (e.g. `/opt/ros/jazzy/setup.ba
 | ----------------- | -------- | -------------------------------------------------------- |
 | rosdistro         | false    | ROS distro to build (e.g. `jazzy`). Default: `jazzy`.     |
 
-The workspace (src, build, install) is under **`/opt/ros/{{ rosdistro }}/`**.
+- **Workspace** (src, build, install/): **`/opt/ros/{{ rosdistro }}/`**. No `--install-base` so colcon writes to `install/` and does not put `COLCON_IGNORE` in the root.
 
 
 ## Example (in your playbook)
@@ -33,4 +33,4 @@ roles:
       rosdistro: jazzy
 ```
 
-Default `rosdistro` is `jazzy`; src, build, and install all live under `/opt/ros/jazzy/`, and `source /opt/ros/jazzy/setup.bash` works like the deb install.
+Default `rosdistro` is `jazzy`; workspace is `/opt/ros/jazzy/` (src, build, install/). Source with `source /opt/ros/jazzy/install/setup.bash`.

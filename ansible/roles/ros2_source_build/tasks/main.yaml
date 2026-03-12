@@ -1,10 +1,9 @@
 # ROS 2 source build for Ubuntu 22.04 (e.g. Jetson). Based on:
 # https://docs.ros.org/en/jazzy/Installation/Alternatives/Ubuntu-Development-Setup.html
 
-- name: Set ROS install base and source directories
+- name: Set ROS workspace directory
   ansible.builtin.set_fact:
     ros_base_dir: "/opt/ros/{{ rosdistro }}"
-    ros_src_dir: "/opt/ros/{{ rosdistro }}/src"
 
 # --- Set locale (UTF-8) ---
 - name: Install locales for source build
@@ -91,17 +90,10 @@
     upgrade: safe
     update_cache: true
 
-# --- Get ROS 2 code (under /opt/ros/<distro>) ---
-- name: Create base directory
+# --- Get ROS 2 code ---
+- name: Create base and source directory
   ansible.builtin.file:
-    path: "{{ ros_base_dir }}"
-    state: directory
-    mode: "0755"
-  become: true
-
-- name: Create source directory
-  ansible.builtin.file:
-    path: "{{ ros_src_dir }}"
+    path: "{{ ros_base_dir }}/src"
     state: directory
     mode: "0755"
   become: true
@@ -141,10 +133,10 @@
   environment:
     LANG: en_US.UTF-8
 
-# --- Build the code ---
+# --- Build the code---
 - name: Colcon build
   ansible.builtin.shell:
-    cmd: "colcon build --merge-install --install-base {{ ros_base_dir }} --cmake-args -DCMAKE_BUILD_TYPE=Release"
+    cmd: "colcon build --merge-install --cmake-args -DCMAKE_BUILD_TYPE=Release"
     chdir: "{{ ros_base_dir }}"
   environment:
     LANG: en_US.UTF-8
@@ -152,11 +144,11 @@
   changed_when: colcon_build.rc == 0
   become: true
 
-# --- Setup environment in .bashrc (same as ros2 deb role) ---
+# --- Setup environment in .bashrc ---
 - name: Add setup.bash to .bashrc
   ansible.builtin.lineinfile:
     path: "{{ ansible_env.HOME }}/.bashrc"
-    line: "source {{ ros_base_dir }}/setup.bash"
+    line: "source {{ ros_base_dir }}/install/setup.bash"
     state: present
     create: true
     mode: "0644"
