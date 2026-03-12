@@ -1,7 +1,7 @@
 # ROS 2 source build for Ubuntu 22.04 (e.g. Jetson). Based on:
 # https://docs.ros.org/en/jazzy/Installation/Alternatives/Ubuntu-Development-Setup.html
 
-- name: Set ROS workspace directory
+- name: Set ROS install directory (same path as deb)
   ansible.builtin.set_fact:
     ros_base_dir: "/opt/ros/{{ rosdistro }}"
 
@@ -91,20 +91,18 @@
     update_cache: true
 
 # --- Get ROS 2 code ---
-- name: Create base and source directory
+- name: Create workspace and source directory
   ansible.builtin.file:
-    path: "{{ ros_base_dir }}/src"
+    path: "{{ source_build_workspace_dir }}/src"
     state: directory
     mode: "0755"
-  become: true
 
 - name: Import ROS 2 repos with vcs
   ansible.builtin.shell:
     cmd: vcs import --input https://raw.githubusercontent.com/ros2/ros2/{{ rosdistro }}/ros2.repos src
-    chdir: "{{ ros_base_dir }}"
+    chdir: "{{ source_build_workspace_dir }}"
   environment:
     LANG: en_US.UTF-8
-  become: true
 
 # --- rosdep init (once) and update ---
 - name: Check if rosdep has been initialized
@@ -118,7 +116,6 @@
   when: not rosdep_default_list.stat.exists
 
 - name: Update rosdep
-  become: true
   ansible.builtin.command: rosdep update
   changed_when: true
 
@@ -129,34 +126,19 @@
     rosdep install --from-paths src --ignore-src -y
     --skip-keys "fastcdr rti-connext-dds-6.0.1 urdfdom_headers"
   args:
-    chdir: "{{ ros_base_dir }}"
+    chdir: "{{ source_build_workspace_dir }}"
   environment:
     LANG: en_US.UTF-8
 
-# --- Build the code---
+# --- Build the code (install to ros_base_dir so setup.bash path matches deb) ---
 - name: Colcon build
   ansible.builtin.shell:
-    cmd: "colcon build --merge-install --cmake-args -DCMAKE_BUILD_TYPE=Release"
-    chdir: "{{ ros_base_dir }}"
+    cmd: "colcon build --merge-install --install-base {{ ros_base_dir }} --cmake-args -DCMAKE_BUILD_TYPE=Release"
+    chdir: "{{ source_build_workspace_dir }}"
   environment:
     LANG: en_US.UTF-8
   register: colcon_build
   changed_when: colcon_build.rc == 0
-  become: true
-
-# --- Symlinks so source /opt/ros/<distro>/setup.bash works like apt install ---
-- name: Create setup.bash symlink in base dir
-  ansible.builtin.file:
-    src: "install/setup.bash"
-    path: "{{ ros_base_dir }}/setup.bash"
-    state: link
-  become: true
-
-- name: Create setup.sh symlink in base dir
-  ansible.builtin.file:
-    src: "install/setup.sh"
-    path: "{{ ros_base_dir }}/setup.sh"
-    state: link
   become: true
 
 # --- Setup environment in .bashrc ---
