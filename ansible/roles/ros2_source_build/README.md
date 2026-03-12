@@ -8,8 +8,7 @@ It will:
 - Enable Universe and ROS 2 apt sources (ros-apt-source)
 - Install development tools (ros-dev-tools, vcstool, colcon, pytest, etc.)
 - Clone the ROS 2 repos via `vcs import` and run `rosdep install`
-- Run `colcon build --symlink-install` in the workspace (e.g. `~/ros2_jazzy`)
-- Copy the `install` tree to **`/opt/ros/{{ rosdistro }}/`** (dereferencing symlinks) so the same path as deb install works
+- Clone repos with `vcs import` into **`/opt/ros/{{ rosdistro }}/src`**, run rosdep and **`colcon build`** with `--install-base /opt/ros/{{ rosdistro }}` (src, build, install all under `/opt/ros/<distro>/`)
 - Add `source /opt/ros/{{ rosdistro }}/setup.bash` to `~/.bashrc`
 
 You can use `source /opt/ros/<distro>/setup.bash` (e.g. `/opt/ros/jazzy/setup.bash`) as with the standard deb-based install.
@@ -20,17 +19,18 @@ You can use `source /opt/ros/<distro>/setup.bash` (e.g. `/opt/ros/jazzy/setup.ba
 
 | Name              | Required | Description                                              |
 | ----------------- | -------- | -------------------------------------------------------- |
-| rosdistro         | false    | ROS distro to build (e.g. `jazzy`). Default: `jazzy`.    |
-| source_workspace  | false    | Workspace path (e.g. `~/ros2_jazzy`). Default: `~/ros2_{{ rosdistro }}`. |
+| rosdistro         | false    | ROS distro to build (e.g. `jazzy`). Default: `jazzy`.     |
 
-## Example
+The workspace (src, build, install) is under **`/opt/ros/{{ rosdistro }}/`**.
+
+
+## Example (in your playbook)
 
 ```yaml
 roles:
   - role: ros2_source_build
     vars:
       rosdistro: jazzy
-      # source_workspace: "~/ros2_jazzy"  # optional
 ```
 
-Default `rosdistro` is `jazzy`; the workspace is built at `~/ros2_jazzy` and the result is installed to `/opt/ros/jazzy/` so that `source /opt/ros/jazzy/setup.bash` works like the deb install.
+Default `rosdistro` is `jazzy`; src, build, and install all live under `/opt/ros/jazzy/`, and `source /opt/ros/jazzy/setup.bash` works like the deb install.

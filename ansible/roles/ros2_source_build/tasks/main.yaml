@@ -1,9 +1,10 @@
 # ROS 2 source build for Ubuntu 22.04 (e.g. Jetson). Based on:
 # https://docs.ros.org/en/jazzy/Installation/Alternatives/Ubuntu-Development-Setup.html
 
-- name: Set absolute path for source workspace
+- name: Set ROS install base and source directories
   ansible.builtin.set_fact:
-    source_workspace_abs: "{{ source_workspace | expanduser }}"
+    ros_base_dir: "/opt/ros/{{ rosdistro }}"
+    ros_src_dir: "/opt/ros/{{ rosdistro }}/src"
 
 # --- Set locale (UTF-8) ---
 - name: Install locales for source build
@@ -90,19 +91,28 @@
     upgrade: safe
     update_cache: true
 
-# --- Get ROS 2 code ---
-- name: Create ROS 2 source workspace directory
+# --- Get ROS 2 code (under /opt/ros/<distro>) ---
+- name: Create base directory
   ansible.builtin.file:
-    path: "{{ source_workspace_abs }}/src"
+    path: "{{ ros_base_dir }}"
     state: directory
     mode: "0755"
+  become: true
+
+- name: Create source directory
+  ansible.builtin.file:
+    path: "{{ ros_src_dir }}"
+    state: directory
+    mode: "0755"
+  become: true
 
 - name: Import ROS 2 repos with vcs
   ansible.builtin.shell:
     cmd: vcs import --input https://raw.githubusercontent.com/ros2/ros2/{{ rosdistro }}/ros2.repos src
-    chdir: "{{ source_workspace_abs }}"
+    chdir: "{{ ros_base_dir }}"
   environment:
     LANG: en_US.UTF-8
+  become: true
 
 # --- rosdep init (once) and update ---
 - name: Check if rosdep has been initialized
@@ -127,39 +137,26 @@
     rosdep install --from-paths src --ignore-src -y
     --skip-keys "fastcdr rti-connext-dds-6.0.1 urdfdom_headers"
   args:
-    chdir: "{{ source_workspace_abs }}"
+    chdir: "{{ ros_base_dir }}"
   environment:
     LANG: en_US.UTF-8
 
-# --- Build with colcon ---
-- name: Build ROS 2 workspace with colcon
+# --- Build the code ---
+- name: Colcon build
   ansible.builtin.shell:
-    cmd: colcon build --symlink-install
-    chdir: "{{ source_workspace_abs }}"
+    cmd: "colcon build --merge-install --install-base {{ ros_base_dir }} --cmake-args -DCMAKE_BUILD_TYPE=Release"
+    chdir: "{{ ros_base_dir }}"
   environment:
     LANG: en_US.UTF-8
   register: colcon_build
   changed_when: colcon_build.rc == 0
-
-# --- Install to /opt/ros/<distro> (same path as deb install) ---
-- name: Create /opt/ros/{{ rosdistro }} directory
-  ansible.builtin.file:
-    path: "/opt/ros/{{ rosdistro }}"
-    state: directory
-    mode: "0755"
   become: true
-
-- name: Copy install to /opt/ros (dereference symlinks for standalone install)
-  ansible.builtin.shell:
-    cmd: "cp -rL {{ source_workspace_abs }}/install/* /opt/ros/{{ rosdistro }}/"
-  become: true
-  changed_when: true
 
 # --- Setup environment in .bashrc (same as ros2 deb role) ---
-- name: Add /opt/ros/{{ rosdistro }}/setup.bash to .bashrc
+- name: Add setup.bash to .bashrc
   ansible.builtin.lineinfile:
     path: "{{ ansible_env.HOME }}/.bashrc"
-    line: "source /opt/ros/{{ rosdistro }}/setup.bash"
+    line: "source {{ ros_base_dir }}/setup.bash"
     state: present
     create: true
     mode: "0644"
