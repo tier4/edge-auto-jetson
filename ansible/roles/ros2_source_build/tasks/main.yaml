@@ -144,11 +144,26 @@
   changed_when: colcon_build.rc == 0
   become: true
 
+# --- Symlinks so source /opt/ros/<distro>/setup.bash works like apt install ---
+- name: Create setup.bash symlink in base dir
+  ansible.builtin.file:
+    src: "install/setup.bash"
+    path: "{{ ros_base_dir }}/setup.bash"
+    state: link
+  become: true
+
+- name: Create setup.sh symlink in base dir
+  ansible.builtin.file:
+    src: "install/setup.sh"
+    path: "{{ ros_base_dir }}/setup.sh"
+    state: link
+  become: true
+
 # --- Setup environment in .bashrc ---
 - name: Add setup.bash to .bashrc
   ansible.builtin.lineinfile:
     path: "{{ ansible_env.HOME }}/.bashrc"
-    line: "source {{ ros_base_dir }}/install/setup.bash"
+    line: "source {{ ros_base_dir }}/setup.bash"
     state: present
     create: true
     mode: "0644"
