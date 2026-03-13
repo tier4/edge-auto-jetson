@@ -64,11 +64,11 @@
     state: present
 
 # --- Install development tools ---
-- name: Install ROS 2 development tools and Python dev packages
+- name: Install development tools
   become: true
   ansible.builtin.apt:
     name:
-      - python3-flake8-blind-except
+      - python3-flake8-blind-except # from ros2 official install guide.
       - python3-flake8-class-newline
       - python3-flake8-deprecated
       - python3-mypy
@@ -107,7 +107,10 @@
 # --- Install selected extra ROS packages from source (vision, image, nav2, etc.) ---
 - name: Import selected extra ROS packages
   ansible.builtin.include_tasks: extra_packages.yaml
-  when: extra_rosinstall_packages | length > 0 or extra_system_packages | length > 0
+  when: >
+    extra_rosinstall_packages | length > 0 or
+    extra_system_packages | length > 0 or
+    extra_python_packages | length > 0
 
 # --- rosdep init (once) and update ---
 - name: Check if rosdep has been initialized

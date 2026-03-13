@@ -2,10 +2,17 @@
 - name: Install system packages for selected extra ROS packages
   become: true
   ansible.builtin.apt:
-    name: "{{ ['python3-rosinstall-generator'] + extra_system_packages }}"
+    name: "{{ extra_system_packages }}"
     state: present
     update_cache: true
-  when: extra_rosinstall_packages | length > 0 or extra_system_packages | length > 0
+  when: extra_system_packages | length > 0
+
+- name: Install Python packages for selected extra ROS packages
+  become: true
+  ansible.builtin.pip:
+    name: "{{ extra_python_packages }}"
+    extra_args: --upgrade --no-cache-dir
+  when: extra_python_packages | length > 0
 
 # Generate a rosinstall file only for the requested extra packages and their deps.
 - name: Generate rosinstall for selected extra ROS packages

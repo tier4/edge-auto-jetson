@@ -28,14 +28,46 @@ extra_rosinstall_packages:
 
 # Extra system libraries needed by the selected extra ROS packages.
 extra_system_packages:
-  - libopencv-dev
-  - libpcl-dev
-  - libboost-dev
-  - python3-rosdep
+  - cmake # from https://github.com/tier4/edge-auto-jetson/blob/338f46f06400f1768b1f323b45425979b9cdc178/ansible/roles/ros2/tasks/main.yaml#L39-L61
+  - libbullet-dev
+  - libpython3-dev
+  - python3-flake8
+  - python3-pip
+  - python3-numpy
+  - python3-setuptools
+  - python3-vcstool
+  - python3-rosinstall-generator
+  - libasio-dev
+  - libtinyxml2-dev
+  - libcunit1-dev
+  - libpugixml-dev
+  - libgeographic-dev
+  - libgtest-dev
+  - libcgal-dev
+  - libfmt-dev
+  - python3-rosdep # https://github.com/tier4/edge-auto-jetson/blob/338f46f06400f1768b1f323b45425979b9cdc178/ansible/roles/ros2/tasks/main.yaml#L133
   - python3-colcon-common-extensions
   - librange-v3-dev
   - v4l-utils
   - nlohmann-json3-dev
+
+# Extra Python packages needed by the selected extra ROS packages.
+extra_python_packages:
+  - empy==3.3.4 # https://github.com/tier4/edge-auto-jetson/blob/338f46f06400f1768b1f323b45425979b9cdc178/ansible/roles/ros2/tasks/main.yaml#L63
+  - argcomplete # # https://github.com/tier4/edge-auto-jetson/blob/338f46f06400f1768b1f323b45425979b9cdc178/ansible/roles/ros2/tasks/main.yaml#L69
+  - pytest
+  - pytest-repeat
+  - pytest-rerunfailures
+  - scikit-build
+  - cmake==3.31.6
+  - flake8-blind-except # https://github.com/tier4/edge-auto-jetson/blob/338f46f06400f1768b1f323b45425979b9cdc178/ansible/roles/ros2/tasks/main.yaml#L81
+  - flake8-builtins
+  - flake8-class-newline
+  - flake8-comprehensions
+  - flake8-deprecated
+  - flake8-docstrings
+  - flake8-import-order
+  - flake8-quotes
 
 # Generated rosinstall file for the selected extra ROS packages.
 extra_rosinstall_file: "{{ source_build_workspace_dir }}/ros2.{{ rosdistro }}.extra.rosinstall"
