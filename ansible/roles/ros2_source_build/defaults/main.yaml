@@ -3,3 +3,39 @@ rosdistro: jazzy
 
 # Workspace directory (src, build, log). Install goes to /opt/ros/{{ rosdistro }} via --install-base.
 source_build_workspace_dir: "{{ ansible_env.HOME }}/source_builds_ws"
+
+# Additional ROS packages imported with rosinstall_generator.
+extra_rosinstall_packages:
+  - cv_bridge
+  - v4l2_camera # maybe already included in jazzy.repos
+  - vision_opencv
+  - geographic_msgs
+  - vision_msgs
+  - image_geometry
+  - image_pipeline # maybe already included in jazzy.repos
+  - compressed_image_transport # maybe already included in jazzy.repos
+  - compressed_depth_image_transport # maybe already included in jazzy.repos
+  - pcl_msgs
+  - perception_pcl
+  - udp_msgs
+  - angles
+  - diagnostics
+  - tf_transformations
+  - mrt_cmake_modules # maybe already included in jazzy.repos
+  - grid_map
+  - filters
+  - nav2_msgs
+
+# Extra system libraries needed by the selected extra ROS packages.
+extra_system_packages:
+  - libopencv-dev
+  - libpcl-dev
+  - libboost-dev
+  - python3-rosdep
+  - python3-colcon-common-extensions
+  - librange-v3-dev
+  - v4l-utils
+  - nlohmann-json3-dev
+
+# Generated rosinstall file for the selected extra ROS packages.
+extra_rosinstall_file: "{{ source_build_workspace_dir }}/ros2.{{ rosdistro }}.extra.rosinstall"

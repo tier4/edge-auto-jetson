@@ -1,0 +1,30 @@
+# Install system libraries required by the selected extra ROS packages.
+- name: Install system packages for selected extra ROS packages
+  become: true
+  ansible.builtin.apt:
+    name: "{{ ['python3-rosinstall-generator'] + extra_system_packages }}"
+    state: present
+    update_cache: true
+  when: extra_rosinstall_packages | length > 0 or extra_system_packages | length > 0
+
+# Generate a rosinstall file only for the requested extra packages and their deps.
+- name: Generate rosinstall for selected extra ROS packages
+  ansible.builtin.shell: >
+    rosinstall_generator --deps --rosdistro {{ rosdistro }}
+    {{ extra_rosinstall_packages | join(' ') }}
+    > {{ extra_rosinstall_file }}
+  args:
+    chdir: "{{ source_build_workspace_dir }}"
+  environment:
+    LANG: en_US.UTF-8
+  changed_when: true
+  when: extra_rosinstall_packages | length > 0
+
+- name: Import selected extra ROS packages with vcs
+  ansible.builtin.shell: >
+    vcs import --skip-existing src < {{ extra_rosinstall_file }}
+  args:
+    chdir: "{{ source_build_workspace_dir }}"
+  environment:
+    LANG: en_US.UTF-8
+  when: extra_rosinstall_packages | length > 0

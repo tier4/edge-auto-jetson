@@ -104,14 +104,10 @@
   environment:
     LANG: en_US.UTF-8
 
-# --- Install ROS2 tools (extra packages from source: vision, image, nav2, etc.) ---
-- name: Import ROS2 tools extra repos with vcs
-  ansible.builtin.shell:
-    cmd: vcs import --input "{{ role_path }}/files/jazzy_extra.repos" src
-    chdir: "{{ source_build_workspace_dir }}"
-  environment:
-    LANG: en_US.UTF-8
-  when: rosdistro == 'jazzy'
+# --- Install selected extra ROS packages from source (vision, image, nav2, etc.) ---
+- name: Import selected extra ROS packages
+  ansible.builtin.include_tasks: extra_packages.yaml
+  when: extra_rosinstall_packages | length > 0 or extra_system_packages | length > 0
 
 # --- rosdep init (once) and update ---
 - name: Check if rosdep has been initialized
