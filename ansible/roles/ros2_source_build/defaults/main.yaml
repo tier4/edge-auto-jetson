@@ -6,46 +6,33 @@ source_build_workspace_dir: "{{ ansible_env.HOME }}/source_builds_ws"
 
 # Additional ROS packages imported with rosinstall_generator.
 extra_rosinstall_packages:
-  # - launch-xml #  already included in ros_base
-  # - launch-yaml #  already included in ros_base
-  # - launch-testing #  already included in ros_base
-  # - launch-testing-ament-cmake #  already included in ros_base
-  # - demo-nodes-cpp
-  # - demo-nodes-py
-  # - example-interfaces
-  - camera-calibration-parsers
-  - camera-info-manager
+  - camera_calibration_parsers
+  - camera_info_manager
   - cv_bridge
-  # - v4l2_camera # tier4/edge-auto-jetson already includes this
   - vision_opencv
-  # - libstatistics-collector #already included in ros_base
   - geographic_msgs
   - vision_msgs
   - image_geometry
-  # - image_pipeline # tier4/edge-auto-jetson already includes this
   - image-transport
-  # - compressed_image_transport  # tier4/edge-auto-jetson already includes this
-  # - compressed_depth_image_transport  # tier4/edge-auto-jetson already includes this
   - pcl_msgs
   - perception_pcl
-  # - logging-demo
+  - logging_demo # https://github.com/autowarefoundation/autoware_utils/blob/f3c8f34264fe4812da406ab0390e65c95ec386ab/autoware_utils_logging/include/autoware_utils_logging/logger_level_configure.hpp#L44
   - udp_msgs
   - angles
   - diagnostics
   - tf_transformations
-  # - mrt_cmake_modules # tier4/edge-auto-jetson already includes this
-  # - gtest-vendor # already included in ros_base
   - grid_map
   - filters
   - nav2_msgs
-  # - tf2_ros # already included in ros_base
-  # - tf2_eigen #  already included in ros_base
-  # - ament_cmake_clang_format # maybe already included in ros_base
-  # - rmw_cyclonedds_cpp # already included in ros_base
+  # - v4l2_camera # already included in edge-auto-jetson.repos
+  # - image_pipeline # already included in edge-auto-jetson.repos
+  # - mrt_cmake_modules # already included in edge-auto-jetson.repos
+  # - compressed_image_transport  # already included in edge-auto-jetson.repos
+  # - compressed_depth_image_transport  # already included in edge-auto-jetson.repos
 
 # Extra system libraries needed by the selected extra ROS packages.
 extra_system_packages:
-  - cmake # from https://github.com/tier4/edge-auto-jetson/blob/338f46f06400f1768b1f323b45425979b9cdc178/ansible/roles/ros2/tasks/main.yaml#L39-L61
+  - cmake # from https://github.com/tier4/edge-auto-jetson/blob/beta/anvil/v0.48.0/ansible/roles/ros2/tasks/main.yaml#L39-L61
   - libbullet-dev
   - libpython3-dev
   - python3-flake8
@@ -62,7 +49,7 @@ extra_system_packages:
   - libgtest-dev
   - libcgal-dev
   - libfmt-dev
-  - python3-rosdep # https://github.com/tier4/edge-auto-jetson/blob/338f46f06400f1768b1f323b45425979b9cdc178/ansible/roles/ros2/tasks/main.yaml#L133
+  - python3-rosdep # hhttps://github.com/tier4/edge-auto-jetson/blob/beta/anvil/v0.48.0/ansible/roles/ros2/tasks/main.yaml#L133
   - python3-colcon-common-extensions
   - librange-v3-dev
   - v4l-utils
@@ -70,14 +57,14 @@ extra_system_packages:
 
 # Extra Python packages needed by the selected extra ROS packages.
 extra_python_packages:
-  - empy==3.3.4 # https://github.com/tier4/edge-auto-jetson/blob/338f46f06400f1768b1f323b45425979b9cdc178/ansible/roles/ros2/tasks/main.yaml#L63
-  - argcomplete # # https://github.com/tier4/edge-auto-jetson/blob/338f46f06400f1768b1f323b45425979b9cdc178/ansible/roles/ros2/tasks/main.yaml#L69
+  - empy==3.3.4 # https://github.com/tier4/edge-auto-jetson/blob/beta/anvil/v0.48.0/ansible/roles/ros2/tasks/main.yaml#L63
+  - argcomplete # https://github.com/tier4/edge-auto-jetson/blob/beta/anvil/v0.48.0/ansible/roles/ros2/tasks/main.yaml#L69
   - pytest
   - pytest-repeat
   - pytest-rerunfailures
   - scikit-build
   - cmake==3.31.6
-  - flake8-blind-except # https://github.com/tier4/edge-auto-jetson/blob/338f46f06400f1768b1f323b45425979b9cdc178/ansible/roles/ros2/tasks/main.yaml#L81
+  - flake8-blind-except # https://github.com/tier4/edge-auto-jetson/blob/beta/anvil/v0.48.0/ansible/roles/ros2/tasks/main.yaml#L81
   - flake8-builtins
   - flake8-class-newline
   - flake8-comprehensions
