@@ -127,6 +127,7 @@
 
 - name: Update rosdep
   ansible.builtin.command: rosdep update
+  become: true
   changed_when: true
 
 # --- Install dependencies with rosdep ---
