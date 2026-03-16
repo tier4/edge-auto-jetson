@@ -72,6 +72,3 @@ extra_python_packages:
   - flake8-docstrings
   - flake8-import-order
   - flake8-quotes
-
-# Generated rosinstall file for the selected extra ROS packages.
-extra_rosinstall_file: "{{ source_build_workspace_dir }}/ros2.{{ rosdistro }}.extra.rosinstall"

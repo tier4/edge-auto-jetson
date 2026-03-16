@@ -19,7 +19,7 @@
   ansible.builtin.shell: >
     rosinstall_generator --deps --rosdistro {{ rosdistro }}
     {{ extra_rosinstall_packages | join(' ') }}
-    > {{ extra_rosinstall_file }}
+    > ros2.{{ rosdistro }}.extra.rosinstall
   args:
     chdir: "{{ source_build_workspace_dir }}"
   environment:
@@ -29,7 +29,7 @@
 
 - name: Import selected extra ROS packages with vcs
   ansible.builtin.shell: >
-    vcs import --skip-existing src < {{ extra_rosinstall_file }}
+    vcs import --skip-existing src < ros2.{{ rosdistro }}.extra.rosinstall
   args:
     chdir: "{{ source_build_workspace_dir }}"
   environment:
