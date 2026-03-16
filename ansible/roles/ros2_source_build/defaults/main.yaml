@@ -49,7 +49,7 @@ extra_system_packages:
   - libgtest-dev
   - libcgal-dev
   - libfmt-dev
-  - python3-rosdep # hhttps://github.com/tier4/edge-auto-jetson/blob/beta/anvil/v0.48.0/ansible/roles/ros2/tasks/main.yaml#L133
+  - python3-rosdep # https://github.com/tier4/edge-auto-jetson/blob/beta/anvil/v0.48.0/ansible/roles/ros2/tasks/main.yaml#L133
   - python3-colcon-common-extensions
   - librange-v3-dev
   - v4l-utils
