@@ -68,6 +68,7 @@
   become: true
   ansible.builtin.apt:
     name:
+      - python3-rosinstall-generator # for rosinstall_generator --deps (ros_variant import)
       - python3-flake8-blind-except # from ros2 official install guide.
       - python3-flake8-class-newline
       - python3-flake8-deprecated
@@ -97,14 +98,15 @@
     state: directory
     mode: "0755"
 
-- name: Import ROS 2 repos with vcs
+# --- ROS 2 base (ros_variant) ---
+- name: Import ROS 2 repos with vcs (rosinstall_generator for ros_variant)
   ansible.builtin.shell:
-    cmd: vcs import --input https://raw.githubusercontent.com/ros2/ros2/{{ rosdistro }}/ros2.repos src
+    cmd: rosinstall_generator --deps --rosdistro {{ rosdistro }} {{ ros_variant }} | vcs import --input - src
     chdir: "{{ source_build_workspace_dir }}"
   environment:
     LANG: en_US.UTF-8
 
-# --- Install selected extra ROS packages from source (vision, image, nav2, etc.) ---
+# --- Extra ROS packages (vision, image, nav2, etc.) ---
 - name: Import selected extra ROS packages
   ansible.builtin.include_tasks: extra_packages.yaml
   when: >
