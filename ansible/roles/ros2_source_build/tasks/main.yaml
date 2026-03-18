@@ -69,7 +69,6 @@
   ansible.builtin.apt:
     name:
       - python3-rosinstall-generator # required for rosinstall_generator
-      - apt-utils # required for apt-get update
       - python3-flake8-blind-except # from ros2 official install guide.
       - python3-flake8-class-newline
       - python3-flake8-deprecated
@@ -85,12 +84,6 @@
       - ros-dev-tools
     update_cache: true
     state: present
-
-- name: Upgrade system packages before rosdep install
-  become: true
-  ansible.builtin.apt:
-    upgrade: safe
-    update_cache: true
 
 # --- Get ROS 2 code ---
 - name: Create workspace and source directory
