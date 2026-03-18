@@ -24,6 +24,7 @@ extra_rosinstall_packages:
   - grid_map
   - filters
   - nav2_msgs
+  - ffmpeg_image_transport_msgs # Required for accelerated_image_processor_ros
   # - v4l2_camera # already included in edge-auto-jetson.repos
   # - image_pipeline # already included in edge-auto-jetson.repos
   # - mrt_cmake_modules # already included in edge-auto-jetson.repos
@@ -54,6 +55,10 @@ extra_system_packages:
   - librange-v3-dev
   - v4l-utils
   - nlohmann-json3-dev
+  - nvidia-jetpack # Install CUDA and dependencies.
+  - libavfilter-dev # Required for accelerated_image_processor_decompression
+  - libturbojpeg0-dev # Required for accelerated_image_processor
+  - libavdevice-dev # Required for accelerated_image_processor
 
 # Extra Python packages needed by the selected extra ROS packages.
 extra_python_packages:
