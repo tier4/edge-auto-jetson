@@ -19,7 +19,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-ins
   && rm -rf /var/lib/apt/lists/*
 
 ## Copy files
-COPY ansible-galaxy-requirements.yaml /autoware/
+COPY .ansible-galaxy-requirements.yaml /autoware/
 COPY ansible/ /autoware/ansible/
 WORKDIR /autoware
 RUN ls /autoware
