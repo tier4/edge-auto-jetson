@@ -59,6 +59,7 @@ extra_system_packages:
   - libavfilter-dev # Required for accelerated_image_processor_decompression
   - libturbojpeg0-dev # Required for accelerated_image_processor
   - libavdevice-dev # Required for accelerated_image_processor
+  - libgpiod-dev # Required for tier4/sensor_trigger
 
 # Extra Python packages needed by the selected extra ROS packages.
 extra_python_packages:
