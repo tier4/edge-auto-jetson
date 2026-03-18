@@ -1,7 +1,7 @@
 # ROS distro to build from source (e.g. jazzy for Ubuntu 22.04).
-rosdistro: jazzy
+ros_distro: jazzy
 ros_variant: ros_base  # detailed ros_variant is defined in https://www.ros.org/reps/rep-2001.html#jazzy-jalisco-may-2024-may-2029
-# Workspace directory (src, build, log). Install goes to /opt/ros/{{ rosdistro }} via --install-base.
+# Workspace directory (src, build, log). Install goes to /opt/ros/{{ ros_distro }} via --install-base.
 source_build_workspace_dir: "{{ ansible_env.HOME }}/source_builds_ws"
 
 # Additional ROS packages imported with rosinstall_generator.
