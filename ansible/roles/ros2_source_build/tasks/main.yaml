@@ -68,7 +68,8 @@
   become: true
   ansible.builtin.apt:
     name:
-      - python3-rosinstall-generator # for rosinstall_generator --deps (ros_variant import)
+      - python3-rosinstall-generator # required for rosinstall_generator
+      - apt-utils # required for apt-get update
       - python3-flake8-blind-except # from ros2 official install guide.
       - python3-flake8-class-newline
       - python3-flake8-deprecated
