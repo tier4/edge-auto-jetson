@@ -146,6 +146,13 @@
   changed_when: colcon_build.rc == 0
   become: true
 
+# --- Shrink footprint: install is under ros_base_dir; workspace is no longer needed ---
+- name: Remove source build workspace after successful install
+  become: true
+  ansible.builtin.file:
+    path: "{{ source_build_workspace_dir }}"
+    state: absent
+
 # --- Setup environment in .bashrc ---
 - name: Add setup.bash to .bashrc
   ansible.builtin.lineinfile:
