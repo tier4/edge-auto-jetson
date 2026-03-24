@@ -30,7 +30,7 @@ RUN mkdir -p ~/.ssh \
 
 ## Set up development environment
 RUN --mount=type=ssh ansible-playbook ansible/base_edge.yaml -e reload_system=no -e autoware_env_dir=/home/autoware \
-  -e ros_distro=${ROS_DISTRO}
+  -e rosdistro=${ROS_DISTRO}
 
 ## Clean up unnecessary files
 # hadolint ignore=DL3059
