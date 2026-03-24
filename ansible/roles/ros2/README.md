@@ -16,7 +16,7 @@ This role performs a complete ROS 2 installation including:
 
 | Name              | Required | Description                                                 |
 | ----------------- | -------- | ----------------------------------------------------------- |
-| rosdistro        | true     | The ROS 2 distribution to install (e.g., humble, iron)      |
+| rosdistro         | true     | The ROS 2 distribution to install (e.g., humble, iron)      |
 | installation_type | false    | Installation type: `desktop` (full) or `ros-base` (minimal) |
 
 ## Default Configuration
