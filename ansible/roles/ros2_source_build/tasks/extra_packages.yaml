@@ -17,9 +17,9 @@
 # Generate a rosinstall file only for the requested extra packages and their deps.
 - name: Generate rosinstall for selected extra ROS packages
   ansible.builtin.shell: >
-    rosinstall_generator --deps --rosdistro {{ ros_distro }}
+    rosinstall_generator --deps --rosdistro {{ rosdistro }}
     {{ extra_rosinstall_packages | join(' ') }}
-    > ros2.{{ ros_distro }}.extra.rosinstall
+    > ros2.{{ rosdistro }}.extra.rosinstall
   args:
     chdir: "{{ source_build_workspace_dir }}"
   environment:
@@ -29,7 +29,7 @@
 
 - name: Import selected extra ROS packages with vcs
   ansible.builtin.shell: >
-    vcs import --skip-existing src < ros2.{{ ros_distro }}.extra.rosinstall
+    vcs import --skip-existing src < ros2.{{ rosdistro }}.extra.rosinstall
   args:
     chdir: "{{ source_build_workspace_dir }}"
   environment:

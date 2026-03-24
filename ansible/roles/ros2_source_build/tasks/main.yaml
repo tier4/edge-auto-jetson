@@ -3,7 +3,7 @@
 
 - name: Set ROS install directory (same path as deb)
   ansible.builtin.set_fact:
-    ros_base_dir: "/opt/ros/{{ ros_distro }}"
+    ros_base_dir: "/opt/ros/{{ rosdistro }}"
 
 # --- Set locale (UTF-8) ---
 - name: Install locales for source build
@@ -95,7 +95,7 @@
 # --- ROS 2 base (ros_variant) ---
 - name: Import ROS 2 repos with vcs (rosinstall_generator for ros_variant)
   ansible.builtin.shell:
-    cmd: rosinstall_generator --deps --rosdistro {{ ros_distro }} {{ ros_variant }} | vcs import --input - src
+    cmd: rosinstall_generator --deps --rosdistro {{ rosdistro }} {{ ros_variant }} | vcs import --input - src
     chdir: "{{ source_build_workspace_dir }}"
   environment:
     LANG: en_US.UTF-8
