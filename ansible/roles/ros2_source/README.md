@@ -5,4 +5,4 @@ This role installs [ROS 2](https://docs.ros.org) under `/opt/ros`. Because apt b
 ## Inputs
 
 | Name | Required | Description |
-| ros_distro | true | The ROS distribution. Currently, only `humble` is supported. |
+| rosdistro | true | The ROS distribution. Currently, only `humble` is supported. |
