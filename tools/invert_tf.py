@@ -11,7 +11,7 @@ def invert_transform(input_file, output_file):
     # 1. Swap frame_id and child_frame_id
     original_frame_id = data['header']['frame_id']
     original_child_frame_id = data['child_frame_id']
-    
+
     data['header']['frame_id'] = original_child_frame_id
     data['child_frame_id'] = original_frame_id
 
@@ -19,7 +19,7 @@ def invert_transform(input_file, output_file):
     tx = data['transform']['translation']['x']
     ty = data['transform']['translation']['y']
     tz = data['transform']['translation']['z']
-    
+
     qx = data['transform']['rotation']['x']
     qy = data['transform']['rotation']['y']
     qz = data['transform']['rotation']['z']
@@ -87,7 +87,7 @@ def invert_transform(input_file, output_file):
     # 4. Save as a new JSON file
     with open(output_file, 'w') as f:
         json.dump(data, f, indent=4)
-        
+
     print(f"=== Success ===")
     print(f"Original transform: {original_frame_id} -> {original_child_frame_id}")
     print(f"Inverse transform : {original_child_frame_id} -> {original_frame_id}")
