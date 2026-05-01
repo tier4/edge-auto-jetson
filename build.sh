@@ -1,7 +1,15 @@
 #!/bin/bash
+
+sudo jetson_clocks
+export MAKEFLAGS="-j8" 
+
 colcon build \
-    --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release \
-    -DPython3_EXECUTABLE="$(which python3.10)" -DCMAKE_CUDA_STANDARD=14 \
-    --packages-ignore cv_bridge \
-    --allow-overriding image_geometry logging_demo \
+    --symlink-install \
+    --cmake-args \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_CUDA_STANDARD=14 \
+        -DCMAKE_SHARED_LINKER_FLAGS="-Wl,--no-as-needed -lgmp -lmpfr" \
+        -DCMAKE_EXE_LINKER_FLAGS="-Wl,--no-as-needed -lgmp -lmpfr" \
+    -DPython3_EXECUTABLE="$(which python3.10)" \
+    --allow-overriding image_geometry logging_demo cv_bridge \
     --packages-up-to edge_auto_jetson_launch
