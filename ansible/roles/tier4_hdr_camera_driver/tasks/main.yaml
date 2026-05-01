@@ -49,17 +49,51 @@
       ansible.builtin.apt:
         deb: "{{ camera_driver_download_dir }}/{{ driver_deb_name }}"
         state: present
-    - name: Post process
-      ansible.builtin.shell:
-        cmd: |
-          /opt/nvidia/jetson-io/config-by-hardware.py -n 2="TIERIV ISX021 GMSL2 Camera Device Tree Overlay"
-        # noqa no-changed-when
-        # TODO: check dtb file
     - name: Install SDK from deb file
       ansible.builtin.apt:
         deb: "{{ camera_driver_download_dir }}/{{ sdk_deb_name }}"
         state: present
       when: sdk_deb_download_url is defined
+
+- name: Verify overlay file exists
+  loop: "{{ overlay_files | dict2items }}"
+  ansible.builtin.stat:
+    path: /boot/{{ item.value }}
+  register: overlay_stat
+  failed_when: not overlay_stat.stat.exists
+
+- name: Ensure extlinux.conf exists
+  ansible.builtin.stat:
+    path: /boot/extlinux/extlinux.conf
+  register: extlinux_stat
+  failed_when: not extlinux_stat.stat.exists
+
+- name: Create new extlinux entry
+  become: true
+  loop: "{{ overlay_files | dict2items }}"
+  ansible.builtin.blockinfile:
+    path: /boot/extlinux/extlinux.conf
+    marker: "# {mark} ANSIBLE MANAGED BLOCK FOR {{ item.key }}"
+    block: |
+      LABEL {{ item.key }}
+              MENU LABEL Custom Header Config: {{ item.key }}
+              LINUX /boot/Image
+              INITRD /boot/initrd
+              FDT /boot/{{ dtb_file }}
+              OVERLAYS /boot/{{ item.value }}
+              APPEND ${cbootargs} {{ extlinux_append }}
+    state: present
+    create: true
+    mode: "0644"
+
+- name: Set DEFAULT extlinux entry
+  lineinfile:
+    dest: "/boot/extlinux/extlinux.conf"
+    regexp: ^DEFAULT
+    line: DEFAULT primary_t4_{{ default_entry }}
+    backrefs: true
+  when: default_entry is defined
+  become: true
 
 - name: Setup C1 configuration
   block:
@@ -99,6 +133,13 @@
       vars:
         target_item: trigger_mode
         target_val: "1"
+
+    # change fsync mfp parameter for connect tech anvil
+    - name: "{{ block_name }} : Change fsync mfp"
+      include_tasks: mod_or_add.yaml
+      vars:
+        target_item: fsync_mfp
+        target_val: "7"
 
     # Set the same value to min/mid/max exposure time
     # so that exposure time can be estimated under any brightness condition

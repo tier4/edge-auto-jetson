@@ -1,2 +1,2 @@
 ptp4l_host_interface:
-  - eth0
+  - enP1p1s0
