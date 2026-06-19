@@ -18,14 +18,14 @@ Builds [ROS 2](https://www.ros.org/) from source on Ubuntu 22.04 (e.g. Jetson), 
 
 ## Variables
 
-| Name                       | Required | Description |
-| -------------------------- | -------- | ----------- |
-| rosdistro                  | no       | ROS distro (e.g. `jazzy`). Default: `jazzy`. |
-| ros_variant                | no       | REP-2001 variant for the base source set (e.g. `ros_base`, `ros_core`). Default: `ros_base`. |
-| source_build_workspace_dir | no       | Workspace path (src, build, log). Default: `~/source_builds_ws`. |
-| extra_rosinstall_packages | no       | Extra ROS package names for `rosinstall_generator`. Package names like `cv_bridge`, not apt names like `ros-jazzy-cv-bridge`. If empty, the extra rosinstall/vcs step is skipped. |
-| extra_system_packages     | no       | Extra apt packages (e.g. libs, dev tools). Defaults include build tools and other deps for the default extra ROS packages (e.g. geographic, grid_map, perception_pcl). |
-| extra_python_packages     | no       | Extra pip packages. Defaults include empy, pytest, flake8 plugins, etc. |
+| Name                       | Required | Description                                                                                                                                                                       |
+| -------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| rosdistro                  | no       | ROS distro (e.g. `jazzy`). Default: `jazzy`.                                                                                                                                      |
+| ros_variant                | no       | REP-2001 variant for the base source set (e.g. `ros_base`, `ros_core`). Default: `ros_base`.                                                                                      |
+| source_build_workspace_dir | no       | Workspace path (src, build, log). Default: `~/source_builds_ws`.                                                                                                                  |
+| extra_rosinstall_packages  | no       | Extra ROS package names for `rosinstall_generator`. Package names like `cv_bridge`, not apt names like `ros-jazzy-cv-bridge`. If empty, the extra rosinstall/vcs step is skipped. |
+| extra_system_packages      | no       | Extra apt packages (e.g. libs, dev tools). Defaults include build tools and other deps for the default extra ROS packages (e.g. geographic, grid_map, perception_pcl).            |
+| extra_python_packages      | no       | Extra pip packages. Defaults include empy, pytest, flake8 plugins, etc.                                                                                                           |
 
 - **Workspace** (src, build, log): **`source_build_workspace_dir`** — created under the connecting user's home; no root. You can delete it after a successful build to save space.
 - **Install** (setup.bash, lib/, share/): **`/opt/ros/{{ rosdistro }}/`** — written by colcon with `--install-base` (same path as deb install).

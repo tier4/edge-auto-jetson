@@ -1,6 +1,6 @@
 # ROS distro to build from source (e.g. jazzy for Ubuntu 22.04).
 rosdistro: jazzy
-ros_variant: ros_base  # detailed ros_variant is defined in https://www.ros.org/reps/rep-2001.html#jazzy-jalisco-may-2024-may-2029
+ros_variant: ros_base # detailed ros_variant is defined in https://www.ros.org/reps/rep-2001.html#jazzy-jalisco-may-2024-may-2029
 # Workspace directory (src, build, log). Install goes to /opt/ros/{{ rosdistro }} via --install-base.
 source_build_workspace_dir: "{{ ansible_env.HOME }}/source_builds_ws"
 
@@ -25,6 +25,7 @@ extra_rosinstall_packages:
   - filters
   - nav2_msgs
   - ffmpeg_image_transport_msgs # Required for accelerated_image_processor_ros
+  - tl_expected
   # - v4l2_camera # already included in edge-auto-jetson.repos
   # - image_pipeline # already included in edge-auto-jetson.repos
   # - mrt_cmake_modules # already included in edge-auto-jetson.repos
