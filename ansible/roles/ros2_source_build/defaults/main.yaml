@@ -26,6 +26,7 @@ extra_rosinstall_packages:
   - nav2_msgs
   - ffmpeg_image_transport_msgs # Required for accelerated_image_processor_ros
   - tl_expected
+  - lanelet_core
   # - v4l2_camera # already included in edge-auto-jetson.repos
   # - image_pipeline # already included in edge-auto-jetson.repos
   # - mrt_cmake_modules # already included in edge-auto-jetson.repos
