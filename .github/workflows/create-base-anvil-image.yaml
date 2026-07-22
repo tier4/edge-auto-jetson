@@ -7,20 +7,23 @@ name: create-base-anvil-image
 
 # Trigger configuration
 on:
-  # Manual trigger only, requires specifying a branch or tag name
-  # - beta/anvil/v0.x.0 -> v0.x.0
-  # - beta/v0.x -> v0.x
-  # - v0.x -> v0.x
+  # Manual trigger only. Optionally specify which branch/tag to build (git-ref)
+  # and the desired image tag (image-tag, sanitized to a valid Docker reference).
   workflow_dispatch:
     inputs:
-      beta-branch-or-tag-name:
-        description: The name of the beta branch or tag to release
-        type: string
-        required: true
-      tag-suffix:
-        description: Optional suffix to add to the image tag (leave empty to use/overwrite existing tag)
+      git-ref:
+        description: Branch or tag to check out and build. Defaults to the ref this workflow run was started from.
         type: string
         required: false
+      image-tag:
+        description: The image tag to publish (sanitized to a valid Docker reference, e.g. "/" becomes "-").
+        type: string
+        required: true
+      update-latest:
+        description: Update "latest" reference
+        type: boolean
+        required: false
+        default: false
 
 # Global environment variables
 env:
@@ -44,32 +47,37 @@ jobs:
       - name: Set tag name
         id: set-tag-name
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            REF_NAME="${{ github.event.inputs.beta-branch-or-tag-name }}"
+          if [ -n "${{ github.event.inputs.git-ref }}" ]; then
+            REF_NAME="${{ github.event.inputs.git-ref }}"
           else
             REF_NAME="${{ github.ref_name }}"
           fi
-          # Extract just the version part (vX.X.X) from the reference name
-          # This handles formats like:
-          VERSION_PART=$(echo "$REF_NAME" | grep -o 'v[0-9]\+\(\.[0-9]\+\)*' || echo "$REF_NAME")
 
-          # Process tag suffix if provided
-          TAG_SUFFIX="${{ github.event.inputs.tag-suffix }}"
-          if [ -n "$TAG_SUFFIX" ]; then
-            VERSION_WITH_SUFFIX="${VERSION_PART}-${TAG_SUFFIX}"
-          else
-            VERSION_WITH_SUFFIX="${VERSION_PART}"
+          # Sanitize the requested image tag into a valid Docker tag:
+          # replace disallowed characters with "-", strip any leading "-"/".",
+          # and truncate to Docker's 128-char tag limit.
+          RAW_TAG="${{ github.event.inputs.image-tag }}"
+          TAG_NAME=$(echo "$RAW_TAG" | sed -E 's/[^a-zA-Z0-9_.-]/-/g; s/^[-.]+//' | cut -c1-128)
+          if [ -z "$TAG_NAME" ]; then
+            echo "::error::Sanitized tag derived from image-tag '$RAW_TAG' is empty"
+            exit 1
+          fi
+
+          TAGS="ghcr.io/${{ github.repository }}/base-image:$TAG_NAME"
+          if [ "${{ github.event.inputs.update-latest }}" = "true" ]; then
+            TAGS="$(printf '%s\n%s' "$TAGS" "ghcr.io/${{ github.repository }}/base-image:latest")"
           fi
 
           echo "ref-name=$REF_NAME" >> $GITHUB_OUTPUT
-          echo "tag-name=$VERSION_PART" >> $GITHUB_OUTPUT
-          echo "tag-name-with-suffix=$VERSION_WITH_SUFFIX" >> $GITHUB_OUTPUT
-          echo "has-suffix=$([[ -n "$TAG_SUFFIX" ]] && echo "true" || echo "false")" >> $GITHUB_OUTPUT
+          echo "tag-name=$TAG_NAME" >> $GITHUB_OUTPUT
+          echo "tags<<EOF" >> $GITHUB_OUTPUT
+          echo "$TAGS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: set description
         id: set-description
         run: |
-          echo "img-description=${{ env.CREATE_DATE }}, ros-${{ env.ROS_DISTRO }}-base:${{ env.ROS_DESKTOP_VER }}" >> $GITHUB_OUTPUT
+          echo "img-description=${{ env.CREATE_DATE }}, ros-${{ env.ROS_DISTRO }}-base" >> $GITHUB_OUTPUT
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -96,32 +104,14 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push (with suffix)
+      - name: Build and push
         uses: docker/build-push-action@v5
-        if: steps.set-tag-name.outputs.has-suffix == 'true'
         with:
           push: true
           file: docker/edge-auto/Dockerfile.bi
           set: |
             *.context=${{ env.WORKSPACE_ROOT }}
-          tags: |
-            ghcr.io/${{ github.repository }}/base-image:${{ steps.set-tag-name.outputs.tag-name-with-suffix }}
-          build-args: |
-            DESCRIPTION=${{ steps.set-description.outputs.img-description }}
-            BASE_IMAGE=${{ env.BASE_IMAGE }}
-            ROS_DISTRO=${{ env.ROS_DISTRO }}
-
-      - name: Build and push (standard tags)
-        uses: docker/build-push-action@v5
-        if: steps.set-tag-name.outputs.has-suffix == 'false'
-        with:
-          push: true
-          file: docker/edge-auto/Dockerfile.bi
-          set: |
-            *.context=${{ env.WORKSPACE_ROOT }}
-          tags: |
-            ghcr.io/${{ github.repository }}/base-image:latest
-            ghcr.io/${{ github.repository }}/base-image:${{ steps.set-tag-name.outputs.tag-name }}
+          tags: ${{ steps.set-tag-name.outputs.tags }}
           build-args: |
             DESCRIPTION=${{ steps.set-description.outputs.img-description }}
             BASE_IMAGE=${{ env.BASE_IMAGE }}
