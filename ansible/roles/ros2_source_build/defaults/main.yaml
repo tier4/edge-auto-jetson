@@ -12,6 +12,7 @@ extra_rosinstall_packages:
   - vision_opencv
   - vision_msgs
   - image_geometry
+  - image_transport_plugins
   - image-transport
   - pcl_msgs
   - perception_pcl
