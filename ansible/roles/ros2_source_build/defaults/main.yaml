@@ -10,9 +10,9 @@ extra_rosinstall_packages:
   - camera_info_manager
   - cv_bridge
   - vision_opencv
-  - geographic_msgs
   - vision_msgs
   - image_geometry
+  - image_transport_plugins
   - image-transport
   - pcl_msgs
   - perception_pcl
@@ -26,6 +26,11 @@ extra_rosinstall_packages:
   - nav2_msgs
   - ffmpeg_image_transport_msgs # Required for accelerated_image_processor_ros
   - tl_expected
+  - topic_tools
+  - lanelet2
+  - tensorrt_cmake_module
+  - geographic_info
+  - rclpy_message_converter
   # - v4l2_camera # already included in edge-auto-jetson.repos
   # - image_pipeline # already included in edge-auto-jetson.repos
   # - mrt_cmake_modules # already included in edge-auto-jetson.repos

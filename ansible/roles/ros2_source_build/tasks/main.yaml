@@ -157,7 +157,7 @@
   become: true
   ansible.builtin.shell: >
     rosdep install --from-paths src --ignore-src -y
-    --skip-keys "fastcdr rti-connext-dds-6.0.1 urdfdom_headers"
+    --skip-keys "fastcdr rti-connext-dds-6.0.1 urdfdom_headers libopencv-imgproc-dev"
   args:
     chdir: "{{ source_build_workspace_dir }}"
   environment:
